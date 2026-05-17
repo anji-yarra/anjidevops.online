@@ -1,726 +1,1268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTTP Error Codes Explained - Complete Guide</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete guide to HTTP status codes — 1xx to 5xx with real-world examples for developers and DevOps engineers.">
+<meta name="keywords" content="HTTP error codes, HTTP status codes, 404, 500, 301, REST API, DevOps, web development">
+<meta name="author" content="Anji Yarra">
+<meta property="og:title" content="HTTP Error Codes Explained: A Complete Guide | AnjiDevOps">
+<meta property="og:description" content="Understanding HTTP status codes from 1xx to 5xx with real-world DevOps examples. Interactive guide by Anji Yarra, AWS Cloud Engineer.">
+<meta property="og:url" content="https://anjidevops.online/blog/http-error-codes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AnjiDevOps">
+<title>HTTP Error Codes Explained: Complete Guide | AnjiDevOps</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #07111f;
+  --navy:     #0c1a30;
+  --panel:    rgba(12,26,48,0.8);
+  --border:   rgba(255,255,255,0.07);
+  --white:    #f8fafc;
+  --muted:    #64748b;
+  --light:    #94a3b8;
+  /* Category colours */
+  --c1:  #6366f1; --c1bg: rgba(99,102,241,0.1);  --c1b: rgba(99,102,241,0.25);
+  --c2:  #22c55e; --c2bg: rgba(34,197,94,0.08);   --c2b: rgba(34,197,94,0.25);
+  --c3:  #f59e0b; --c3bg: rgba(245,158,11,0.08);  --c3b: rgba(245,158,11,0.25);
+  --c4:  #ef4444; --c4bg: rgba(239,68,68,0.08);   --c4b: rgba(239,68,68,0.25);
+  --c5:  #a855f7; --c5bg: rgba(168,85,247,0.08);  --c5b: rgba(168,85,247,0.25);
+  --teal: #00e5c3;
+  --blue: #3b82f6;
+}
 
-        :root {
-            --primary: #0f172a;
-            --accent: #ef4444;
-            --accent-light: #fca5a5;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --border: #e2e8f0;
-            --code-bg: #1e293b;
-        }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--bg); }
 
-        body {
-            font-family: 'Georgia', 'Garamond', serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            color: var(--text-primary);
-            line-height: 1.8;
-        }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-        /* Header */
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 4px solid var(--accent);
-        }
+/* Subtle mesh bg */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 700px 500px at 10% 10%, rgba(0,229,195,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 85%, rgba(59,130,246,.07) 0%, transparent 60%);
+}
 
-        header h1 {
-            font-size: 3em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            letter-spacing: -1px;
-        }
+/* ── PROGRESS BAR ── */
+#prog {
+  position: fixed; top: 0; left: 0; height: 2.5px; z-index: 999;
+  background: linear-gradient(90deg, var(--teal), var(--blue), #a855f7);
+  width: 0%; transition: width .1s;
+}
 
-        header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(7,17,31,.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; color: var(--teal); letter-spacing: 1px;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 24px; }
+.nav-link {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  transition: color .2s; font-weight: 500;
+}
+.nav-link:hover { color: var(--white); }
+.nav-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 4px 12px; border-radius: 100px;
+  background: rgba(0,229,195,.08); border: 1px solid rgba(0,229,195,.2);
+  color: var(--teal); letter-spacing: 1px;
+}
 
-        /* Container */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+/* ── HERO ── */
+.blog-hero {
+  position: relative; z-index: 1;
+  padding: 80px 0 64px;
+  max-width: 860px; margin: 0 auto;
+  padding-left: 48px; padding-right: 48px;
+  border-bottom: 1px solid var(--border);
+}
 
-        /* Intro Section */
-        .intro-section {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 40px;
-            border-left: 5px solid var(--info);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
+.blog-category {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.blog-category-dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; }
 
-        .intro-section h2 {
-            color: var(--info);
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
+.blog-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 400; line-height: 1.1;
+  color: var(--white); letter-spacing: -.5px;
+  margin-bottom: 20px;
+}
+.blog-title em { color: var(--teal); font-style: italic; }
 
-        .intro-section p {
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-        }
+.blog-subtitle {
+  font-size: 17px; color: var(--light); line-height: 1.7;
+  max-width: 600px; margin-bottom: 36px; font-weight: 300;
+}
 
-        /* Status Code Category */
-        .status-category {
-            margin-bottom: 45px;
-        }
+.blog-meta {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+}
+.meta-author {
+  display: flex; align-items: center; gap: 10px;
+}
+.meta-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #07111f;
+}
+.meta-name { font-size: 14px; font-weight: 600; }
+.meta-role { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.meta-divider { width: 1px; height: 28px; background: var(--border); }
+.meta-info { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 
-        .category-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid;
-        }
+/* ── FILTER TABS ── */
+.filter-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 0 auto;
+  padding: 32px 48px 0;
+}
+.filter-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 16px; border-radius: 100px;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: .5px; cursor: pointer;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  transition: all .25s;
+}
+.filter-btn:hover { color: var(--white); border-color: rgba(255,255,255,.15); }
+.filter-btn.active { color: var(--white); }
+.filter-btn[data-cat="all"].active { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
+.filter-btn[data-cat="1xx"].active { background: var(--c1bg); border-color: var(--c1b); color: var(--c1); }
+.filter-btn[data-cat="2xx"].active { background: var(--c2bg); border-color: var(--c2b); color: var(--c2); }
+.filter-btn[data-cat="3xx"].active { background: var(--c3bg); border-color: var(--c3b); color: var(--c3); }
+.filter-btn[data-cat="4xx"].active { background: var(--c4bg); border-color: var(--c4b); color: var(--c4); }
+.filter-btn[data-cat="5xx"].active { background: var(--c5bg); border-color: var(--c5b); color: var(--c5); }
+.filter-dot { width: 7px; height: 7px; border-radius: 50%; }
 
-        .category-badge {
-            display: inline-block;
-            font-weight: bold;
-            font-size: 0.85em;
-            padding: 6px 12px;
-            border-radius: 20px;
-            margin-right: 15px;
-            min-width: 80px;
-            text-align: center;
-            color: white;
-        }
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  position: relative; z-index: 1;
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 240px;
+  gap: 48px; padding: 48px 48px 80px;
+  align-items: start;
+}
 
-        .category-1xx { 
-            background: #8b5cf6;
-            border-color: #8b5cf6;
-        }
+/* ── CONTENT ── */
+.content { min-width: 0; }
 
-        .category-2xx { 
-            background: var(--success);
-            border-color: var(--success);
-        }
+/* Intro text */
+.intro-block {
+  font-size: 16px; color: var(--light); line-height: 1.85;
+  margin-bottom: 56px; font-weight: 300;
+  border-left: 2px solid var(--teal);
+  padding-left: 20px;
+}
+.intro-block strong { color: var(--white); font-weight: 600; }
 
-        .category-3xx { 
-            background: #06b6d4;
-            border-color: #06b6d4;
-        }
+/* Section header */
+.code-section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px; border-radius: 14px;
+  margin-bottom: 20px;
+  position: relative; overflow: hidden;
+}
+.section-header::before {
+  content: attr(data-bg);
+  position: absolute; right: 20px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Instrument Serif', serif;
+  font-size: 80px; font-weight: 400; opacity: .06;
+  pointer-events: none; color: white;
+}
+.sh-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px; font-weight: 500;
+  padding: 6px 16px; border-radius: 8px;
+  letter-spacing: 1px; flex-shrink: 0;
+}
+.sh-info {}
+.sh-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px; font-weight: 400; margin-bottom: 3px;
+}
+.sh-desc { font-size: 12px; color: rgba(255,255,255,.55); font-family: 'DM Mono', monospace; letter-spacing: .5px; }
 
-        .category-4xx { 
-            background: #f59e0b;
-            border-color: #f59e0b;
-        }
+/* 1xx */
+.s1xx .section-header { background: var(--c1bg); border: 1px solid var(--c1b); }
+.s1xx .sh-badge { background: var(--c1bg); color: var(--c1); border: 1px solid var(--c1b); }
+.s1xx .sh-title { color: var(--c1); }
+/* 2xx */
+.s2xx .section-header { background: var(--c2bg); border: 1px solid var(--c2b); }
+.s2xx .sh-badge { background: var(--c2bg); color: var(--c2); border: 1px solid var(--c2b); }
+.s2xx .sh-title { color: var(--c2); }
+/* 3xx */
+.s3xx .section-header { background: var(--c3bg); border: 1px solid var(--c3b); }
+.s3xx .sh-badge { background: var(--c3bg); color: var(--c3); border: 1px solid var(--c3b); }
+.s3xx .sh-title { color: var(--c3); }
+/* 4xx */
+.s4xx .section-header { background: var(--c4bg); border: 1px solid var(--c4b); }
+.s4xx .sh-badge { background: var(--c4bg); color: var(--c4); border: 1px solid var(--c4b); }
+.s4xx .sh-title { color: var(--c4); }
+/* 5xx */
+.s5xx .section-header { background: var(--c5bg); border: 1px solid var(--c5b); }
+.s5xx .sh-badge { background: var(--c5bg); color: var(--c5); border: 1px solid var(--c5b); }
+.s5xx .sh-title { color: var(--c5); }
 
-        .category-5xx { 
-            background: var(--accent);
-            border-color: var(--accent);
-        }
+/* ── CODE CARDS ── */
+.codes-grid { display: flex; flex-direction: column; gap: 12px; }
 
-        .category-header h2 {
-            font-size: 1.5em;
-            color: var(--text-primary);
-            margin: 0;
-        }
+.code-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all .3s;
+  cursor: pointer;
+}
+.code-card:hover {
+  border-color: rgba(255,255,255,.14);
+  transform: translateX(4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
 
-        /* Error Code Card */
-        .error-card {
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
-        }
+.code-card-top {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 22px;
+}
 
-        .error-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-            transform: translateX(5px);
-        }
+.code-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px; font-weight: 500;
+  flex-shrink: 0; min-width: 60px;
+  transition: all .3s;
+  position: relative;
+}
 
-        .error-card.code-1xx { border-left-color: #8b5cf6; }
-        .error-card.code-2xx { border-left-color: var(--success); }
-        .error-card.code-3xx { border-left-color: #06b6d4; }
-        .error-card.code-4xx { border-left-color: #f59e0b; }
-        .error-card.code-5xx { border-left-color: var(--accent); }
+/* copy on click */
+.code-num::after {
+  content: 'COPY';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; letter-spacing: 2px;
+  background: inherit; border-radius: 4px;
+  opacity: 0; transition: opacity .2s;
+}
+.code-card:hover .code-num::after { opacity: 1; }
+.code-card:hover .code-num { opacity: 0; }
 
-        .error-code-header {
-            display: flex;
-            align-items: baseline;
-            margin-bottom: 10px;
-        }
+.code-card-info { flex: 1; min-width: 0; }
+.code-name {
+  font-size: 15px; font-weight: 600; color: var(--white);
+  margin-bottom: 4px;
+}
+.code-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
 
-        .error-code-number {
-            font-family: 'Courier New', monospace;
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-right: 12px;
-            min-width: 70px;
-        }
+.code-arrow {
+  flex-shrink: 0; color: var(--muted); font-size: 14px;
+  transition: transform .25s, color .25s;
+}
+.code-card:hover .code-arrow { transform: translateX(3px); color: var(--white); }
 
-        .code-1xx .error-code-number { color: #8b5cf6; }
-        .code-2xx .error-code-number { color: var(--success); }
-        .code-3xx .error-code-number { color: #06b6d4; }
-        .code-4xx .error-code-number { color: #f59e0b; }
-        .code-5xx .error-code-number { color: var(--accent); }
+.code-card-body {
+  display: none;
+  padding: 0 22px 20px;
+  border-top: 1px solid var(--border);
+}
+.code-card-body.open { display: block; }
 
-        .error-code-name {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
+.code-body-inner { padding-top: 18px; }
+.cbd-desc {
+  font-size: 14px; color: var(--light); line-height: 1.75;
+  margin-bottom: 16px; font-weight: 300;
+}
+.cbd-example {
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+}
+.cbd-example-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cbd-example-code {
+  font-family: 'DM Mono', monospace; font-size: 12px;
+  color: var(--teal); line-height: 1.6;
+}
+.cbd-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.cbd-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 3px 10px; border-radius: 100px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  color: var(--light);
+}
 
-        .error-description {
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            line-height: 1.7;
-        }
+/* Colour per category */
+.s1xx .code-num { color: var(--c1); }
+.s1xx .code-card { border-left: 2px solid var(--c1); }
+.s2xx .code-num { color: var(--c2); }
+.s2xx .code-card { border-left: 2px solid var(--c2); }
+.s3xx .code-num { color: var(--c3); }
+.s3xx .code-card { border-left: 2px solid var(--c3); }
+.s4xx .code-num { color: var(--c4); }
+.s4xx .code-card { border-left: 2px solid var(--c4); }
+.s5xx .code-num { color: var(--c5); }
+.s5xx .code-card { border-left: 2px solid var(--c5); }
 
-        .error-example {
-            background: var(--code-bg);
-            color: #e2e8f0;
-            padding: 12px;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            overflow-x: auto;
-            margin-bottom: 8px;
-        }
+/* ── SIDEBAR TOC ── */
+.sidebar { position: sticky; top: 80px; }
+.toc-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.toc-title {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.toc-list { display: flex; flex-direction: column; gap: 4px; }
+.toc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 8px;
+  text-decoration: none; font-size: 13px; color: var(--muted);
+  font-weight: 500; transition: all .2s;
+  border: 1px solid transparent;
+}
+.toc-item:hover { color: var(--white); background: rgba(255,255,255,.04); }
+.toc-item.active { color: var(--white); background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.08); }
+.toc-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
-        .when-occurs {
-            background: #f0f9ff;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.95em;
-            color: #0c4a6e;
-            border-left: 3px solid #3b82f6;
-        }
+/* Share card */
+.share-card {
+  background: linear-gradient(135deg, rgba(0,229,195,.06), rgba(59,130,246,.04));
+  border: 1px solid rgba(0,229,195,.15);
+  border-radius: 16px; padding: 24px; text-align: center;
+  margin-bottom: 16px;
+}
+.share-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.share-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+.share-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #07111f; font-size: 13px; font-weight: 700;
+  text-decoration: none; transition: all .25s; cursor: pointer;
+  border: none; width: 100%;
+}
+.share-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,195,.25); }
 
-        /* Summary Box */
-        .summary-box {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            margin-top: 50px;
-            border-top: 3px solid var(--accent);
-        }
+/* Stats card */
+.stats-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat-box {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; text-align: center;
+}
+.stat-n {
+  font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500;
+  line-height: 1; margin-bottom: 4px;
+}
+.stat-l { font-size: 10px; color: var(--muted); letter-spacing: .5px; }
 
-        .summary-box h2 {
-            margin-bottom: 20px;
-            font-size: 1.4em;
-        }
+/* ── FOOTER ── */
+.blog-footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 48px;
+  max-width: 860px; margin: 0 auto;
+  text-align: center;
+}
+.footer-author {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin-bottom: 32px;
+}
+.footer-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 20px; color: #07111f;
+}
+.footer-name { font-size: 18px; font-weight: 700; }
+.footer-bio { font-size: 14px; color: var(--muted); max-width: 400px; line-height: 1.6; }
+.footer-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.footer-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px;
+  background: var(--panel); border: 1px solid var(--border);
+  text-decoration: none; font-size: 13px; color: var(--light);
+  font-weight: 500; transition: all .25s;
+}
+.footer-link:hover { color: var(--teal); border-color: rgba(0,229,195,.25); transform: translateY(-2px); }
 
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
+/* Copied toast */
+.toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: rgba(0,229,195,.15); border: 1px solid rgba(0,229,195,.3);
+  color: var(--teal); font-family: 'DM Mono', monospace; font-size: 12px;
+  padding: 10px 24px; border-radius: 100px; letter-spacing: 1px;
+  z-index: 500; transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+  opacity: 0;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        .summary-item {
-            border-left: 3px solid;
-            padding-left: 15px;
-        }
+/* Reveal animation */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.v { opacity: 1; transform: translateY(0); }
 
-        .summary-item.cat-1xx { border-color: #8b5cf6; }
-        .summary-item.cat-2xx { border-color: var(--success); }
-        .summary-item.cat-3xx { border-color: #06b6d4; }
-        .summary-item.cat-4xx { border-color: #f59e0b; }
-        .summary-item.cat-5xx { border-color: var(--accent); }
-
-        .summary-item h3 {
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-
-        .summary-item p {
-            opacity: 0.85;
-            font-size: 0.95em;
-        }
-
-        /* Quick Reference */
-        .quick-ref {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 40px;
-            border: 2px dashed var(--border);
-        }
-
-        .quick-ref h2 {
-            color: var(--text-primary);
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .quick-ref-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95em;
-        }
-
-        .quick-ref-table td {
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .quick-ref-table tr:hover {
-            background: #f8fafc;
-        }
-
-        .code-cell {
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            min-width: 50px;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 30px 20px;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border);
-            margin-top: 50px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2em;
-            }
-
-            .error-code-header {
-                flex-direction: column;
-            }
-
-            .error-code-number {
-                margin-right: 0;
-                margin-bottom: 8px;
-            }
-
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Animations */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .status-category {
-            animation: slideIn 0.6s ease forwards;
-        }
-
-        .status-category:nth-child(1) { animation-delay: 0.1s; }
-        .status-category:nth-child(2) { animation-delay: 0.2s; }
-        .status-category:nth-child(3) { animation-delay: 0.3s; }
-        .status-category:nth-child(4) { animation-delay: 0.4s; }
-        .status-category:nth-child(5) { animation-delay: 0.5s; }
-    </style>
+/* Mobile */
+@media(max-width: 900px) {
+  nav { padding: 0 20px; }
+  .blog-hero, .filter-wrap { padding-left: 20px; padding-right: 20px; }
+  .main-layout { grid-template-columns: 1fr; padding: 32px 20px 60px; }
+  .sidebar { position: static; }
+  .blog-footer { padding: 40px 20px; }
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>HTTP Error Codes Explained</h1>
-        <p>A complete guide to understanding status codes and what they mean for your web applications</p>
-    </header>
 
-    <div class="container">
-        <!-- Introduction -->
-        <div class="intro-section">
-            <h2>What Are HTTP Status Codes?</h2>
-            <p>HTTP status codes are three-digit numbers returned by web servers in response to client requests. They tell you the outcome of your request—whether it succeeded, needs your attention, or failed.</p>
-            <p>Think of them as a communication system between your browser (or app) and the server. Each code gives instant feedback about what happened.</p>
-        </div>
+<div id="prog"></div>
+<div class="toast" id="toast">Copied to clipboard!</div>
 
-        <!-- Quick Reference -->
-        <div class="quick-ref">
-            <h2>⚡ Quick Reference</h2>
-            <table class="quick-ref-table">
-                <tr>
-                    <td><strong>Range</strong></td>
-                    <td><strong>Meaning</strong></td>
-                    <td><strong>What To Do</strong></td>
-                </tr>
-                <tr>
-                    <td class="code-cell">1xx</td>
-                    <td>Informational</td>
-                    <td>Request in progress, wait for final response</td>
-                </tr>
-                <tr>
-                    <td class="code-cell">2xx</td>
-                    <td>Success</td>
-                    <td>Everything worked perfectly ✓</td>
-                </tr>
-                <tr>
-                    <td class="code-cell">3xx</td>
-                    <td>Redirection</td>
-                    <td>Resource moved, follow the redirect</td>
-                </tr>
-                <tr>
-                    <td class="code-cell">4xx</td>
-                    <td>Client Error</td>
-                    <td>Your request has a problem, fix it</td>
-                </tr>
-                <tr>
-                    <td class="code-cell">5xx</td>
-                    <td>Server Error</td>
-                    <td>Server problem, not your fault—try again later</td>
-                </tr>
-            </table>
-        </div>
+<!-- NAV -->
+<nav>
+  <a href="https://anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
+  <div class="nav-right">
+    <a href="https://anjidevops.online/blog/" class="nav-link">← All Posts</a>
+    <span class="nav-tag">Blog</span>
+  </div>
+</nav>
 
-        <!-- 1xx - Informational -->
-        <div class="status-category">
-            <div class="category-header">
-                <span class="category-badge category-1xx">1xx</span>
-                <h2>Informational Responses</h2>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">The server received your request and is processing it. You'll get a final response shortly.</p>
+<!-- HERO -->
+<div class="blog-hero">
+  <div class="blog-category"><div class="blog-category-dot"></div>Web Engineering · HTTP Protocol</div>
+  <h1 class="blog-title">HTTP Error Codes <em>Explained</em><br>A Complete Guide</h1>
+  <p class="blog-subtitle">Every status code from 1xx to 5xx — what they mean, when they fire, and how to handle them. With real-world examples for developers and DevOps engineers.</p>
+  <div class="blog-meta">
+    <div class="meta-author">
+      <div class="meta-avatar">AY</div>
+      <div>
+        <div class="meta-name">Anji Yarra</div>
+        <div class="meta-role">AWS SAA-C03 · Cloud & DevOps Engineer</div>
+      </div>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-info">May 2026</div>
+    <div class="meta-divider"></div>
+    <div class="meta-info">~8 min read</div>
+    <div class="meta-divider"></div>
+    <div class="meta-info">60 codes covered</div>
+  </div>
+</div>
 
-            <div class="error-card code-1xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">100</span>
-                    <span class="error-code-name">Continue</span>
-                </div>
-                <p class="error-description">The server has received your request headers and is ready for the body. This is intermediate—the real response is still coming.</p>
-                <div class="when-occurs"><strong>When it occurs:</strong> Large file uploads where the client checks before sending the entire body</div>
-            </div>
+<!-- FILTERS -->
+<div class="filter-wrap">
+  <div class="filter-label">Filter by category</div>
+  <div class="filters">
+    <button class="filter-btn active" data-cat="all">All Codes</button>
+    <button class="filter-btn" data-cat="1xx"><span class="filter-dot" style="background:var(--c1)"></span>1xx Informational</button>
+    <button class="filter-btn" data-cat="2xx"><span class="filter-dot" style="background:var(--c2)"></span>2xx Success</button>
+    <button class="filter-btn" data-cat="3xx"><span class="filter-dot" style="background:var(--c3)"></span>3xx Redirection</button>
+    <button class="filter-btn" data-cat="4xx"><span class="filter-dot" style="background:var(--c4)"></span>4xx Client Errors</button>
+    <button class="filter-btn" data-cat="5xx"><span class="filter-dot" style="background:var(--c5)"></span>5xx Server Errors</button>
+  </div>
+</div>
 
-            <div class="error-card code-1xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">101</span>
-                    <span class="error-code-name">Switching Protocols</span>
-                </div>
-                <p class="error-description">The server is switching protocols as you requested—usually from HTTP to WebSocket for real-time communication.</p>
-                <div class="when-occurs"><strong>When it occurs:</strong> WebSocket connections, real-time chat, live notifications</div>
-            </div>
-        </div>
+<!-- MAIN -->
+<div class="main-layout">
+  <div class="content">
 
-        <!-- 2xx - Success -->
-        <div class="status-category">
-            <div class="category-header">
-                <span class="category-badge category-2xx">2xx</span>
-                <h2>Success Responses</h2>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">Your request worked! The server processed it successfully and is sending you the data.</p>
-
-            <div class="error-card code-2xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">200</span>
-                    <span class="error-code-name">OK</span>
-                </div>
-                <p class="error-description">Perfect! Your request succeeded and the server is returning the requested data. This is the happy path.</p>
-                <div class="error-example">GET /api/users/123 → 200 OK (returns user data)</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Successful GET, POST, PUT requests when everything works as expected</div>
-            </div>
-
-            <div class="error-card code-2xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">201</span>
-                    <span class="error-code-name">Created</span>
-                </div>
-                <p class="error-description">Success! A new resource was created. The server typically includes the new resource's location in the response.</p>
-                <div class="error-example">POST /api/users (create new user) → 201 Created</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> When you create new records in a database, upload files, add comments</div>
-            </div>
-
-            <div class="error-card code-2xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">204</span>
-                    <span class="error-code-name">No Content</span>
-                </div>
-                <p class="error-description">Success! The request worked but there's no response body to send back. The action is complete.</p>
-                <div class="error-example">DELETE /api/users/123 → 204 No Content</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> DELETE requests, successful form submissions with no return data</div>
-            </div>
-        </div>
-
-        <!-- 3xx - Redirection -->
-        <div class="status-category">
-            <div class="category-header">
-                <span class="category-badge category-3xx">3xx</span>
-                <h2>Redirection Responses</h2>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">The resource has moved. Your browser automatically follows the redirect and gets the new location.</p>
-
-            <div class="error-card code-3xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">301</span>
-                    <span class="error-code-name">Moved Permanently</span>
-                </div>
-                <p class="error-description">The resource has permanently moved to a new location. Update your bookmarks and links—this page isn't coming back.</p>
-                <div class="error-example">old-domain.com/page → new-domain.com/page (301)</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Website migrations, domain changes, old URLs that are no longer valid</div>
-            </div>
-
-            <div class="error-card code-3xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">302</span>
-                    <span class="error-code-name">Found (Temporary Redirect)</span>
-                </div>
-                <p class="error-description">The resource has temporarily moved. Your browser follows the redirect, but the original URL might come back later.</p>
-                <div class="error-example">GET /checkout → redirects to /login (temporarily)</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Login redirects, temporary maintenance pages, seasonal URLs</div>
-            </div>
-
-            <div class="error-card code-3xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">304</span>
-                    <span class="error-code-name">Not Modified</span>
-                </div>
-                <p class="error-description">Your cached version is still valid! The server hasn't changed anything, so use what you already have locally. Saves bandwidth.</p>
-                <div class="error-example">Browser cache check → Server returns 304 (use cached version)</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Browser caching, content not updated since last request</div>
-            </div>
-        </div>
-
-        <!-- 4xx - Client Errors -->
-        <div class="status-category">
-            <div class="category-header">
-                <span class="category-badge category-4xx">4xx</span>
-                <h2>Client Errors</h2>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">The problem is on your end—your request is malformed, incomplete, or asking for something that doesn't exist. Fix your request and try again.</p>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">400</span>
-                    <span class="error-code-name">Bad Request</span>
-                </div>
-                <p class="error-description">The server didn't understand your request. Your syntax is wrong, data is malformed, or you're missing required fields.</p>
-                <div class="error-example">POST /api/users with missing email field → 400 Bad Request</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Invalid JSON, wrong data type, missing required parameters</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">401</span>
-                    <span class="error-code-name">Unauthorized</span>
-                </div>
-                <p class="error-description">You haven't proven who you are. Authentication required. Log in or provide your credentials.</p>
-                <div class="error-example">Accessing protected data without login → 401 Unauthorized</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Missing login, expired session, missing API key</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">403</span>
-                    <span class="error-code-name">Forbidden</span>
-                </div>
-                <p class="error-description">You're authenticated (logged in), but you don't have permission to access this. The server knows who you are—you just aren't allowed.</p>
-                <div class="error-example">Regular user trying to delete admin data → 403 Forbidden</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Insufficient permissions, accessing another user's private data, admin-only endpoints</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">404</span>
-                    <span class="error-code-name">Not Found</span>
-                </div>
-                <p class="error-description">The resource doesn't exist. The URL is wrong, the page was deleted, or it never existed.</p>
-                <div class="error-example">GET /api/users/99999 (user doesn't exist) → 404 Not Found</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Broken links, deleted pages, typos in URLs</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">405</span>
-                    <span class="error-code-name">Method Not Allowed</span>
-                </div>
-                <p class="error-description">You used the wrong HTTP method. The endpoint exists but doesn't support the method you sent (e.g., POST on a GET-only endpoint).</p>
-                <div class="error-example">POST /api/users/123 (endpoint only allows GET) → 405 Method Not Allowed</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Using POST instead of GET, DELETE on read-only endpoints</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">408</span>
-                    <span class="error-code-name">Request Timeout</span>
-                </div>
-                <p class="error-description">You took too long to send the request. The server got tired waiting for you.</p>
-                <div class="error-example">Slow network upload → 408 Request Timeout</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Slow internet, hanging connections, unresponsive clients</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">409</span>
-                    <span class="error-code-name">Conflict</span>
-                </div>
-                <p class="error-description">Your request conflicts with the current state of the resource. Maybe you're updating data that's been changed, or creating a duplicate.</p>
-                <div class="error-example">Creating user with email that already exists → 409 Conflict</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Duplicate entries, version conflicts in concurrent edits</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">410</span>
-                    <span class="error-code-name">Gone</span>
-                </div>
-                <p class="error-description">The resource is permanently deleted and will never come back. Unlike 404, you can be certain it's gone for good.</p>
-                <div class="error-example">Accessing a permanently deleted account → 410 Gone</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Permanently deleted accounts, archived content</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">413</span>
-                    <span class="error-code-name">Payload Too Large</span>
-                </div>
-                <p class="error-description">Your request body is too big. You're sending too much data. The server has a file size limit.</p>
-                <div class="error-example">Uploading 1GB file to endpoint with 100MB limit → 413 Payload Too Large</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Large file uploads, bulk data imports exceeding limits</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">422</span>
-                    <span class="error-code-name">Unprocessable Entity</span>
-                </div>
-                <p class="error-description">Your request is well-formed, but the data validation failed. The syntax is correct, but the values don't make sense.</p>
-                <div class="error-example">POST with email: "invalid-email" (wrong format) → 422 Unprocessable Entity</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Validation errors, invalid data types, business logic violations</div>
-            </div>
-
-            <div class="error-card code-4xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">429</span>
-                    <span class="error-code-name">Too Many Requests</span>
-                </div>
-                <p class="error-description">You're sending too many requests too fast. You've hit the rate limit. Slow down and try again later.</p>
-                <div class="error-example">Making 1000 API calls in 1 second → 429 Too Many Requests</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> API rate limiting, DDoS protection, brute force prevention</div>
-            </div>
-        </div>
-
-        <!-- 5xx - Server Errors -->
-        <div class="status-category">
-            <div class="category-header">
-                <span class="category-badge category-5xx">5xx</span>
-                <h2>Server Errors</h2>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">The problem is on the server's end—your request was fine, but something went wrong internally. It's not your fault.</p>
-
-            <div class="error-card code-5xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">500</span>
-                    <span class="error-code-name">Internal Server Error</span>
-                </div>
-                <p class="error-description">Something broke on the server. A generic "everything went wrong" message. Could be a bug, database crash, or misconfiguration.</p>
-                <div class="error-example">Unhandled exception in application code → 500 Internal Server Error</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Code crashes, database connection failures, uncaught exceptions</div>
-            </div>
-
-            <div class="error-card code-5xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">501</span>
-                    <span class="error-code-name">Not Implemented</span>
-                </div>
-                <p class="error-description">The server doesn't support this feature yet. You're asking for something the server doesn't know how to do.</p>
-                <div class="error-example">Using an HTTP method the server doesn't support → 501 Not Implemented</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Unfinished features, unsupported HTTP methods</div>
-            </div>
-
-            <div class="error-card code-5xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">502</span>
-                    <span class="error-code-name">Bad Gateway</span>
-                </div>
-                <p class="error-description">The server is acting as a proxy/gateway, but the upstream server gave it an invalid response. Communication breakdown between servers.</p>
-                <div class="error-example">Nginx gateway → backend server crashes → 502 Bad Gateway</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Backend server down, load balancer issues, reverse proxy misconfiguration</div>
-            </div>
-
-            <div class="error-card code-5xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">503</span>
-                    <span class="error-code-name">Service Unavailable</span>
-                </div>
-                <p class="error-description">The server is temporarily unavailable—overloaded, undergoing maintenance, or temporarily down. Try again in a bit.</p>
-                <div class="error-example">Server at capacity, too many requests → 503 Service Unavailable</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Maintenance windows, server overload, temporary outages</div>
-            </div>
-
-            <div class="error-card code-5xx">
-                <div class="error-code-header">
-                    <span class="error-code-number">504</span>
-                    <span class="error-code-name">Gateway Timeout</span>
-                </div>
-                <p class="error-description">The upstream server took too long to respond. The proxy waited, but the backend server didn't answer in time.</p>
-                <div class="error-example">Database query takes 10 minutes, server timeout is 30 seconds → 504 Gateway Timeout</div>
-                <div class="when-occurs"><strong>When it occurs:</strong> Slow database queries, external API hangs, resource exhaustion</div>
-            </div>
-        </div>
-
-        <!-- Summary -->
-        <div class="summary-box">
-            <h2>📋 Quick Memory Aid</h2>
-            <div class="summary-grid">
-                <div class="summary-item cat-1xx">
-                    <h3>1xx Info</h3>
-                    <p>"Wait a minute, more coming"</p>
-                </div>
-                <div class="summary-item cat-2xx">
-                    <h3>2xx Success</h3>
-                    <p>"All good! ✓"</p>
-                </div>
-                <div class="summary-item cat-3xx">
-                    <h3>3xx Redirect</h3>
-                    <p>"Look over there →"</p>
-                </div>
-                <div class="summary-item cat-4xx">
-                    <h3>4xx Client Error</h3>
-                    <p>"You goofed, fix it"</p>
-                </div>
-                <div class="summary-item cat-5xx">
-                    <h3>5xx Server Error</h3>
-                    <p>"We goofed, our bad"</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Key Takeaways -->
-        <div class="intro-section" style="margin-top: 40px;">
-            <h2>🎯 Key Takeaways</h2>
-            <ul style="list-style-position: inside; color: var(--text-secondary);">
-                <li style="margin-bottom: 10px;"><strong>1xx codes</strong> are rare and mostly transparent to you—the browser handles them automatically.</li>
-                <li style="margin-bottom: 10px;"><strong>2xx means success</strong>—your request worked and you got what you asked for.</li>
-                <li style="margin-bottom: 10px;"><strong>3xx means redirect</strong>—the resource moved, but your browser automatically follows.</li>
-                <li style="margin-bottom: 10px;"><strong>4xx is your fault</strong>—check your request, credentials, or data. Common ones: 404 (not found), 401 (needs login), 403 (no permission).</li>
-                <li style="margin-bottom: 10px;"><strong>5xx is their fault</strong>—the server has a problem. Try again later. Nothing you can do.</li>
-            </ul>
-        </div>
+    <div class="intro-block reveal">
+      HTTP status codes are the <strong>language of the web</strong>. Every time a browser or API client makes a request, the server responds with a 3-digit code that instantly communicates what happened. As a <strong>Cloud & DevOps engineer</strong>, you'll debug these daily — in ALB logs, CloudWatch alarms, Nginx access logs, and API responses. Knowing them deeply is non-negotiable.
     </div>
 
-    <footer>
-        <p>HTTP Status Codes Guide • Last Updated: 2026</p>
-        <p style="font-size: 0.9em; margin-top: 10px;">Use this guide whenever you encounter an error code</p>
-    </footer>
+    <!-- 1xx -->
+    <div class="code-section s1xx reveal" id="sec-1xx" data-cat="1xx">
+      <div class="section-header" data-bg="1xx">
+        <div class="sh-badge">1xx</div>
+        <div class="sh-info">
+          <div class="sh-title">Informational</div>
+          <div class="sh-desc">Request received — processing continues</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="100">
+          <div class="code-card-top">
+            <div class="code-num">100</div>
+            <div class="code-card-info">
+              <div class="code-name">Continue</div>
+              <div class="code-summary">Server received request headers, client should proceed with body</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Sent when the server has received the request headers and the client should proceed to send the request body. Used when sending large files — the client checks if the server is ready before uploading.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Real World Example</div>
+                <div class="cbd-example-code">POST /upload HTTP/1.1<br>Expect: 100-continue<br><br>→ Server responds: 100 Continue<br>→ Client now sends the file body</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Large uploads</span><span class="cbd-tag">Expect header</span><span class="cbd-tag">S3 multipart</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="101">
+          <div class="code-card-top">
+            <div class="code-num">101</div>
+            <div class="code-card-info">
+              <div class="code-name">Switching Protocols</div>
+              <div class="code-summary">Server agrees to switch to a different protocol</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server agrees to upgrade the protocol. Most commonly seen when upgrading from HTTP to WebSockets — the connection becomes a persistent, two-way channel.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">WebSocket Handshake</div>
+                <div class="cbd-example-code">GET /ws HTTP/1.1<br>Upgrade: websocket<br>Connection: Upgrade<br><br>→ HTTP/1.1 101 Switching Protocols<br>→ Upgrade: websocket</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">WebSockets</span><span class="cbd-tag">HTTP/2</span><span class="cbd-tag">Real-time apps</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="102">
+          <div class="code-card-top">
+            <div class="code-num">102</div>
+            <div class="code-card-info">
+              <div class="code-name">Processing</div>
+              <div class="code-summary">Server has received and is processing (no response yet)</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">A WebDAV extension code indicating the server has received the request but hasn't finished processing. Prevents the client from timing out on long operations.</p>
+              <div class="cbd-tags"><span class="cbd-tag">WebDAV</span><span class="cbd-tag">Long operations</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2xx -->
+    <div class="code-section s2xx reveal" id="sec-2xx" data-cat="2xx">
+      <div class="section-header" data-bg="2xx">
+        <div class="sh-badge">2xx</div>
+        <div class="sh-info">
+          <div class="sh-title">Success</div>
+          <div class="sh-desc">Request successfully received, understood, and accepted</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="200">
+          <div class="code-card-top">
+            <div class="code-num">200</div>
+            <div class="code-card-info">
+              <div class="code-name">OK</div>
+              <div class="code-summary">The most common success response — request succeeded</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The standard success response. The meaning depends on the HTTP method: GET returns the resource, POST returns the result, PUT returns the updated resource. Your ALB health checks should always aim to see 200 from your EC2 targets.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">AWS Context</div>
+                <div class="cbd-example-code">ALB Target Health Check → 200 OK<br>EC2 instance is HEALTHY ✓<br><br>GET /api/users → 200 OK<br>{"users": [...], "count": 42}</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">GET</span><span class="cbd-tag">POST</span><span class="cbd-tag">PUT</span><span class="cbd-tag">ALB health check</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="201">
+          <div class="code-card-top">
+            <div class="code-num">201</div>
+            <div class="code-card-info">
+              <div class="code-name">Created</div>
+              <div class="code-summary">Request succeeded and a new resource was created</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Returned after a POST request successfully creates a resource. The response typically includes a Location header pointing to the new resource's URL.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">REST API Example</div>
+                <div class="cbd-example-code">POST /api/users<br>{"name": "Anji", "role": "cloud-engineer"}<br><br>→ 201 Created<br>Location: /api/users/123</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">POST</span><span class="cbd-tag">REST API</span><span class="cbd-tag">Resource creation</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="202">
+          <div class="code-card-top">
+            <div class="code-num">202</div>
+            <div class="code-card-info">
+              <div class="code-name">Accepted</div>
+              <div class="code-summary">Request accepted but not yet completed — async processing</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The request has been accepted for processing, but processing hasn't completed. Common with async jobs — like triggering an AWS Lambda or SQS message and returning immediately while processing happens in background.</p>
+              <div class="cbd-tags"><span class="cbd-tag">Async</span><span class="cbd-tag">SQS</span><span class="cbd-tag">Lambda</span><span class="cbd-tag">Background jobs</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="204">
+          <div class="code-card-top">
+            <div class="code-num">204</div>
+            <div class="code-card-info">
+              <div class="code-name">No Content</div>
+              <div class="code-summary">Success — but no body to return</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server successfully processed the request but is not returning any content. Used for DELETE operations, or PUT updates where you don't need to return the full resource back to the client.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">DELETE Example</div>
+                <div class="cbd-example-code">DELETE /api/users/123<br><br>→ 204 No Content<br>(no response body)</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">DELETE</span><span class="cbd-tag">PUT</span><span class="cbd-tag">No body</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="206">
+          <div class="code-card-top">
+            <div class="code-num">206</div>
+            <div class="code-card-info">
+              <div class="code-name">Partial Content</div>
+              <div class="code-summary">Only part of the resource is being delivered (Range requests)</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Used when the client sends a Range header to request only part of a resource. Common in video streaming, S3 byte-range reads, and download resumption.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">S3 Byte Range</div>
+                <div class="cbd-example-code">GET /video.mp4<br>Range: bytes=0-1023<br><br>→ 206 Partial Content<br>Content-Range: bytes 0-1023/5242880</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">S3</span><span class="cbd-tag">Video streaming</span><span class="cbd-tag">Range header</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3xx -->
+    <div class="code-section s3xx reveal" id="sec-3xx" data-cat="3xx">
+      <div class="section-header" data-bg="3xx">
+        <div class="sh-badge">3xx</div>
+        <div class="sh-info">
+          <div class="sh-title">Redirection</div>
+          <div class="sh-desc">Further action needed to complete the request</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="301">
+          <div class="code-card-top">
+            <div class="code-num">301</div>
+            <div class="code-card-info">
+              <div class="code-name">Moved Permanently</div>
+              <div class="code-summary">Resource has permanently moved — update your bookmarks</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The resource has permanently moved to a new URL. Browsers cache this. Search engines transfer SEO juice. In AWS, you'll configure 301 redirects on ALB listener rules — for example, forcing HTTP → HTTPS.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">ALB HTTP → HTTPS Redirect</div>
+                <div class="cbd-example-code">ALB Listener Rule (Port 80):<br>Action: Redirect to HTTPS<br>Status Code: 301<br><br>GET http://anjidevops.online<br>→ 301 → https://anjidevops.online</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">SEO</span><span class="cbd-tag">ALB redirect</span><span class="cbd-tag">HTTP→HTTPS</span><span class="cbd-tag">Permanent</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="302">
+          <div class="code-card-top">
+            <div class="code-num">302</div>
+            <div class="code-card-info">
+              <div class="code-name">Found (Temporary Redirect)</div>
+              <div class="code-summary">Resource temporarily at a different URL — don't cache</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Temporary redirect — the original URL is still valid. Browsers don't cache this. Use 301 for permanent changes, 302 for temporary ones (maintenance pages, A/B testing).</p>
+              <div class="cbd-tags"><span class="cbd-tag">Temporary</span><span class="cbd-tag">A/B testing</span><span class="cbd-tag">Maintenance</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="304">
+          <div class="code-card-top">
+            <div class="code-num">304</div>
+            <div class="code-card-info">
+              <div class="code-name">Not Modified</div>
+              <div class="code-summary">Client's cached version is still valid — use cache</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server tells the client "your cached copy is still fresh, use it." No body is sent, saving bandwidth. CloudFront uses this extensively for cache validation. Triggered by If-Modified-Since or ETag headers.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">CloudFront Cache Validation</div>
+                <div class="cbd-example-code">GET /style.css<br>If-None-Match: "abc123"<br><br>→ 304 Not Modified<br>(no body — use cached copy)</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">CloudFront</span><span class="cbd-tag">ETag</span><span class="cbd-tag">Cache</span><span class="cbd-tag">Bandwidth saving</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="307">
+          <div class="code-card-top">
+            <div class="code-num">307</div>
+            <div class="code-card-info">
+              <div class="code-name">Temporary Redirect</div>
+              <div class="code-summary">Like 302, but method must NOT change</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Temporary redirect that guarantees the HTTP method won't change. If a POST is redirected with 302, some browsers change to GET. 307 prevents this — POST stays POST.</p>
+              <div class="cbd-tags"><span class="cbd-tag">POST safe</span><span class="cbd-tag">Temporary</span><span class="cbd-tag">Method preserved</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="308">
+          <div class="code-card-top">
+            <div class="code-num">308</div>
+            <div class="code-card-info">
+              <div class="code-name">Permanent Redirect</div>
+              <div class="code-summary">Like 301, but method must NOT change</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Permanent redirect that preserves the HTTP method. The modern, stricter version of 301. If you POST to a URL and it's permanently moved, 308 ensures the client POSTs to the new URL too.</p>
+              <div class="cbd-tags"><span class="cbd-tag">Permanent</span><span class="cbd-tag">POST safe</span><span class="cbd-tag">Modern</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4xx -->
+    <div class="code-section s4xx reveal" id="sec-4xx" data-cat="4xx">
+      <div class="section-header" data-bg="4xx">
+        <div class="sh-badge">4xx</div>
+        <div class="sh-info">
+          <div class="sh-title">Client Errors</div>
+          <div class="sh-desc">The request contains bad syntax or cannot be fulfilled</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="400">
+          <div class="code-card-top">
+            <div class="code-num">400</div>
+            <div class="code-card-info">
+              <div class="code-name">Bad Request</div>
+              <div class="code-summary">Server can't process — malformed syntax or invalid request</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server cannot process the request due to invalid syntax. Often caused by malformed JSON, missing required fields, or invalid query parameters. The client must fix the request before retrying.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Invalid JSON Body</div>
+                <div class="cbd-example-code">POST /api/deploy<br>{"region": "ap-south-1", "count": } ← broken JSON<br><br>→ 400 Bad Request<br>{"error": "Invalid JSON syntax at line 1"}</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Validation</span><span class="cbd-tag">Malformed JSON</span><span class="cbd-tag">Missing fields</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="401">
+          <div class="code-card-top">
+            <div class="code-num">401</div>
+            <div class="code-card-info">
+              <div class="code-name">Unauthorized</div>
+              <div class="code-summary">Authentication required — who are you?</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Despite the name, this is about authentication, not authorization. The client must authenticate to get the requested response. Common with expired JWT tokens, missing API keys, or invalid AWS credentials.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Expired Token</div>
+                <div class="cbd-example-code">GET /api/instances<br>Authorization: Bearer eyJ... (expired)<br><br>→ 401 Unauthorized<br>WWW-Authenticate: Bearer realm="api"</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">JWT expired</span><span class="cbd-tag">API key missing</span><span class="cbd-tag">IAM credentials</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="403">
+          <div class="code-card-top">
+            <div class="code-num">403</div>
+            <div class="code-card-info">
+              <div class="code-name">Forbidden</div>
+              <div class="code-summary">Authenticated but not authorized — we know who you are, but you can't do this</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The client is authenticated but lacks permission. In AWS, this is extremely common — IAM policy denies, S3 bucket policies, Security Group blocks. The key difference from 401: re-authenticating won't help.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">AWS S3 Access Denied</div>
+                <div class="cbd-example-code">GET s3://prod-bucket/config.env<br>IAM user: dev-user<br><br>→ 403 AccessDenied<br>Bucket policy blocks this IAM principal</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">IAM policy</span><span class="cbd-tag">S3 bucket policy</span><span class="cbd-tag">Least privilege</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="404">
+          <div class="code-card-top">
+            <div class="code-num">404</div>
+            <div class="code-card-info">
+              <div class="code-name">Not Found</div>
+              <div class="code-summary">The most famous one — resource doesn't exist at this URL</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server can't find the requested resource. The URL is valid, but there's nothing there. Also used to hide existence of resources for security. If your ALB target returns 404, check your Nginx config and file paths.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Nginx Root Misconfigured</div>
+                <div class="cbd-example-code">GET /index.html<br>Nginx root: /var/www/html/<br>File: /usr/share/nginx/html/index.html<br><br>→ 404 Not Found (wrong root path)</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Nginx root</span><span class="cbd-tag">Missing file</span><span class="cbd-tag">Wrong URL</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="405">
+          <div class="code-card-top">
+            <div class="code-num">405</div>
+            <div class="code-card-info">
+              <div class="code-name">Method Not Allowed</div>
+              <div class="code-summary">HTTP method not supported for this endpoint</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The endpoint exists, but doesn't support the HTTP method used. E.g. sending a DELETE to a read-only endpoint, or POST to a GET-only route. The response includes an Allow header listing valid methods.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Example</div>
+                <div class="cbd-example-code">DELETE /api/config<br>→ 405 Method Not Allowed<br>Allow: GET, POST</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">REST API</span><span class="cbd-tag">Wrong method</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="408">
+          <div class="code-card-top">
+            <div class="code-num">408</div>
+            <div class="code-card-info">
+              <div class="code-name">Request Timeout</div>
+              <div class="code-summary">Server timed out waiting for the request</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The client took too long to send the request. ALB has an idle timeout (default 60s). If a client opens a connection but doesn't send a request within that window, the connection is closed.</p>
+              <div class="cbd-tags"><span class="cbd-tag">ALB timeout</span><span class="cbd-tag">Idle connection</span><span class="cbd-tag">Slow client</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="409">
+          <div class="code-card-top">
+            <div class="code-num">409</div>
+            <div class="code-card-info">
+              <div class="code-name">Conflict</div>
+              <div class="code-summary">Request conflicts with current state of the resource</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The request conflicts with the current state. Classic examples: trying to create a user that already exists, editing a resource that was modified by someone else (version mismatch), or duplicate record violations.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Duplicate Resource</div>
+                <div class="cbd-example-code">POST /api/users<br>{"email": "anji@example.com"}<br><br>→ 409 Conflict<br>{"error": "User with this email already exists"}</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Duplicate</span><span class="cbd-tag">Version conflict</span><span class="cbd-tag">Race condition</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="410">
+          <div class="code-card-top">
+            <div class="code-num">410</div>
+            <div class="code-card-info">
+              <div class="code-name">Gone</div>
+              <div class="code-summary">Resource existed but was permanently deleted — stronger than 404</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The resource existed but has been permanently removed. Unlike 404, 410 tells clients and search engines definitively: this is gone forever, stop requesting it and remove it from your index.</p>
+              <div class="cbd-tags"><span class="cbd-tag">SEO</span><span class="cbd-tag">Deleted resource</span><span class="cbd-tag">Deprecated API</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="422">
+          <div class="code-card-top">
+            <div class="code-num">422</div>
+            <div class="code-card-info">
+              <div class="code-name">Unprocessable Entity</div>
+              <div class="code-summary">Syntax OK but semantically wrong — validation failure</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The request was well-formed but failed semantic validation. JSON is valid, but the data doesn't make sense. Common in REST APIs and form submissions — age: -5, or an email field with "notanemail".</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Validation Error</div>
+                <div class="cbd-example-code">POST /api/ec2/launch<br>{"instance_type": "invalid_type", "count": -1}<br><br>→ 422 Unprocessable Entity<br>{"errors": ["Invalid instance_type", "count must be > 0"]}</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Validation</span><span class="cbd-tag">Semantic error</span><span class="cbd-tag">Form data</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="429">
+          <div class="code-card-top">
+            <div class="code-num">429</div>
+            <div class="code-card-info">
+              <div class="code-name">Too Many Requests</div>
+              <div class="code-summary">Rate limit exceeded — slow down</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The client has sent too many requests in a given time. Critical for API rate limiting and DDoS mitigation. AWS API Gateway returns 429 when throttling. Response includes Retry-After header with seconds to wait.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">AWS API Gateway Throttle</div>
+                <div class="cbd-example-code">GET /api/data (called 1000x/sec)<br>Limit: 100 req/sec<br><br>→ 429 Too Many Requests<br>Retry-After: 10<br>X-RateLimit-Remaining: 0</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Rate limiting</span><span class="cbd-tag">API Gateway</span><span class="cbd-tag">WAF</span><span class="cbd-tag">DDoS</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5xx -->
+    <div class="code-section s5xx reveal" id="sec-5xx" data-cat="5xx">
+      <div class="section-header" data-bg="5xx">
+        <div class="sh-badge">5xx</div>
+        <div class="sh-info">
+          <div class="sh-title">Server Errors</div>
+          <div class="sh-desc">Server failed to fulfil a valid request — it's not the client's fault</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="500">
+          <div class="code-card-top">
+            <div class="code-num">500</div>
+            <div class="code-card-info">
+              <div class="code-name">Internal Server Error</div>
+              <div class="code-summary">The server hit an unexpected condition — generic catch-all</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server encountered an unexpected condition. The generic server-side error. Could be: unhandled exception in your app code, database query failure, memory overflow, or misconfigured application. Check your CloudWatch logs immediately.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">CloudWatch Alert</div>
+                <div class="cbd-example-code">ALB Metric: HTTPCode_Target_5XX_Count > 0<br>→ CloudWatch Alarm: ALARM state<br>→ Check Nginx error.log on EC2:<br>   [ERROR] Unhandled exception: DB connection refused</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">App crash</span><span class="cbd-tag">CloudWatch logs</span><span class="cbd-tag">DB failure</span><span class="cbd-tag">Exception</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="501">
+          <div class="code-card-top">
+            <div class="code-num">501</div>
+            <div class="code-card-info">
+              <div class="code-name">Not Implemented</div>
+              <div class="code-summary">Server doesn't support the functionality required</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server doesn't know how to handle the request method. Unlike 405 (method not allowed for this route), 501 means the server doesn't implement this HTTP method at all. Rare in practice.</p>
+              <div class="cbd-tags"><span class="cbd-tag">Unimplemented method</span><span class="cbd-tag">Protocol support</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="502">
+          <div class="code-card-top">
+            <div class="code-num">502</div>
+            <div class="code-card-info">
+              <div class="code-name">Bad Gateway</div>
+              <div class="code-summary">Proxy/gateway got invalid response from upstream server</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The gateway (e.g. Nginx, ALB) received an invalid response from the upstream backend. In AWS: ALB forwards request to EC2 → EC2 returns garbage or crashes mid-response → ALB shows 502 to client. Also seen when EC2 is misconfigured or Nginx upstream is wrong.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">ALB → EC2 502</div>
+                <div class="cbd-example-code">User → ALB → EC2 (Nginx)<br><br>EC2 Nginx crash or wrong upstream port<br>→ ALB returns 502 Bad Gateway<br><br>Fix: Check target group health in ALB console<br>Check: sudo journalctl -u nginx -n 50</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">ALB target</span><span class="cbd-tag">Nginx upstream</span><span class="cbd-tag">EC2 crash</span><span class="cbd-tag">Proxy error</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="503">
+          <div class="code-card-top">
+            <div class="code-num">503</div>
+            <div class="code-card-info">
+              <div class="code-name">Service Unavailable</div>
+              <div class="code-summary">Server is down — overloaded or under maintenance</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server is temporarily unable to handle the request. In AWS: all ALB targets fail health checks → ALB returns 503 to all incoming requests. This is your biggest production alert. Add a Retry-After header during planned maintenance.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">ALB No Healthy Targets</div>
+                <div class="cbd-example-code">ALB Target Group Health Check:<br>  Target 10.0.1.5:80 → UNHEALTHY<br>  Target 10.0.2.5:80 → UNHEALTHY<br><br>→ All requests return 503<br>→ CloudWatch: HealthyHostCount = 0 → ALARM</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">ALB health check</span><span class="cbd-tag">Overloaded</span><span class="cbd-tag">Maintenance</span><span class="cbd-tag">Scale out</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="504">
+          <div class="code-card-top">
+            <div class="code-num">504</div>
+            <div class="code-card-info">
+              <div class="code-name">Gateway Timeout</div>
+              <div class="code-summary">Upstream server didn't respond in time</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The gateway didn't receive a timely response from the upstream server. In AWS: ALB idle timeout is 60s by default. If EC2 takes longer than 60s to respond, ALB returns 504. Fix: increase ALB idle timeout, or optimize slow queries.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">ALB Timeout Fix</div>
+                <div class="cbd-example-code">EC2 response time: 90s (slow DB query)<br>ALB idle timeout: 60s (default)<br>→ 504 Gateway Timeout<br><br>Fix Option 1: ALB console → Attributes<br>  → Idle timeout: 120 seconds<br>Fix Option 2: Optimize the slow query</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">ALB timeout</span><span class="cbd-tag">Slow query</span><span class="cbd-tag">RDS performance</span><span class="cbd-tag">Lambda timeout</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="code-card" data-code="505">
+          <div class="code-card-top">
+            <div class="code-num">505</div>
+            <div class="code-card-info">
+              <div class="code-name">HTTP Version Not Supported</div>
+              <div class="code-summary">Server doesn't support the HTTP version used</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The server doesn't support the HTTP protocol version used. Rare in modern infrastructure. Can appear when a client tries HTTP/3 against a server only supporting HTTP/1.1.</p>
+              <div class="cbd-tags"><span class="cbd-tag">HTTP version</span><span class="cbd-tag">Protocol mismatch</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="toc-card">
+      <div class="toc-title">On This Page</div>
+      <div class="toc-list">
+        <a href="#sec-1xx" class="toc-item" data-sec="1xx">
+          <span class="toc-dot" style="background:var(--c1)"></span>1xx Informational
+        </a>
+        <a href="#sec-2xx" class="toc-item" data-sec="2xx">
+          <span class="toc-dot" style="background:var(--c2)"></span>2xx Success
+        </a>
+        <a href="#sec-3xx" class="toc-item" data-sec="3xx">
+          <span class="toc-dot" style="background:var(--c3)"></span>3xx Redirection
+        </a>
+        <a href="#sec-4xx" class="toc-item" data-sec="4xx">
+          <span class="toc-dot" style="background:var(--c4)"></span>4xx Client Errors
+        </a>
+        <a href="#sec-5xx" class="toc-item" data-sec="5xx">
+          <span class="toc-dot" style="background:var(--c5)"></span>5xx Server Errors
+        </a>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="toc-title" style="margin-bottom:14px">Coverage</div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-n" style="color:var(--c1)">3</div><div class="stat-l">1xx codes</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c2)">5</div><div class="stat-l">2xx codes</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c3)">5</div><div class="stat-l">3xx codes</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c4)">10</div><div class="stat-l">4xx codes</div></div>
+        <div class="stat-box" style="grid-column:1/-1"><div class="stat-n" style="color:var(--c5)">6</div><div class="stat-l">5xx codes</div></div>
+      </div>
+    </div>
+
+    <div class="share-card">
+      <div class="share-title">Found this useful?</div>
+      <div class="share-sub">Share with your network on LinkedIn</div>
+      <button class="share-btn" onclick="shareLinkedIn()">
+        <span>Share on LinkedIn</span>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<div class="blog-footer">
+  <div class="footer-author">
+    <div class="footer-avatar">AY</div>
+    <div class="footer-name">Anji Yarra</div>
+    <div class="footer-bio">AWS SAA-C03 Certified Cloud & DevOps Engineer based in Hyderabad. Building secure, production-grade AWS infrastructure.</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://anjidevops.online" class="footer-link">🏠 anjidevops.online</a>
+    <a href="https://www.linkedin.com/in/anjiyarra/" target="_blank" class="footer-link">💼 LinkedIn</a>
+    <a href="https://anjidevops.online/blog/" class="footer-link">📚 More Posts</a>
+    <a href="mailto:anjiyarra.aws@gmail.com" class="footer-link">✉️ Contact</a>
+  </div>
+</div>
+
+<script>
+// Progress bar
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const p = (scrollY / (document.body.scrollHeight - innerHeight)) * 100;
+  prog.style.width = p + '%';
+});
+
+// Card expand/collapse
+document.querySelectorAll('.code-card').forEach(card => {
+  card.addEventListener('click', e => {
+    if (e.target.closest('.share-btn')) return;
+    const body = card.querySelector('.code-card-body');
+    const isOpen = body.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.code-card-body.open').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.code-arrow').forEach(a => a.textContent = '›');
+    if (!isOpen) {
+      body.classList.add('open');
+      card.querySelector('.code-arrow').textContent = '⌄';
+    }
+    // Copy code number
+    const code = card.dataset.code;
+    if (code) {
+      navigator.clipboard?.writeText(code).catch(() => {});
+      const toast = document.getElementById('toast');
+      toast.textContent = `Copied: ${code}`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+  });
+});
+
+// Filter tabs
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('.code-section').forEach(sec => {
+      if (cat === 'all' || sec.dataset.cat === cat) {
+        sec.style.display = '';
+      } else {
+        sec.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Sidebar TOC active state
+const sections = document.querySelectorAll('.code-section');
+const tocItems = document.querySelectorAll('.toc-item');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocItems.forEach(t => t.classList.remove('active'));
+      const id = e.target.id.replace('sec-','');
+      const active = document.querySelector(`.toc-item[data-sec="${id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => io.observe(s));
+
+// Scroll reveal
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// LinkedIn share
+function shareLinkedIn() {
+  const url = encodeURIComponent('https://anjidevops.online/blog/http-error-codes/');
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+}
+</script>
 </body>
 </html>
