@@ -3,55 +3,724 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DevOps and Cloud Engineering blog posts">
-    <title>Blog - AnjiDevOps</title>
+    <title>HTTP Error Codes Explained - Complete Guide</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f172a;
+            --accent: #ef4444;
+            --accent-light: #fca5a5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+        }
+
         body {
-            font-family: 'Georgia', serif;
+            font-family: 'Georgia', 'Garamond', serif;
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e3a8a 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
             padding: 40px 20px;
         }
-        .container { max-width: 800px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 50px; }
-        header h1 { font-size: 2.5em; color: #0f172a; margin-bottom: 10px; }
-        header p { color: #64748b; font-size: 1.1em; }
-        .blog-post {
-            background: white;
+
+        /* Intro Section */
+        .intro-section {
+            background: var(--card-bg);
             padding: 30px;
-            margin-bottom: 20px;
             border-radius: 12px;
-            border-left: 4px solid #ef4444;
+            margin-bottom: 40px;
+            border-left: 5px solid var(--info);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .intro-section h2 {
+            color: var(--info);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .intro-section p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        /* Status Code Category */
+        .status-category {
+            margin-bottom: 45px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid;
+        }
+
+        .category-badge {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 0.85em;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-right: 15px;
+            min-width: 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .category-1xx { 
+            background: #8b5cf6;
+            border-color: #8b5cf6;
+        }
+
+        .category-2xx { 
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .category-3xx { 
+            background: #06b6d4;
+            border-color: #06b6d4;
+        }
+
+        .category-4xx { 
+            background: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .category-5xx { 
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .category-header h2 {
+            font-size: 1.5em;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Error Code Card */
+        .error-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
         }
-        .blog-post:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); }
-        .blog-post h2 { color: #0f172a; margin-bottom: 10px; font-size: 1.5em; }
-        .blog-post .date { color: #64748b; font-size: 0.9em; margin-bottom: 12px; }
-        .blog-post p { color: #475569; line-height: 1.6; margin-bottom: 15px; }
-        .blog-post a { color: #ef4444; text-decoration: none; font-weight: 600; }
-        .blog-post a:hover { color: #dc2626; }
-        .tag { display: inline-block; background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; margin-right: 8px; }
+
+        .error-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transform: translateX(5px);
+        }
+
+        .error-card.code-1xx { border-left-color: #8b5cf6; }
+        .error-card.code-2xx { border-left-color: var(--success); }
+        .error-card.code-3xx { border-left-color: #06b6d4; }
+        .error-card.code-4xx { border-left-color: #f59e0b; }
+        .error-card.code-5xx { border-left-color: var(--accent); }
+
+        .error-code-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        .error-code-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-right: 12px;
+            min-width: 70px;
+        }
+
+        .code-1xx .error-code-number { color: #8b5cf6; }
+        .code-2xx .error-code-number { color: var(--success); }
+        .code-3xx .error-code-number { color: #06b6d4; }
+        .code-4xx .error-code-number { color: #f59e0b; }
+        .code-5xx .error-code-number { color: var(--accent); }
+
+        .error-code-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .error-description {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .error-example {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-bottom: 8px;
+        }
+
+        .when-occurs {
+            background: #f0f9ff;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            color: #0c4a6e;
+            border-left: 3px solid #3b82f6;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 50px;
+            border-top: 3px solid var(--accent);
+        }
+
+        .summary-box h2 {
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-item {
+            border-left: 3px solid;
+            padding-left: 15px;
+        }
+
+        .summary-item.cat-1xx { border-color: #8b5cf6; }
+        .summary-item.cat-2xx { border-color: var(--success); }
+        .summary-item.cat-3xx { border-color: #06b6d4; }
+        .summary-item.cat-4xx { border-color: #f59e0b; }
+        .summary-item.cat-5xx { border-color: var(--accent); }
+
+        .summary-item h3 {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .summary-item p {
+            opacity: 0.85;
+            font-size: 0.95em;
+        }
+
+        /* Quick Reference */
+        .quick-ref {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 2px dashed var(--border);
+        }
+
+        .quick-ref h2 {
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .quick-ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        .quick-ref-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .quick-ref-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .code-cell {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            min-width: 50px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .error-code-header {
+                flex-direction: column;
+            }
+
+            .error-code-number {
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-category {
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        .status-category:nth-child(1) { animation-delay: 0.1s; }
+        .status-category:nth-child(2) { animation-delay: 0.2s; }
+        .status-category:nth-child(3) { animation-delay: 0.3s; }
+        .status-category:nth-child(4) { animation-delay: 0.4s; }
+        .status-category:nth-child(5) { animation-delay: 0.5s; }
     </style>
 </head>
 <body>
+    <header>
+        <h1>HTTP Error Codes Explained</h1>
+        <p>A complete guide to understanding status codes and what they mean for your web applications</p>
+    </header>
+
     <div class="container">
-        <header>
-            <h1>📚 DevOps & Cloud Blog</h1>
-            <p>Articles on AWS, DevOps, and Web Development</p>
-        </header>
-        
-        <div class="blog-post">
-            <h2>HTTP Error Codes Explained: A Complete Guide</h2>
-            <p class="date">📅 May 2026</p>
-            <p>A comprehensive guide to understanding HTTP status codes. Learn what each code means, when they occur, and how to handle them with real-world examples.</p>
-            <p>
-                <span class="tag">#HTTP</span>
-                <span class="tag">#API</span>
-                <span class="tag">#WebDevelopment</span>
-            </p>
-            <a href="/blog/http-error-codes/">Read Full Article →</a>
+        <!-- Introduction -->
+        <div class="intro-section">
+            <h2>What Are HTTP Status Codes?</h2>
+            <p>HTTP status codes are three-digit numbers returned by web servers in response to client requests. They tell you the outcome of your request—whether it succeeded, needs your attention, or failed.</p>
+            <p>Think of them as a communication system between your browser (or app) and the server. Each code gives instant feedback about what happened.</p>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="quick-ref">
+            <h2>⚡ Quick Reference</h2>
+            <table class="quick-ref-table">
+                <tr>
+                    <td><strong>Range</strong></td>
+                    <td><strong>Meaning</strong></td>
+                    <td><strong>What To Do</strong></td>
+                </tr>
+                <tr>
+                    <td class="code-cell">1xx</td>
+                    <td>Informational</td>
+                    <td>Request in progress, wait for final response</td>
+                </tr>
+                <tr>
+                    <td class="code-cell">2xx</td>
+                    <td>Success</td>
+                    <td>Everything worked perfectly ✓</td>
+                </tr>
+                <tr>
+                    <td class="code-cell">3xx</td>
+                    <td>Redirection</td>
+                    <td>Resource moved, follow the redirect</td>
+                </tr>
+                <tr>
+                    <td class="code-cell">4xx</td>
+                    <td>Client Error</td>
+                    <td>Your request has a problem, fix it</td>
+                </tr>
+                <tr>
+                    <td class="code-cell">5xx</td>
+                    <td>Server Error</td>
+                    <td>Server problem, not your fault—try again later</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 1xx - Informational -->
+        <div class="status-category">
+            <div class="category-header">
+                <span class="category-badge category-1xx">1xx</span>
+                <h2>Informational Responses</h2>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">The server received your request and is processing it. You'll get a final response shortly.</p>
+
+            <div class="error-card code-1xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">100</span>
+                    <span class="error-code-name">Continue</span>
+                </div>
+                <p class="error-description">The server has received your request headers and is ready for the body. This is intermediate—the real response is still coming.</p>
+                <div class="when-occurs"><strong>When it occurs:</strong> Large file uploads where the client checks before sending the entire body</div>
+            </div>
+
+            <div class="error-card code-1xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">101</span>
+                    <span class="error-code-name">Switching Protocols</span>
+                </div>
+                <p class="error-description">The server is switching protocols as you requested—usually from HTTP to WebSocket for real-time communication.</p>
+                <div class="when-occurs"><strong>When it occurs:</strong> WebSocket connections, real-time chat, live notifications</div>
+            </div>
+        </div>
+
+        <!-- 2xx - Success -->
+        <div class="status-category">
+            <div class="category-header">
+                <span class="category-badge category-2xx">2xx</span>
+                <h2>Success Responses</h2>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Your request worked! The server processed it successfully and is sending you the data.</p>
+
+            <div class="error-card code-2xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">200</span>
+                    <span class="error-code-name">OK</span>
+                </div>
+                <p class="error-description">Perfect! Your request succeeded and the server is returning the requested data. This is the happy path.</p>
+                <div class="error-example">GET /api/users/123 → 200 OK (returns user data)</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Successful GET, POST, PUT requests when everything works as expected</div>
+            </div>
+
+            <div class="error-card code-2xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">201</span>
+                    <span class="error-code-name">Created</span>
+                </div>
+                <p class="error-description">Success! A new resource was created. The server typically includes the new resource's location in the response.</p>
+                <div class="error-example">POST /api/users (create new user) → 201 Created</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> When you create new records in a database, upload files, add comments</div>
+            </div>
+
+            <div class="error-card code-2xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">204</span>
+                    <span class="error-code-name">No Content</span>
+                </div>
+                <p class="error-description">Success! The request worked but there's no response body to send back. The action is complete.</p>
+                <div class="error-example">DELETE /api/users/123 → 204 No Content</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> DELETE requests, successful form submissions with no return data</div>
+            </div>
+        </div>
+
+        <!-- 3xx - Redirection -->
+        <div class="status-category">
+            <div class="category-header">
+                <span class="category-badge category-3xx">3xx</span>
+                <h2>Redirection Responses</h2>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">The resource has moved. Your browser automatically follows the redirect and gets the new location.</p>
+
+            <div class="error-card code-3xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">301</span>
+                    <span class="error-code-name">Moved Permanently</span>
+                </div>
+                <p class="error-description">The resource has permanently moved to a new location. Update your bookmarks and links—this page isn't coming back.</p>
+                <div class="error-example">old-domain.com/page → new-domain.com/page (301)</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Website migrations, domain changes, old URLs that are no longer valid</div>
+            </div>
+
+            <div class="error-card code-3xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">302</span>
+                    <span class="error-code-name">Found (Temporary Redirect)</span>
+                </div>
+                <p class="error-description">The resource has temporarily moved. Your browser follows the redirect, but the original URL might come back later.</p>
+                <div class="error-example">GET /checkout → redirects to /login (temporarily)</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Login redirects, temporary maintenance pages, seasonal URLs</div>
+            </div>
+
+            <div class="error-card code-3xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">304</span>
+                    <span class="error-code-name">Not Modified</span>
+                </div>
+                <p class="error-description">Your cached version is still valid! The server hasn't changed anything, so use what you already have locally. Saves bandwidth.</p>
+                <div class="error-example">Browser cache check → Server returns 304 (use cached version)</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Browser caching, content not updated since last request</div>
+            </div>
+        </div>
+
+        <!-- 4xx - Client Errors -->
+        <div class="status-category">
+            <div class="category-header">
+                <span class="category-badge category-4xx">4xx</span>
+                <h2>Client Errors</h2>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">The problem is on your end—your request is malformed, incomplete, or asking for something that doesn't exist. Fix your request and try again.</p>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">400</span>
+                    <span class="error-code-name">Bad Request</span>
+                </div>
+                <p class="error-description">The server didn't understand your request. Your syntax is wrong, data is malformed, or you're missing required fields.</p>
+                <div class="error-example">POST /api/users with missing email field → 400 Bad Request</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Invalid JSON, wrong data type, missing required parameters</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">401</span>
+                    <span class="error-code-name">Unauthorized</span>
+                </div>
+                <p class="error-description">You haven't proven who you are. Authentication required. Log in or provide your credentials.</p>
+                <div class="error-example">Accessing protected data without login → 401 Unauthorized</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Missing login, expired session, missing API key</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">403</span>
+                    <span class="error-code-name">Forbidden</span>
+                </div>
+                <p class="error-description">You're authenticated (logged in), but you don't have permission to access this. The server knows who you are—you just aren't allowed.</p>
+                <div class="error-example">Regular user trying to delete admin data → 403 Forbidden</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Insufficient permissions, accessing another user's private data, admin-only endpoints</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">404</span>
+                    <span class="error-code-name">Not Found</span>
+                </div>
+                <p class="error-description">The resource doesn't exist. The URL is wrong, the page was deleted, or it never existed.</p>
+                <div class="error-example">GET /api/users/99999 (user doesn't exist) → 404 Not Found</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Broken links, deleted pages, typos in URLs</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">405</span>
+                    <span class="error-code-name">Method Not Allowed</span>
+                </div>
+                <p class="error-description">You used the wrong HTTP method. The endpoint exists but doesn't support the method you sent (e.g., POST on a GET-only endpoint).</p>
+                <div class="error-example">POST /api/users/123 (endpoint only allows GET) → 405 Method Not Allowed</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Using POST instead of GET, DELETE on read-only endpoints</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">408</span>
+                    <span class="error-code-name">Request Timeout</span>
+                </div>
+                <p class="error-description">You took too long to send the request. The server got tired waiting for you.</p>
+                <div class="error-example">Slow network upload → 408 Request Timeout</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Slow internet, hanging connections, unresponsive clients</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">409</span>
+                    <span class="error-code-name">Conflict</span>
+                </div>
+                <p class="error-description">Your request conflicts with the current state of the resource. Maybe you're updating data that's been changed, or creating a duplicate.</p>
+                <div class="error-example">Creating user with email that already exists → 409 Conflict</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Duplicate entries, version conflicts in concurrent edits</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">410</span>
+                    <span class="error-code-name">Gone</span>
+                </div>
+                <p class="error-description">The resource is permanently deleted and will never come back. Unlike 404, you can be certain it's gone for good.</p>
+                <div class="error-example">Accessing a permanently deleted account → 410 Gone</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Permanently deleted accounts, archived content</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">413</span>
+                    <span class="error-code-name">Payload Too Large</span>
+                </div>
+                <p class="error-description">Your request body is too big. You're sending too much data. The server has a file size limit.</p>
+                <div class="error-example">Uploading 1GB file to endpoint with 100MB limit → 413 Payload Too Large</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Large file uploads, bulk data imports exceeding limits</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">422</span>
+                    <span class="error-code-name">Unprocessable Entity</span>
+                </div>
+                <p class="error-description">Your request is well-formed, but the data validation failed. The syntax is correct, but the values don't make sense.</p>
+                <div class="error-example">POST with email: "invalid-email" (wrong format) → 422 Unprocessable Entity</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Validation errors, invalid data types, business logic violations</div>
+            </div>
+
+            <div class="error-card code-4xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">429</span>
+                    <span class="error-code-name">Too Many Requests</span>
+                </div>
+                <p class="error-description">You're sending too many requests too fast. You've hit the rate limit. Slow down and try again later.</p>
+                <div class="error-example">Making 1000 API calls in 1 second → 429 Too Many Requests</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> API rate limiting, DDoS protection, brute force prevention</div>
+            </div>
+        </div>
+
+        <!-- 5xx - Server Errors -->
+        <div class="status-category">
+            <div class="category-header">
+                <span class="category-badge category-5xx">5xx</span>
+                <h2>Server Errors</h2>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">The problem is on the server's end—your request was fine, but something went wrong internally. It's not your fault.</p>
+
+            <div class="error-card code-5xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">500</span>
+                    <span class="error-code-name">Internal Server Error</span>
+                </div>
+                <p class="error-description">Something broke on the server. A generic "everything went wrong" message. Could be a bug, database crash, or misconfiguration.</p>
+                <div class="error-example">Unhandled exception in application code → 500 Internal Server Error</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Code crashes, database connection failures, uncaught exceptions</div>
+            </div>
+
+            <div class="error-card code-5xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">501</span>
+                    <span class="error-code-name">Not Implemented</span>
+                </div>
+                <p class="error-description">The server doesn't support this feature yet. You're asking for something the server doesn't know how to do.</p>
+                <div class="error-example">Using an HTTP method the server doesn't support → 501 Not Implemented</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Unfinished features, unsupported HTTP methods</div>
+            </div>
+
+            <div class="error-card code-5xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">502</span>
+                    <span class="error-code-name">Bad Gateway</span>
+                </div>
+                <p class="error-description">The server is acting as a proxy/gateway, but the upstream server gave it an invalid response. Communication breakdown between servers.</p>
+                <div class="error-example">Nginx gateway → backend server crashes → 502 Bad Gateway</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Backend server down, load balancer issues, reverse proxy misconfiguration</div>
+            </div>
+
+            <div class="error-card code-5xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">503</span>
+                    <span class="error-code-name">Service Unavailable</span>
+                </div>
+                <p class="error-description">The server is temporarily unavailable—overloaded, undergoing maintenance, or temporarily down. Try again in a bit.</p>
+                <div class="error-example">Server at capacity, too many requests → 503 Service Unavailable</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Maintenance windows, server overload, temporary outages</div>
+            </div>
+
+            <div class="error-card code-5xx">
+                <div class="error-code-header">
+                    <span class="error-code-number">504</span>
+                    <span class="error-code-name">Gateway Timeout</span>
+                </div>
+                <p class="error-description">The upstream server took too long to respond. The proxy waited, but the backend server didn't answer in time.</p>
+                <div class="error-example">Database query takes 10 minutes, server timeout is 30 seconds → 504 Gateway Timeout</div>
+                <div class="when-occurs"><strong>When it occurs:</strong> Slow database queries, external API hangs, resource exhaustion</div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-box">
+            <h2>📋 Quick Memory Aid</h2>
+            <div class="summary-grid">
+                <div class="summary-item cat-1xx">
+                    <h3>1xx Info</h3>
+                    <p>"Wait a minute, more coming"</p>
+                </div>
+                <div class="summary-item cat-2xx">
+                    <h3>2xx Success</h3>
+                    <p>"All good! ✓"</p>
+                </div>
+                <div class="summary-item cat-3xx">
+                    <h3>3xx Redirect</h3>
+                    <p>"Look over there →"</p>
+                </div>
+                <div class="summary-item cat-4xx">
+                    <h3>4xx Client Error</h3>
+                    <p>"You goofed, fix it"</p>
+                </div>
+                <div class="summary-item cat-5xx">
+                    <h3>5xx Server Error</h3>
+                    <p>"We goofed, our bad"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="intro-section" style="margin-top: 40px;">
+            <h2>🎯 Key Takeaways</h2>
+            <ul style="list-style-position: inside; color: var(--text-secondary);">
+                <li style="margin-bottom: 10px;"><strong>1xx codes</strong> are rare and mostly transparent to you—the browser handles them automatically.</li>
+                <li style="margin-bottom: 10px;"><strong>2xx means success</strong>—your request worked and you got what you asked for.</li>
+                <li style="margin-bottom: 10px;"><strong>3xx means redirect</strong>—the resource moved, but your browser automatically follows.</li>
+                <li style="margin-bottom: 10px;"><strong>4xx is your fault</strong>—check your request, credentials, or data. Common ones: 404 (not found), 401 (needs login), 403 (no permission).</li>
+                <li style="margin-bottom: 10px;"><strong>5xx is their fault</strong>—the server has a problem. Try again later. Nothing you can do.</li>
+            </ul>
         </div>
     </div>
+
+    <footer>
+        <p>HTTP Status Codes Guide • Last Updated: 2026</p>
+        <p style="font-size: 0.9em; margin-top: 10px;">Use this guide whenever you encounter an error code</p>
+    </footer>
 </body>
 </html>
