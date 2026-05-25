@@ -3,144 +3,537 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="DevOps and Cloud Engineering blog posts by AnjiDevOps">
-
-<title>Blog - AnjiDevOps</title>
-
+<meta name="description" content="Blog posts on DevOps, AWS, Shell Scripting, HTTP, and Cloud Engineering by Anji Yarra.">
+<meta name="keywords" content="blog, devops, aws, shell scripting, http, cloud engineering">
+<meta name="author" content="Anji Yarra">
+<meta property="og:title" content="AnjiDevOps Blog - Cloud & DevOps Articles">
+<meta property="og:description" content="In-depth guides on AWS, DevOps, Shell Scripting, and Cloud Engineering.">
+<meta property="og:url" content="https://anjidevops.online/blog/">
+<meta property="og:type" content="website">
+<title>Blog - AnjiDevOps | Cloud & DevOps Engineering</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+:root {
+  --bg:       #07111f;
+  --navy:     #0c1a30;
+  --panel:    rgba(12,26,48,0.8);
+  --border:   rgba(255,255,255,0.07);
+  --white:    #f8fafc;
+  --muted:    #64748b;
+  --light:    #94a3b8;
+  --teal:     #00e5c3;
+  --blue:     #3b82f6;
+  --purple:   #a855f7;
+  --green:    #10b981;
+  --amber:    #f59e0b;
+  --rose:     #ef4444;
+}
 
-    body {
-        font-family: 'Georgia', serif;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 40px 20px;
-        color: #0f172a;
-    }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--bg); }
 
-    .container {
-        max-width: 800px;
-        margin: auto;
-    }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-    /* HEADER (clean + like your site style) */
-    header {
-        text-align: center;
-        margin-bottom: 45px;
-    }
+/* Subtle mesh bg */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 700px 500px at 10% 10%, rgba(0,229,195,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 85%, rgba(59,130,246,.07) 0%, transparent 60%);
+}
 
-    header h1 {
-        font-size: 2.6em;
-        color: #0f172a;
-        margin-bottom: 10px;
-    }
+/* ── PROGRESS BAR ── */
+#prog {
+  position: fixed; top: 0; left: 0; height: 2.5px; z-index: 999;
+  background: linear-gradient(90deg, var(--teal), var(--blue), var(--purple));
+  width: 0%; transition: width .1s;
+}
 
-    header p {
-        color: #64748b;
-        font-size: 1.1em;
-    }
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(7,17,31,.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; color: var(--teal); letter-spacing: 1px;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 24px; }
+.nav-link {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  transition: color .2s; font-weight: 500;
+}
+.nav-link:hover { color: var(--white); }
+.nav-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 4px 12px; border-radius: 100px;
+  background: rgba(0,229,195,.08); border: 1px solid rgba(0,229,195,.2);
+  color: var(--teal); letter-spacing: 1px;
+}
 
-    /* BLOG CARD */
-    .blog-post {
-        background: #ffffff;
-        padding: 28px;
-        margin-bottom: 20px;
-        border-radius: 14px;
-        border-left: 4px solid #ef4444;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        transition: 0.25s ease;
-    }
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  padding: 100px 0 80px;
+  max-width: 1000px; margin: 0 auto;
+  padding-left: 48px; padding-right: 48px;
+  text-align: center;
+}
 
-    .blog-post:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 18px rgba(0,0,0,0.10);
-    }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.hero-dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; }
 
-    .blog-post h2 {
-        color: #0f172a;
-        font-size: 1.5em;
-        margin-bottom: 8px;
-    }
+.hero h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(44px, 8vw, 72px);
+  font-weight: 400; line-height: 1.1;
+  color: var(--white); letter-spacing: -.5px;
+  margin-bottom: 20px;
+}
+.hero h1 em { color: var(--teal); font-style: italic; }
 
-    .date {
-        color: #64748b;
-        font-size: 0.9em;
-        margin-bottom: 12px;
-    }
+.hero-subtitle {
+  font-size: 18px; color: var(--light); line-height: 1.7;
+  max-width: 700px; margin: 0 auto 40px;
+  font-weight: 300;
+}
 
-    .blog-post p {
-        color: #475569;
-        line-height: 1.7;
-        margin-bottom: 14px;
-    }
+.hero-stats {
+  display: flex; align-items: center; gap: 32px; justify-content: center;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.stat {
+  display: flex; align-items: center; gap: 8px;
+}
+.stat-num {
+  font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 600;
+  color: var(--teal);
+}
+.stat-label { color: var(--muted); font-size: 12px; }
 
-    /* TAGS */
-    .tag {
-        display: inline-block;
-        background: #f1f5f9;
-        color: #475569;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.85em;
-        margin-right: 6px;
-        transition: 0.2s ease;
-    }
+/* ── FILTERS ── */
+.filters-wrap {
+  position: relative; z-index: 1;
+  max-width: 1000px; margin: 0 auto 60px;
+  padding: 0 48px;
+}
+.filter-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 18px; border-radius: 100px;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: .5px; cursor: pointer;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  transition: all .25s;
+}
+.filter-btn:hover { color: var(--white); border-color: rgba(255,255,255,.15); }
+.filter-btn.active {
+  color: var(--white);
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.2);
+}
+.filter-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-    .tag:hover {
-        background: #ef4444;
-        color: #fff;
-    }
+/* ── BLOG GRID ── */
+.blogs-container {
+  position: relative; z-index: 1;
+  max-width: 1000px; margin: 0 auto;
+  padding: 0 48px 80px;
+}
 
-    /* LINK */
-    .read-more {
-        display: inline-block;
-        margin-top: 12px;
-        color: #ef4444;
-        font-weight: 600;
-        text-decoration: none;
-        transition: 0.2s;
-    }
+.blogs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+}
 
-    .read-more:hover {
-        color: #dc2626;
-        text-decoration: underline;
-    }
+/* ── BLOG CARD ── */
+.blog-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all .3s;
+  display: flex; flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  position: relative;
+}
+.blog-card:hover {
+  border-color: rgba(255,255,255,.14);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.4);
+}
+
+.blog-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.blog-card-header::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(139,92,246,.05) 0%, rgba(6,182,212,.05) 100%);
+  pointer-events: none;
+}
+
+.card-category {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  color: var(--teal); letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 12px;
+  position: relative; z-index: 1;
+}
+.category-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+.blog-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px; font-weight: 400; line-height: 1.2;
+  color: var(--white);
+  position: relative; z-index: 1;
+}
+
+.blog-card-body {
+  padding: 24px;
+  flex: 1; display: flex; flex-direction: column;
+}
+
+.blog-description {
+  color: var(--light); font-size: 14px; line-height: 1.7;
+  margin-bottom: 20px; flex: 1;
+}
+
+.blog-meta {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding-top: 16px; border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+.meta-item {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--muted);
+}
+.meta-dot { width: 4px; height: 4px; background: var(--muted); border-radius: 50%; }
+
+.blog-tags {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px;
+}
+.blog-tag {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  padding: 4px 12px; border-radius: 100px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  color: var(--light);
+}
+
+.blog-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.read-time {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted);
+}
+.read-btn {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--teal); font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  transition: color .2s;
+}
+.blog-card:hover .read-btn {
+  color: var(--white);
+}
+
+/* Color variants */
+.blog-card.http { border-top: 3px solid #6366f1; }
+.blog-card.shell { border-top: 3px solid #06b6d4; }
+.blog-card.aws { border-top: 3px solid #f59e0b; }
+.blog-card.docker { border-top: 3px solid #10b981; }
+.blog-card.kubernetes { border-top: 3px solid #a855f7; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-state-icon {
+  font-size: 48px; margin-bottom: 16px;
+}
+.empty-state h3 {
+  font-size: 18px; color: var(--white); margin-bottom: 8px;
+}
+.empty-state p {
+  font-size: 14px; color: var(--light);
+}
+
+/* ── FOOTER ── */
+.footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 48px;
+  max-width: 1000px; margin: 0 auto;
+  text-align: center;
+}
+.footer-content {
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+  margin-bottom: 32px;
+}
+.footer-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 20px; color: #07111f;
+}
+.footer-info h3 {
+  font-size: 16px; font-weight: 600; margin-bottom: 4px;
+}
+.footer-info p {
+  font-size: 13px; color: var(--muted); max-width: 400px; line-height: 1.6;
+}
+.footer-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.footer-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px;
+  background: var(--panel); border: 1px solid var(--border);
+  text-decoration: none; font-size: 13px; color: var(--light);
+  font-weight: 500; transition: all .25s;
+}
+.footer-link:hover { color: var(--teal); border-color: rgba(0,229,195,.25); transform: translateY(-2px); }
+
+/* ── REVEAL ANIMATION ── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.v { opacity: 1; transform: translateY(0); }
+
+.blog-card {
+  animation: slideIn .5s ease forwards;
+  opacity: 0;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.blog-card:nth-child(1) { animation-delay: .1s; }
+.blog-card:nth-child(2) { animation-delay: .15s; }
+.blog-card:nth-child(3) { animation-delay: .2s; }
+.blog-card:nth-child(n+4) { animation-delay: .25s; }
+
+/* ── MOBILE ── */
+@media(max-width: 900px) {
+  nav { padding: 0 20px; }
+  .hero { padding: 60px 20px 60px; }
+  .filters-wrap { padding: 0 20px; margin-bottom: 40px; }
+  .blogs-container { padding: 0 20px 60px; }
+  .blogs-grid { grid-template-columns: 1fr; }
+  .footer { padding: 40px 20px; }
+  .hero-stats { gap: 20px; }
+}
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div id="prog"></div>
 
-    <header>
-        <h1>📚 DevOps & Cloud Blog</h1>
-        <p>Articles on AWS, DevOps, Kubernetes, and Web Development</p>
-    </header>
+<!-- NAV -->
+<nav>
+  <a href="https://anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
+  <div class="nav-right">
+    <a href="https://anjidevops.online" class="nav-link">← Home</a>
+    <span class="nav-tag">Blog</span>
+  </div>
+</nav>
 
-    <div class="blog-post">
-        <h2>HTTP Error Codes Explained: A Complete Guide</h2>
-        <div class="date">📅 May 2026</div>
-
-        <p>
-            A practical guide to HTTP status codes from a DevOps perspective.
-            Learn how APIs respond, why errors happen, and how to debug production issues.
-        </p>
-
-        <div>
-            <span class="tag">HTTP</span>
-            <span class="tag">API</span>
-            <span class="tag">DevOps</span>
-        </div>
-
-        <a class="read-more" href="https://www.anjidevops.online/blog/http-error-codes/">
-            Read Full Article →
-        </a>
+<!-- HERO -->
+<div class="hero reveal">
+  <div class="hero-tag"><div class="hero-dot"></div>Technical Writing · DevOps · Cloud</div>
+  <h1>Blog <em>Articles</em></h1>
+  <p class="hero-subtitle">In-depth guides on DevOps, AWS, Cloud Engineering, Shell Scripting, and system administration. Written for engineers who want to master their craft.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num" id="post-count">2</span>
+      <span class="stat-label">Articles Published</span>
     </div>
-
+    <div class="stat">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Practical Guides</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">50+</span>
+      <span class="stat-label">Code Examples</span>
+    </div>
+  </div>
 </div>
 
+<!-- FILTERS -->
+<div class="filters-wrap reveal" style="animation-delay: .2s;">
+  <div class="filter-label">Filter by Topic</div>
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All Topics</button>
+    <button class="filter-btn" data-filter="http"><span class="filter-dot" style="background:#6366f1"></span>HTTP</button>
+    <button class="filter-btn" data-filter="shell"><span class="filter-dot" style="background:#06b6d4"></span>Shell Scripting</button>
+    <button class="filter-btn" data-filter="aws"><span class="filter-dot" style="background:#f59e0b"></span>AWS</button>
+    <button class="filter-btn" data-filter="devops"><span class="filter-dot" style="background:#10b981"></span>DevOps</button>
+  </div>
+</div>
+
+<!-- BLOG GRID -->
+<div class="blogs-container">
+  <div class="blogs-grid" id="blogs-grid">
+    
+    <!-- Blog 1: HTTP Error Codes -->
+    <a href="/blog/http-error-codes/" class="blog-card http" data-filter="http">
+      <div class="blog-card-header">
+        <div class="card-category"><div class="category-dot" style="background:#6366f1"></div>Web Engineering</div>
+        <h2 class="blog-title">HTTP Error Codes <em>Explained</em></h2>
+      </div>
+      <div class="blog-card-body">
+        <p class="blog-description">Complete guide to all HTTP status codes from 1xx to 5xx. Learn what each code means, when they occur, and how to handle them with real-world examples for developers and DevOps engineers.</p>
+        <div class="blog-tags">
+          <span class="blog-tag">#HTTP</span>
+          <span class="blog-tag">#API</span>
+          <span class="blog-tag">#WebDevelopment</span>
+        </div>
+        <div class="blog-footer">
+          <span class="read-time">~8 min read</span>
+          <span class="read-btn">Read Article →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Blog 2: Shell Scripting -->
+    <a href="/blog/shell-scripting/" class="blog-card shell" data-filter="shell">
+      <div class="blog-card-header">
+        <div class="card-category"><div class="category-dot" style="background:#06b6d4"></div>DevOps · Automation</div>
+        <h2 class="blog-title">Shell Scripting <em>Mastery</em></h2>
+      </div>
+      <div class="blog-card-body">
+        <p class="blog-description">Master Bash from basics to advanced. Learn variables, loops, functions, arrays, text processing, and real-world automation techniques. Perfect for DevOps engineers and system administrators.</p>
+        <div class="blog-tags">
+          <span class="blog-tag">#Bash</span>
+          <span class="blog-tag">#Linux</span>
+          <span class="blog-tag">#Automation</span>
+        </div>
+        <div class="blog-footer">
+          <span class="read-time">~12 min read</span>
+          <span class="read-btn">Read Article →</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Empty State (hidden by default) -->
+  <div class="empty-state" id="empty-state" style="display: none;">
+    <div class="empty-state-icon">📭</div>
+    <h3>No articles found</h3>
+    <p>Try adjusting your filters or check back soon for new content</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer reveal" style="animation-delay: .3s;">
+  <div class="footer-content">
+    <div class="footer-avatar">AY</div>
+    <div class="footer-info">
+      <h3>Anji Yarra</h3>
+      <p>AWS SAA-C03 Certified Cloud & DevOps Engineer. Writing about cloud infrastructure, automation, and DevOps best practices.</p>
+    </div>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.anjidevops.online" class="footer-link">🏠 Home</a>
+    <a href="https://www.linkedin.com/in/anjiyarra/" target="_blank" class="footer-link">💼 LinkedIn</a>
+    <a href="mailto:anjiyarra.aws@gmail.com" class="footer-link">✉️ Email</a>
+  </div>
+</div>
+
+<script>
+// Progress bar
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const p = (scrollY / (document.body.scrollHeight - innerHeight)) * 100;
+  prog.style.width = p + '%';
+});
+
+// Filter functionality
+const filterBtns = document.querySelectorAll('.filter-btn');
+const blogCards = document.querySelectorAll('.blog-card');
+const emptyState = document.getElementById('empty-state');
+const blogsGrid = document.getElementById('blogs-grid');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Update active button
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const filter = btn.dataset.filter;
+    let visibleCount = 0;
+    
+    // Filter cards
+    blogCards.forEach(card => {
+      if (filter === 'all' || card.dataset.filter === filter) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    
+    // Show/hide empty state
+    if (visibleCount === 0) {
+      emptyState.style.display = 'block';
+      blogsGrid.style.display = 'none';
+    } else {
+      emptyState.style.display = 'none';
+      blogsGrid.style.display = 'grid';
+    }
+  });
+});
+
+// Scroll reveal
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// Update post count
+document.getElementById('post-count').textContent = blogCards.length;
+</script>
 </body>
 </html>

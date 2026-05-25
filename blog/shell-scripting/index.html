@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Complete Shell Scripting guide — Bash from basics to advanced automation with real-world DevOps examples.">
-<meta name="keywords" content="shell scripting, bash, linux, devops, automation, sysadmin, tutorial, guide">
+<meta name="description" content="Complete Shell Scripting guide covering Bash from basics to advanced automation. Perfect for DevOps engineers and system administrators.">
+<meta name="keywords" content="shell scripting, bash, linux, devops, automation, sysadmin, tutorial">
 <meta name="author" content="Anji Yarra">
 <meta property="og:title" content="Shell Scripting Mastery: Complete Guide | AnjiDevOps">
-<meta property="og:description" content="Master Bash shell scripting with comprehensive examples. Variables, loops, functions, arrays, and advanced automation techniques for DevOps engineers.">
+<meta property="og:description" content="Master Bash shell scripting with comprehensive examples covering variables, loops, functions, arrays, and advanced automation techniques.">
 <meta property="og:url" content="https://anjidevops.online/blog/shell-scripting/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="AnjiDevOps">
@@ -23,12 +23,11 @@
   --muted:    #64748b;
   --light:    #94a3b8;
   /* Category colours */
-  --c1:  #6366f1; --c1bg: rgba(99,102,241,0.1);  --c1b: rgba(99,102,241,0.25);
-  --c2:  #22c55e; --c2bg: rgba(34,197,94,0.08);   --c2b: rgba(34,197,94,0.25);
-  --c3:  #f59e0b; --c3bg: rgba(245,158,11,0.08);  --c3b: rgba(245,158,11,0.25);
-  --c4:  #ef4444; --c4bg: rgba(239,68,68,0.08);   --c4b: rgba(239,68,68,0.25);
-  --c5:  #a855f7; --c5bg: rgba(168,85,247,0.08);  --c5b: rgba(168,85,247,0.25);
-  --c6:  #06b6d4; --c6bg: rgba(6,182,212,0.08);   --c6b: rgba(6,182,212,0.25);
+  --c1:  #8b5cf6; --c1bg: rgba(139,92,246,0.1);  --c1b: rgba(139,92,246,0.25);
+  --c2:  #06b6d4; --c2bg: rgba(6,182,212,0.08);  --c2b: rgba(6,182,212,0.25);
+  --c3:  #f59e0b; --c3bg: rgba(245,158,11,0.08); --c3b: rgba(245,158,11,0.25);
+  --c4:  #10b981; --c4bg: rgba(16,185,129,0.08); --c4b: rgba(16,185,129,0.25);
+  --c5:  #3b82f6; --c5bg: rgba(59,130,246,0.08); --c5b: rgba(59,130,246,0.25);
   --teal: #00e5c3;
   --blue: #3b82f6;
 }
@@ -168,8 +167,7 @@ nav {
 .filter-btn[data-cat="variables"].active { background: var(--c2bg); border-color: var(--c2b); color: var(--c2); }
 .filter-btn[data-cat="operators"].active { background: var(--c3bg); border-color: var(--c3b); color: var(--c3); }
 .filter-btn[data-cat="control"].active { background: var(--c4bg); border-color: var(--c4b); color: var(--c4); }
-.filter-btn[data-cat="functions"].active { background: var(--c5bg); border-color: var(--c5b); color: var(--c5); }
-.filter-btn[data-cat="advanced"].active { background: var(--c6bg); border-color: var(--c6b); color: var(--c6); }
+.filter-btn[data-cat="advanced"].active { background: var(--c5bg); border-color: var(--c5b); color: var(--c5); }
 .filter-dot { width: 7px; height: 7px; border-radius: 50%; }
 
 /* ── MAIN LAYOUT ── */
@@ -222,35 +220,31 @@ nav {
 }
 .sh-desc { font-size: 12px; color: rgba(255,255,255,.55); font-family: 'DM Mono', monospace; letter-spacing: .5px; }
 
-/* Section colors */
-.s-basics .section-header { background: var(--c1bg); border: 1px solid var(--c1b); }
-.s-basics .sh-badge { background: var(--c1bg); color: var(--c1); border: 1px solid var(--c1b); }
-.s-basics .sh-title { color: var(--c1); }
+/* Basics */
+.sbasics .section-header { background: var(--c1bg); border: 1px solid var(--c1b); }
+.sbasics .sh-badge { background: var(--c1bg); color: var(--c1); border: 1px solid var(--c1b); }
+.sbasics .sh-title { color: var(--c1); }
+/* Variables */
+.svariables .section-header { background: var(--c2bg); border: 1px solid var(--c2b); }
+.svariables .sh-badge { background: var(--c2bg); color: var(--c2); border: 1px solid var(--c2b); }
+.svariables .sh-title { color: var(--c2); }
+/* Operators */
+.soperators .section-header { background: var(--c3bg); border: 1px solid var(--c3b); }
+.soperators .sh-badge { background: var(--c3bg); color: var(--c3); border: 1px solid var(--c3b); }
+.soperators .sh-title { color: var(--c3); }
+/* Control Flow */
+.scontrol .section-header { background: var(--c4bg); border: 1px solid var(--c4b); }
+.scontrol .sh-badge { background: var(--c4bg); color: var(--c4); border: 1px solid var(--c4b); }
+.scontrol .sh-title { color: var(--c4); }
+/* Advanced */
+.sadvanced .section-header { background: var(--c5bg); border: 1px solid var(--c5b); }
+.sadvanced .sh-badge { background: var(--c5bg); color: var(--c5); border: 1px solid var(--c5b); }
+.sadvanced .sh-title { color: var(--c5); }
 
-.s-variables .section-header { background: var(--c2bg); border: 1px solid var(--c2b); }
-.s-variables .sh-badge { background: var(--c2bg); color: var(--c2); border: 1px solid var(--c2b); }
-.s-variables .sh-title { color: var(--c2); }
+/* ── TOPIC CARDS ── */
+.topics-grid { display: flex; flex-direction: column; gap: 12px; }
 
-.s-operators .section-header { background: var(--c3bg); border: 1px solid var(--c3b); }
-.s-operators .sh-badge { background: var(--c3bg); color: var(--c3); border: 1px solid var(--c3b); }
-.s-operators .sh-title { color: var(--c3); }
-
-.s-control .section-header { background: var(--c4bg); border: 1px solid var(--c4b); }
-.s-control .sh-badge { background: var(--c4bg); color: var(--c4); border: 1px solid var(--c4b); }
-.s-control .sh-title { color: var(--c4); }
-
-.s-functions .section-header { background: var(--c5bg); border: 1px solid var(--c5b); }
-.s-functions .sh-badge { background: var(--c5bg); color: var(--c5); border: 1px solid var(--c5b); }
-.s-functions .sh-title { color: var(--c5); }
-
-.s-advanced .section-header { background: var(--c6bg); border: 1px solid var(--c6b); }
-.s-advanced .sh-badge { background: var(--c6bg); color: var(--c6); border: 1px solid var(--c6b); }
-.s-advanced .sh-title { color: var(--c6); }
-
-/* ── CODE CARDS ── */
-.codes-grid { display: flex; flex-direction: column; gap: 12px; }
-
-.code-card {
+.topic-card {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -258,80 +252,67 @@ nav {
   transition: all .3s;
   cursor: pointer;
 }
-.code-card:hover {
+.topic-card:hover {
   border-color: rgba(255,255,255,.14);
   transform: translateX(4px);
   box-shadow: 0 8px 32px rgba(0,0,0,.3);
 }
 
-.code-card-top {
+.topic-card-top {
   display: flex; align-items: center; gap: 16px;
   padding: 18px 22px;
 }
 
-.code-num {
+.topic-name {
   font-family: 'DM Mono', monospace;
-  font-size: 22px; font-weight: 500;
+  font-size: 14px; font-weight: 500;
   flex-shrink: 0; min-width: 60px;
-  transition: all .3s;
-  position: relative;
+  color: var(--light);
 }
 
-/* copy on click */
-.code-num::after {
-  content: 'COPY';
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; letter-spacing: 2px;
-  background: inherit; border-radius: 4px;
-  opacity: 0; transition: opacity .2s;
-}
-.code-card:hover .code-num::after { opacity: 1; }
-.code-card:hover .code-num { opacity: 0; }
-
-.code-card-info { flex: 1; min-width: 0; }
-.code-name {
+.topic-card-info { flex: 1; min-width: 0; }
+.topic-title {
   font-size: 15px; font-weight: 600; color: var(--white);
   margin-bottom: 4px;
 }
-.code-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.topic-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
 
-.code-arrow {
+.topic-arrow {
   flex-shrink: 0; color: var(--muted); font-size: 14px;
   transition: transform .25s, color .25s;
 }
-.code-card:hover .code-arrow { transform: translateX(3px); color: var(--white); }
+.topic-card:hover .topic-arrow { transform: translateX(3px); color: var(--white); }
 
-.code-card-body {
+.topic-card-body {
   display: none;
   padding: 0 22px 20px;
   border-top: 1px solid var(--border);
 }
-.code-card-body.open { display: block; }
+.topic-card-body.open { display: block; }
 
-.code-body-inner { padding-top: 18px; }
-.cbd-desc {
+.topic-body-inner { padding-top: 18px; }
+.tbi-desc {
   font-size: 14px; color: var(--light); line-height: 1.75;
   margin-bottom: 16px; font-weight: 300;
 }
-.cbd-example {
+.tbi-example {
   background: rgba(0,0,0,.3);
   border: 1px solid rgba(255,255,255,.06);
   border-radius: 8px;
   padding: 14px 18px;
   margin-bottom: 12px;
 }
-.cbd-example-label {
+.tbi-example-label {
   font-family: 'DM Mono', monospace; font-size: 9px;
   color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
   margin-bottom: 8px;
 }
-.cbd-example-code {
+.tbi-example-code {
   font-family: 'DM Mono', monospace; font-size: 12px;
   color: var(--teal); line-height: 1.6;
 }
-.cbd-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.cbd-tag {
+.tbi-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tbi-tag {
   font-family: 'DM Mono', monospace; font-size: 10px;
   padding: 3px 10px; border-radius: 100px;
   background: rgba(255,255,255,.04);
@@ -340,18 +321,16 @@ nav {
 }
 
 /* Colour per category */
-.s-basics .code-num { color: var(--c1); }
-.s-basics .code-card { border-left: 2px solid var(--c1); }
-.s-variables .code-num { color: var(--c2); }
-.s-variables .code-card { border-left: 2px solid var(--c2); }
-.s-operators .code-num { color: var(--c3); }
-.s-operators .code-card { border-left: 2px solid var(--c3); }
-.s-control .code-num { color: var(--c4); }
-.s-control .code-card { border-left: 2px solid var(--c4); }
-.s-functions .code-num { color: var(--c5); }
-.s-functions .code-card { border-left: 2px solid var(--c5); }
-.s-advanced .code-num { color: var(--c6); }
-.s-advanced .code-card { border-left: 2px solid var(--c6); }
+.sbasics .topic-name { color: var(--c1); }
+.sbasics .topic-card { border-left: 2px solid var(--c1); }
+.svariables .topic-name { color: var(--c2); }
+.svariables .topic-card { border-left: 2px solid var(--c2); }
+.soperators .topic-name { color: var(--c3); }
+.soperators .topic-card { border-left: 2px solid var(--c3); }
+.scontrol .topic-name { color: var(--c4); }
+.scontrol .topic-card { border-left: 2px solid var(--c4); }
+.sadvanced .topic-name { color: var(--c5); }
+.sadvanced .topic-card { border-left: 2px solid var(--c5); }
 
 /* ── SIDEBAR TOC ── */
 .sidebar { position: sticky; top: 80px; }
@@ -476,18 +455,18 @@ nav {
 
 <!-- NAV -->
 <nav>
-  <a href="https://anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
+  <a href="https://www.anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
   <div class="nav-right">
-    <a href="https://anjidevops.online/blog/" class="nav-link">← All Posts</a>
+    <a href="https://www.anjidevops.online/blog/" class="nav-link">← All Posts</a>
     <span class="nav-tag">Blog</span>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="blog-hero">
-  <div class="blog-category"><div class="blog-category-dot"></div>Linux · Automation · DevOps</div>
+  <div class="blog-category"><div class="blog-category-dot"></div>DevOps · Automation · Linux</div>
   <h1 class="blog-title">Shell Scripting <em>Mastery</em><br>Complete Guide</h1>
-  <p class="blog-subtitle">Master Bash from basics to advanced automation. Variables, loops, functions, arrays, text processing, and real-world DevOps techniques with practical examples.</p>
+  <p class="blog-subtitle">Master Bash from basics to advanced — variables, loops, functions, arrays, text processing, and real-world automation techniques. For DevOps engineers, system administrators, and developers.</p>
   <div class="blog-meta">
     <div class="meta-author">
       <div class="meta-avatar">AY</div>
@@ -499,7 +478,7 @@ nav {
     <div class="meta-divider"></div>
     <div class="meta-info">May 2026</div>
     <div class="meta-divider"></div>
-    <div class="meta-info">~15 min read</div>
+    <div class="meta-info">~12 min read</div>
     <div class="meta-divider"></div>
     <div class="meta-info">50+ examples</div>
   </div>
@@ -514,8 +493,7 @@ nav {
     <button class="filter-btn" data-cat="variables"><span class="filter-dot" style="background:var(--c2)"></span>Variables</button>
     <button class="filter-btn" data-cat="operators"><span class="filter-dot" style="background:var(--c3)"></span>Operators</button>
     <button class="filter-btn" data-cat="control"><span class="filter-dot" style="background:var(--c4)"></span>Control Flow</button>
-    <button class="filter-btn" data-cat="functions"><span class="filter-dot" style="background:var(--c5)"></span>Functions</button>
-    <button class="filter-btn" data-cat="advanced"><span class="filter-dot" style="background:var(--c6)"></span>Advanced</button>
+    <button class="filter-btn" data-cat="advanced"><span class="filter-dot" style="background:var(--c5)"></span>Advanced</button>
   </div>
 </div>
 
@@ -524,66 +502,750 @@ nav {
   <div class="content">
 
     <div class="intro-block reveal">
-      Shell scripting is <strong>the invisible backbone of DevOps</strong>. Every AWS Lambda uses it, every deployment pipeline runs it, every system administrator relies on it. As a Cloud Engineer, you'll write scripts daily — automating deployments, monitoring systems, processing logs, managing infrastructure. Mastering Bash isn't optional; it's essential to working efficiently in production.
+      Shell scripting is the <strong>backbone of DevOps automation</strong>. Whether you're deploying infrastructure, monitoring systems, or processing logs, bash is everywhere. In <strong>AWS</strong>, you'll use shell scripts in EC2 user data, Lambda, Systems Manager, and deployment pipelines. Mastering shell scripting saves hours and prevents errors — you'll write once, run reliably.
     </div>
 
-    <!-- BASICS -->
-    <div class="code-section s-basics reveal" id="sec-basics" data-cat="basics">
-      <div class="section-header" data-bg="Basics">
+    <!-- Basics -->
+    <div class="code-section sbasics reveal" id="sec-basics" data-cat="basics">
+      <div class="section-header" data-bg="1">
         <div class="sh-badge">1</div>
         <div class="sh-info">
-          <div class="sh-title">Getting Started</div>
-          <div class="sh-desc">Shebang, executable scripts, and basic structure</div>
+          <div class="sh-title">Basics & Getting Started</div>
+          <div class="sh-desc">Shebang, executable scripts, first program</div>
         </div>
       </div>
-      <div class="codes-grid">
-        <div class="code-card" data-code="#!/bin/bash">
-          <div class="code-card-top">
-            <div class="code-num">Shebang</div>
-            <div class="code-card-info">
-              <div class="code-name">The First Line</div>
-              <div class="code-summary">Tells the OS which interpreter to use</div>
+      <div class="topics-grid">
+        <div class="topic-card" data-topic="shebang">
+          <div class="topic-card-top">
+            <div class="topic-name">#!/bin/bash</div>
+            <div class="topic-card-info">
+              <div class="topic-title">The Shebang</div>
+              <div class="topic-summary">Tells the system which interpreter to use for this script</div>
             </div>
-            <div class="code-arrow">›</div>
+            <div class="topic-arrow">›</div>
           </div>
-          <div class="code-card-body">
-            <div class="code-body-inner">
-              <p class="cbd-desc">Always start your script with #!/bin/bash. This shebang tells Linux to execute the file using the Bash interpreter. Without it, the OS won't know how to run it.</p>
-              <div class="cbd-example">
-                <div class="cbd-example-label">Example</div>
-                <div class="cbd-example-code">#!/bin/bash<br># This is a comment<br>echo "Hello, World!"</div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">The shebang (#!) is the first line of every script. It specifies the interpreter. Always use #!/bin/bash for maximum compatibility on Linux/Mac systems.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">#!/bin/bash
+# Your script starts here
+echo "Hello, World!"</div>
               </div>
-              <div class="cbd-tags"><span class="cbd-tag">Essential</span><span class="cbd-tag">First line</span><span class="cbd-tag">Interpreter</span></div>
+              <div class="tbi-tags"><span class="tbi-tag">Mandatory</span><span class="tbi-tag">First line</span><span class="tbi-tag">Bash compatible</span></div>
             </div>
           </div>
         </div>
 
-        <div class="code-card" data-code="chmod +x">
-          <div class="code-card-top">
-            <div class="code-num">Execute</div>
-            <div class="code-card-info">
-              <div class="code-name">Make Script Executable</div>
-              <div class="code-summary">Add execute permission so you can run it</div>
+        <div class="topic-card" data-topic="executable">
+          <div class="topic-card-top">
+            <div class="topic-name">chmod +x</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Making Scripts Executable</div>
+              <div class="topic-summary">Add execute permission so you can run the script</div>
             </div>
-            <div class="code-arrow">›</div>
+            <div class="topic-arrow">›</div>
           </div>
-          <div class="code-card-body">
-            <div class="code-body-inner">
-              <p class="cbd-desc">Files aren't executable by default. Use chmod +x to grant execute permission. Then run with ./script.sh (the ./ means current directory).</p>
-              <div class="cbd-example">
-                <div class="cbd-example-label">Commands</div>
-                <div class="cbd-example-code">chmod +x hello.sh<br>./hello.sh<br><br># Output: Hello, World!</div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Without execute permission, you can't run a script directly. chmod +x adds execute permission for all users. Then use ./scriptname.sh to run it from the current directory.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Commands</div>
+                <div class="tbi-example-code">chmod +x hello.sh
+./hello.sh          # Runs the script
+bash hello.sh       # Also works (runs explicitly with bash)</div>
               </div>
-              <div class="cbd-tags"><span class="cbd-tag">Permissions</span><span class="cbd-tag">chmod</span><span class="cbd-tag">Run</span></div>
+              <div class="tbi-tags"><span class="tbi-tag">Permissions</span><span class="tbi-tag">chmod</span><span class="tbi-tag">Executable</span></div>
             </div>
           </div>
         </div>
 
-        <div class="code-card" data-code="echo">
-          <div class="code-card-top">
-            <div class="code-num">Echo</div>
-            <div class="code-card-info">
-              <div class="code-name">Print Output</div>
+        <div class="topic-card" data-topic="first-script">
+          <div class="topic-card-top">
+            <div class="topic-name">echo</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Your First Script</div>
+              <div class="topic-summary">Print text to the terminal — the hello world of bash</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">echo outputs text to stdout. It's the most basic command. Every string you want to print to the terminal goes through echo.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example Script</div>
+                <div class="tbi-example-code">#!/bin/bash
+echo "Welcome to Shell Scripting"
+echo "This is line 2"</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Output</span><span class="tbi-tag">Stdout</span><span class="tbi-tag">Print</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="comments">
+          <div class="topic-card-top">
+            <div class="topic-name">#</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Comments</div>
+              <div class="topic-summary">Document your code — lines that don't execute</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Comments start with # and are ignored by the interpreter. Always add comments explaining the purpose of your script and complex sections. The only exception: #!/bin/bash is a comment that doubles as a directive.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Good Comments</div>
+                <div class="tbi-example-code">#!/bin/bash
+# Backup script for production database
+# Author: Anji Yarra
+# Date: May 2026
+
+# Connect to RDS instance
+DB_HOST="prod-db.region.rds.amazonaws.com"</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Documentation</span><span class="tbi-tag">#symbol</span><span class="tbi-tag">Ignored</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variables -->
+    <div class="code-section svariables reveal" id="sec-variables" data-cat="variables">
+      <div class="section-header" data-bg="2">
+        <div class="sh-badge">2</div>
+        <div class="sh-info">
+          <div class="sh-title">Variables & Data</div>
+          <div class="sh-desc">Store and manipulate text and numbers</div>
+        </div>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" data-topic="var-assign">
+          <div class="topic-card-top">
+            <div class="topic-name">VAR=</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Variable Assignment</div>
+              <div class="topic-summary">Create a variable and store a value — no $ when assigning</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Variables store values. To assign: NAME=value (no spaces). To use: $NAME. Common mistake: using $ on the left side of assignment — always wrong.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Correct vs Wrong</div>
+                <div class="tbi-example-code">✓ NAME="Alice"      # Correct
+✗ $NAME="Alice"     # Wrong
+✗ NAME = "Alice"    # Wrong (spaces)</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Assignment</span><span class="tbi-tag">No $</span><span class="tbi-tag">String</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="var-use">
+          <div class="topic-card-top">
+            <div class="topic-name">$VAR</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Using Variables</div>
+              <div class="topic-summary">Access the value stored in a variable with $</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Prefix the variable name with $ to access its value. Without $, bash treats it as literal text. Always quote variables in echo to avoid word splitting.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">NAME="Cloud Engineer"
+echo $NAME              # Cloud Engineer
+echo "$NAME is AWS certified"  # Cloud Engineer is AWS certified</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Dollar sign</span><span class="tbi-tag">Quote variables</span><span class="tbi-tag">Word splitting</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="command-sub">
+          <div class="topic-card-top">
+            <div class="topic-name">$()</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Command Substitution</div>
+              <div class="topic-summary">Save the output of a command into a variable</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Use $(command) to run a command and capture its output. Modern syntax is $(). Old backtick syntax `command` still works but is discouraged.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">CURRENT_USER=$(whoami)
+TODAY=$(date +%Y-%m-%d)
+echo "User $CURRENT_USER logged in on $TODAY"</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Capture output</span><span class="tbi-tag">Modern syntax</span><span class="tbi-tag">Backticks deprecated</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="special-vars">
+          <div class="topic-card-top">
+            <div class="topic-name">$1 $# $$</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Special Variables</div>
+              <div class="topic-summary">Bash provides variables with automatic values</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Bash automatically sets variables: $0=script name, $1=$2=$3=arguments, $#=number of arguments, $?=exit code of last command, $$=process ID.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example Script</div>
+                <div class="tbi-example-code">#!/bin/bash
+echo "Script: $0"
+echo "First arg: $1"
+echo "Total args: $#"
+echo "Last exit code: $?"</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Arguments</span><span class="tbi-tag">$#</span><span class="tbi-tag">$?</span><span class="tbi-tag">Automatic</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operators -->
+    <div class="code-section soperators reveal" id="sec-operators" data-cat="operators">
+      <div class="section-header" data-bg="3">
+        <div class="sh-badge">3</div>
+        <div class="sh-info">
+          <div class="sh-title">Operators</div>
+          <div class="sh-desc">Arithmetic, comparison, logical, file tests</div>
+        </div>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" data-topic="arithmetic">
+          <div class="topic-card-top">
+            <div class="topic-name">$((...))</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Arithmetic Operations</div>
+              <div class="topic-summary">Do math: +, -, *, /, %</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Use $(( )) for arithmetic. Inside the double parentheses, you don't need $ for variables. Supports: +, -, *, /, % (modulo), ++, --.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Examples</div>
+                <div class="tbi-example-code">A=10
+B=3
+echo $((A + B))     # 13
+echo $((A * B))     # 30
+echo $((A / B))     # 3
+echo $((A % B))     # 1</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Math</span><span class="tbi-tag">Double parens</span><span class="tbi-tag">No $</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="comparison">
+          <div class="topic-card-top">
+            <div class="topic-name">-eq -lt -gt</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Number Comparison</div>
+              <div class="topic-summary">Compare: -eq, -ne, -lt, -le, -gt, -ge</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Compare numbers with test operators inside [ ]. Don't use = or <: they're for strings. Use -eq for "equal to", -lt for "less than", etc.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Comparison Operators</div>
+                <div class="tbi-example-code">[ $A -eq $B ]   # Equal to
+[ $A -ne $B ]   # Not equal
+[ $A -lt $B ]   # Less than
+[ $A -le $B ]   # Less or equal
+[ $A -gt $B ]   # Greater than
+[ $A -ge $B ]   # Greater or equal</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Numbers only</span><span class="tbi-tag">Square brackets</span><span class="tbi-tag">Test command</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="file-test">
+          <div class="topic-card-top">
+            <div class="topic-name">-f -d -e</div>
+            <div class="topic-card-info">
+              <div class="topic-title">File Tests</div>
+              <div class="topic-summary">Check: file exists, is directory, readable, writable</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Test file properties: -e (exists), -f (is file), -d (is directory), -r (readable), -w (writable), -x (executable), -s (non-empty).</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">if [ -f "config.json" ]; then
+  echo "Config file exists"
+fi
+
+if [ -d "/var/log" ]; then
+  echo "Log directory found"
+fi</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Files</span><span class="tbi-tag">Directories</span><span class="tbi-tag">Permissions</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="logical">
+          <div class="topic-card-top">
+            <div class="topic-name">&&  ||  !</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Logical Operators</div>
+              <div class="topic-summary">AND, OR, NOT — combine conditions</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">AND (&&): both must be true. OR (||): at least one true. NOT (!): negates the condition.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Examples</div>
+                <div class="tbi-example-code">[ $AGE -gt 18 ] && echo "Adult"
+[ -f "file.txt" ] || echo "File missing"
+[ ! -d "/tmp" ] && echo "/tmp doesn't exist"</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">AND</span><span class="tbi-tag">OR</span><span class="tbi-tag">NOT</span><span class="tbi-tag">Conditions</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Flow -->
+    <div class="code-section scontrol reveal" id="sec-control" data-cat="control">
+      <div class="section-header" data-bg="4">
+        <div class="sh-badge">4</div>
+        <div class="sh-info">
+          <div class="sh-title">Control Flow</div>
+          <div class="sh-desc">if/else, for loops, while loops, case statements</div>
+        </div>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" data-topic="if">
+          <div class="topic-card-top">
+            <div class="topic-name">if then fi</div>
+            <div class="topic-card-info">
+              <div class="topic-title">if/else Conditionals</div>
+              <div class="topic-summary">Execute code based on conditions</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">if tests a condition. If true, execute the then block. Use elif for multiple branches, else for the fallback. Always end with fi.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">if [ $AGE -ge 18 ]; then
+  echo "Adult"
+elif [ $AGE -ge 13 ]; then
+  echo "Teenager"
+else
+  echo "Child"
+fi</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Conditionals</span><span class="tbi-tag">then fi</span><span class="tbi-tag">elif</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="for">
+          <div class="topic-card-top">
+            <div class="topic-name">for do done</div>
+            <div class="topic-card-info">
+              <div class="topic-title">for Loops</div>
+              <div class="topic-summary">Iterate over ranges, lists, or files</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">for loops iterate. Common syntaxes: for i in {1..10}, for item in list, for ((i=0; i<10; i++)). Always end with done.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Examples</div>
+                <div class="tbi-example-code">for i in {1..5}; do
+  echo "Number: $i"
+done
+
+for file in *.log; do
+  echo "Processing $file"
+done</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Loop</span><span class="tbi-tag">Iterate</span><span class="tbi-tag">done</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="while">
+          <div class="topic-card-top">
+            <div class="topic-name">while do done</div>
+            <div class="topic-card-info">
+              <div class="topic-title">while Loops</div>
+              <div class="topic-summary">Loop while condition is true</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">while loops run as long as condition is true. Common for reading files or processing data. Always ensure the condition eventually becomes false to avoid infinite loops.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">COUNT=1
+while [ $COUNT -le 5 ]; do
+  echo "Count: $COUNT"
+  COUNT=$((COUNT + 1))
+done</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Loop</span><span class="tbi-tag">Condition</span><span class="tbi-tag">done</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="case">
+          <div class="topic-card-top">
+            <div class="topic-name">case esac</div>
+            <div class="topic-card-info">
+              <div class="topic-title">case Statements</div>
+              <div class="topic-summary">Switch on value — cleaner than multiple if/elif</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">case evaluates a value against patterns. Cleaner than if-elif-else when checking one variable against many values. Each pattern ends with ;;.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">case $DAY in
+  Monday) echo "Start of week" ;;
+  Friday) echo "TGIF" ;;
+  Saturday|Sunday) echo "Weekend" ;;
+  *) echo "Weekday" ;;
+esac</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Switch</span><span class="tbi-tag">Pattern matching</span><span class="tbi-tag">esac</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced -->
+    <div class="code-section sadvanced reveal" id="sec-advanced" data-cat="advanced">
+      <div class="section-header" data-bg="5">
+        <div class="sh-badge">5</div>
+        <div class="sh-info">
+          <div class="sh-title">Advanced Topics</div>
+          <div class="sh-desc">Functions, arrays, text processing, error handling</div>
+        </div>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" data-topic="functions">
+          <div class="topic-card-top">
+            <div class="topic-name">function()</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Functions</div>
+              <div class="topic-summary">Reusable code blocks with parameters</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Functions group code for reuse. Define with function_name() { }. Call by name. Access arguments via $1, $2, etc. Return values with return or echo.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">greet() {
+  echo "Hello, $1!"
+}
+
+greet "Alice"    # Calls the function
+greet "Bob"      # Calls again</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Reusable</span><span class="tbi-tag">Parameters</span><span class="tbi-tag">Modular</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="arrays">
+          <div class="topic-card-top">
+            <div class="topic-name">ARRAY=()</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Arrays</div>
+              <div class="topic-summary">Store lists of values — strings or numbers</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">Arrays store lists. Create with (space-separated values). Access with ${array[index]}. Use ${#array[@]} for length and ${array[@]} for all elements.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Example</div>
+                <div class="tbi-example-code">FRUITS=(apple banana orange)
+echo ${FRUITS[0]}    # apple
+echo ${FRUITS[@]}    # All: apple banana orange
+echo ${#FRUITS[@]}   # Length: 3</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Lists</span><span class="tbi-tag">Index</span><span class="tbi-tag">Iterate</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="sed">
+          <div class="topic-card-top">
+            <div class="topic-name">sed</div>
+            <div class="topic-card-info">
+              <div class="topic-title">sed — Stream Editor</div>
+              <div class="topic-summary">Powerful text replacement and manipulation</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">sed modifies text. Common use: sed 's/old/new/g' replaces all occurrences of "old" with "new" in a file. The g flag means "global" (all on each line).</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Examples</div>
+                <div class="tbi-example-code">sed 's/ERROR/ALERT/g' log.txt    # Replace all
+sed '2d' file.txt                 # Delete line 2
+sed -i 's/old/new/g' file.txt     # In-place edit</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Text processing</span><span class="tbi-tag">Regex</span><span class="tbi-tag">Replace</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="awk">
+          <div class="topic-card-top">
+            <div class="topic-name">awk</div>
+            <div class="topic-card-info">
+              <div class="topic-title">awk — Column Processing</div>
+              <div class="topic-summary">Extract and process columns from text</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">awk processes text in columns. Use $1, $2, etc. for columns. Common: awk '{print $1, $3}' shows columns 1 and 3. Perfect for parsing log files.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Examples</div>
+                <div class="tbi-example-code">awk '{print $1}' access.log           # 1st column
+awk '{sum += $2} END {print sum}' data.txt  # Sum column 2
+awk -F: '{print $1}' /etc/passwd    # Parse /etc/passwd</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Columns</span><span class="tbi-tag">$1 $2</span><span class="tbi-tag">Delimiter</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="error-handling">
+          <div class="topic-card-top">
+            <div class="topic-name">set -e</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Error Handling</div>
+              <div class="topic-summary">Make scripts fail fast on errors</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">set -e makes the script exit if any command fails. set -u errors on undefined variables. set -o pipefail exits if any pipe fails. Add these at the top for robust scripts.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Best Practice</div>
+                <div class="tbi-example-code">#!/bin/bash
+set -e              # Exit on error
+set -u              # Error on undefined vars
+set -o pipefail     # Pipe failures exit script
+
+# Rest of script...</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Robustness</span><span class="tbi-tag">Fail fast</span><span class="tbi-tag">Debugging</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic-card" data-topic="cron">
+          <div class="topic-card-top">
+            <div class="topic-name">crontab</div>
+            <div class="topic-card-info">
+              <div class="topic-title">Cron Jobs — Scheduled Scripts</div>
+              <div class="topic-summary">Run scripts automatically on a schedule</div>
+            </div>
+            <div class="topic-arrow">›</div>
+          </div>
+          <div class="topic-card-body">
+            <div class="topic-body-inner">
+              <p class="tbi-desc">crontab schedules scripts to run at specific times. Format: minute hour day month weekday command. Perfect for backups, health checks, log rotation.</p>
+              <div class="tbi-example">
+                <div class="tbi-example-label">Examples</div>
+                <div class="tbi-example-code">0 2 * * * /home/user/backup.sh    # Daily at 2 AM
+*/15 * * * * /home/user/check.sh  # Every 15 minutes
+0 0 1 * * /home/user/monthly.sh   # 1st of month</div>
+              </div>
+              <div class="tbi-tags"><span class="tbi-tag">Automation</span><span class="tbi-tag">Schedule</span><span class="tbi-tag">Maintenance</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="toc-card">
+      <div class="toc-title">On This Page</div>
+      <div class="toc-list">
+        <a href="#sec-basics" class="toc-item" data-sec="basics">
+          <span class="toc-dot" style="background:var(--c1)"></span>Basics
+        </a>
+        <a href="#sec-variables" class="toc-item" data-sec="variables">
+          <span class="toc-dot" style="background:var(--c2)"></span>Variables
+        </a>
+        <a href="#sec-operators" class="toc-item" data-sec="operators">
+          <span class="toc-dot" style="background:var(--c3)"></span>Operators
+        </a>
+        <a href="#sec-control" class="toc-item" data-sec="control">
+          <span class="toc-dot" style="background:var(--c4)"></span>Control Flow
+        </a>
+        <a href="#sec-advanced" class="toc-item" data-sec="advanced">
+          <span class="toc-dot" style="background:var(--c5)"></span>Advanced
+        </a>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="toc-title" style="margin-bottom:14px">Coverage</div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-n" style="color:var(--c1)">4</div><div class="stat-l">Basics</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c2)">4</div><div class="stat-l">Variables</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c3)">4</div><div class="stat-l">Operators</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c4)">4</div><div class="stat-l">Control Flow</div></div>
+        <div class="stat-box" style="grid-column:1/-1"><div class="stat-n" style="color:var(--c5)">6</div><div class="stat-l">Advanced Topics</div></div>
+      </div>
+    </div>
+
+    <div class="share-card">
+      <div class="share-title">Found this useful?</div>
+      <div class="share-sub">Share with your DevOps team on LinkedIn</div>
+      <button class="share-btn" onclick="shareLinkedIn()">
+        <span>Share on LinkedIn</span>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<div class="blog-footer">
+  <div class="footer-author">
+    <div class="footer-avatar">AY</div>
+    <div class="footer-name">Anji Yarra</div>
+    <div class="footer-bio">AWS SAA-C03 Certified Cloud & DevOps Engineer. Building production-grade infrastructure on AWS. Expert in shell scripting, Linux, and automation.</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.anjidevops.online" class="footer-link">🏠 anjidevops.online</a>
+    <a href="https://www.linkedin.com/in/anjiyarra/" target="_blank" class="footer-link">💼 LinkedIn</a>
+    <a href="https://www.anjidevops.online/blog/" class="footer-link">📚 More Posts</a>
+    <a href="mailto:anjiyarra.aws@gmail.com" class="footer-link">✉️ Contact</a>
+  </div>
+</div>
+
+<script>
+// Progress bar
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const p = (scrollY / (document.body.scrollHeight - innerHeight)) * 100;
+  prog.style.width = p + '%';
+});
+
+// Card expand/collapse
+document.querySelectorAll('.topic-card').forEach(card => {
+  card.addEventListener('click', e => {
+    if (e.target.closest('.share-btn')) return;
+    const body = card.querySelector('.topic-card-body');
+    const isOpen = body.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.topic-card-body.open').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.topic-arrow').forEach(a => a.textContent = '›');
+    if (!isOpen) {
+      body.classList.add('open');
+      card.querySelector('.topic-arrow').textContent = '⌄';
+    }
+    // Copy topic name
+    const topic = card.dataset.topic;
+    if (topic) {
+      navigator.clipboard?.writeText(topic).catch(() => {});
+      const toast = document.getElementById('toast');
+      toast.textContent = `Copied: ${topic}`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+  });
+});
+
+// Filter tabs
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('.code-section').forEach(sec => {
+      if (cat === 'all' || sec.dataset.cat === cat) {
+        sec.style.display = '';
+      } else {
+        sec.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Sidebar TOC active state
+const sections = document.querySelectorAll('.code-section');
+const tocItems = document.querySelectorAll('.toc-item');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocItems.forEach(t => t.classList.remove('active'));
+      const id = e.target.id.replace('sec-','');
+      const active = document.querySelector(`.toc-item[data-sec="${id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => io.observe(s));
+
+// Scroll reveal
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// LinkedIn share
+function shareLinkedIn() {
+  const url = encodeURIComponent('https://anjidevops.online/blog/shell-scripting/');
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+}
+</script>
+</body>
+</html>v>
               <div class="code-summary">Display text or variable values</div>
             </div>
             <div class="code-arrow">›</div>
