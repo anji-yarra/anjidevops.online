@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete Shell Scripting guide covering Bash from basics to advanced automation. Perfect for DevOps engineers and system administrators.">
+<meta name="keywords" content="shell scripting, bash, linux, devops, automation, sysadmin, tutorial, awk, sed, cron jobs">
+<meta name="author" content="Anji Yarra">
+<meta property="og:title" content="Shell Scripting Mastery: Complete Guide | AnjiDevOps">
+<meta property="og:description" content="Master Bash shell scripting from basics to advanced. Variables, loops, functions, arrays, text processing, and real-world DevOps automation.">
+<meta property="og:url" content="https://anjidevops.online/blog/shell-scripting/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AnjiDevOps">
+<title>Shell Scripting Mastery: Complete Guide | AnjiDevOps</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #07111f;
+  --navy:     #0c1a30;
+  --panel:    rgba(12,26,48,0.8);
+  --border:   rgba(255,255,255,0.07);
+  --white:    #f8fafc;
+  --muted:    #64748b;
+  --light:    #94a3b8;
+  /* Category colours */
+  --c1:  #8b5cf6; --c1bg: rgba(139,92,246,0.1);  --c1b: rgba(139,92,246,0.25);
+  --c2:  #22c55e; --c2bg: rgba(34,197,94,0.08);   --c2b: rgba(34,197,94,0.25);
+  --c3:  #f59e0b; --c3bg: rgba(245,158,11,0.08);  --c3b: rgba(245,158,11,0.25);
+  --c4:  #10b981; --c4bg: rgba(16,185,129,0.08);  --c4b: rgba(16,185,129,0.25);
+  --c5:  #ef4444; --c5bg: rgba(239,68,68,0.08);   --c5b: rgba(239,68,68,0.25);
+  --c6:  #3b82f6; --c6bg: rgba(59,130,246,0.08);  --c6b: rgba(59,130,246,0.25);
+  --c7:  #06b6d4; --c7bg: rgba(6,182,212,0.08);   --c7b: rgba(6,182,212,0.25);
+  --c8:  #a855f7; --c8bg: rgba(168,85,247,0.08);  --c8b: rgba(168,85,247,0.25);
+  --c9:  #ec4899; --c9bg: rgba(236,72,153,0.08);  --c9b: rgba(236,72,153,0.25);
+  --c10: #f97316; --c10bg: rgba(249,115,22,0.08); --c10b: rgba(249,115,22,0.25);
+  --teal: #00e5c3;
+  --blue: #3b82f6;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Subtle mesh bg */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 700px 500px at 10% 10%, rgba(0,229,195,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 85%, rgba(59,130,246,.07) 0%, transparent 60%);
+}
+
+/* ── PROGRESS BAR ── */
+#prog {
+  position: fixed; top: 0; left: 0; height: 2.5px; z-index: 999;
+  background: linear-gradient(90deg, var(--teal), var(--blue), #a855f7);
+  width: 0%; transition: width .1s;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(7,17,31,.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; color: var(--teal); letter-spacing: 1px;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 24px; }
+.nav-link {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  transition: color .2s; font-weight: 500;
+}
+.nav-link:hover { color: var(--white); }
+.nav-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 4px 12px; border-radius: 100px;
+  background: rgba(0,229,195,.08); border: 1px solid rgba(0,229,195,.2);
+  color: var(--teal); letter-spacing: 1px;
+}
+
+/* ── HERO ── */
+.blog-hero {
+  position: relative; z-index: 1;
+  padding: 80px 0 64px;
+  max-width: 860px; margin: 0 auto;
+  padding-left: 48px; padding-right: 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.blog-category {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--teal); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.blog-category-dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; }
+
+.blog-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 400; line-height: 1.1;
+  color: var(--white); letter-spacing: -.5px;
+  margin-bottom: 20px;
+}
+.blog-title em { color: var(--teal); font-style: italic; }
+
+.blog-subtitle {
+  font-size: 17px; color: var(--light); line-height: 1.7;
+  max-width: 600px; margin-bottom: 36px; font-weight: 300;
+}
+
+.blog-meta {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+}
+.meta-author {
+  display: flex; align-items: center; gap: 10px;
+}
+.meta-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #07111f;
+}
+.meta-name { font-size: 14px; font-weight: 600; }
+.meta-role { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.meta-divider { width: 1px; height: 28px; background: var(--border); }
+.meta-info { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+
+/* ── FILTER TABS ── */
+.filter-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 0 auto;
+  padding: 32px 48px 0;
+}
+.filter-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.filters {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 16px; border-radius: 100px;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: .5px; cursor: pointer;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  transition: all .25s;
+}
+.filter-btn:hover { color: var(--white); border-color: rgba(255,255,255,.15); }
+.filter-btn.active { color: var(--white); }
+.filter-btn[data-cat="all"].active { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
+.filter-btn[data-cat="basics"].active { background: var(--c1bg); border-color: var(--c1b); color: var(--c1); }
+.filter-btn[data-cat="variables"].active { background: var(--c2bg); border-color: var(--c2b); color: var(--c2); }
+.filter-btn[data-cat="operators"].active { background: var(--c3bg); border-color: var(--c3b); color: var(--c3); }
+.filter-btn[data-cat="conditionals"].active { background: var(--c4bg); border-color: var(--c4b); color: var(--c4); }
+.filter-btn[data-cat="loops"].active { background: var(--c5bg); border-color: var(--c5b); color: var(--c5); }
+.filter-btn[data-cat="functions"].active { background: var(--c6bg); border-color: var(--c6b); color: var(--c6); }
+.filter-btn[data-cat="advanced"].active { background: var(--c7bg); border-color: var(--c7b); color: var(--c7); }
+.filter-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  position: relative; z-index: 1;
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 240px;
+  gap: 48px; padding: 48px 48px 80px;
+  align-items: start;
+}
+
+/* ── CONTENT ── */
+.content { min-width: 0; }
+
+/* Intro text */
+.intro-block {
+  font-size: 16px; color: var(--light); line-height: 1.85;
+  margin-bottom: 56px; font-weight: 300;
+  border-left: 2px solid var(--teal);
+  padding-left: 20px;
+}
+.intro-block strong { color: var(--white); font-weight: 600; }
+
+/* Section header */
+.code-section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px; border-radius: 14px;
+  margin-bottom: 20px;
+  position: relative; overflow: hidden;
+}
+.section-header::before {
+  content: attr(data-bg);
+  position: absolute; right: 20px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Instrument Serif', serif;
+  font-size: 80px; font-weight: 400; opacity: .06;
+  pointer-events: none; color: white;
+}
+.sh-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px; font-weight: 500;
+  padding: 6px 16px; border-radius: 8px;
+  letter-spacing: 1px; flex-shrink: 0;
+}
+.sh-info {}
+.sh-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px; font-weight: 400; margin-bottom: 3px;
+}
+.sh-desc { font-size: 12px; color: rgba(255,255,255,.55); font-family: 'DM Mono', monospace; letter-spacing: .5px; }
+
+/* Topic Categories */
+.sBasics .section-header { background: var(--c1bg); border: 1px solid var(--c1b); }
+.sBasics .sh-badge { background: var(--c1bg); color: var(--c1); border: 1px solid var(--c1b); }
+.sBasics .sh-title { color: var(--c1); }
+
+.sVariables .section-header { background: var(--c2bg); border: 1px solid var(--c2b); }
+.sVariables .sh-badge { background: var(--c2bg); color: var(--c2); border: 1px solid var(--c2b); }
+.sVariables .sh-title { color: var(--c2); }
+
+.sOperators .section-header { background: var(--c3bg); border: 1px solid var(--c3b); }
+.sOperators .sh-badge { background: var(--c3bg); color: var(--c3); border: 1px solid var(--c3b); }
+.sOperators .sh-title { color: var(--c3); }
+
+.sConditionals .section-header { background: var(--c4bg); border: 1px solid var(--c4b); }
+.sConditionals .sh-badge { background: var(--c4bg); color: var(--c4); border: 1px solid var(--c4b); }
+.sConditionals .sh-title { color: var(--c4); }
+
+.sLoops .section-header { background: var(--c5bg); border: 1px solid var(--c5b); }
+.sLoops .sh-badge { background: var(--c5bg); color: var(--c5); border: 1px solid var(--c5b); }
+.sLoops .sh-title { color: var(--c5); }
+
+.sFunctions .section-header { background: var(--c6bg); border: 1px solid var(--c6b); }
+.sFunctions .sh-badge { background: var(--c6bg); color: var(--c6); border: 1px solid var(--c6b); }
+.sFunctions .sh-title { color: var(--c6); }
+
+.sAdvanced .section-header { background: var(--c7bg); border: 1px solid var(--c7b); }
+.sAdvanced .sh-badge { background: var(--c7bg); color: var(--c7); border: 1px solid var(--c7b); }
+.sAdvanced .sh-title { color: var(--c7); }
+
+/* ── CODE CARDS ── */
+.codes-grid { display: flex; flex-direction: column; gap: 12px; }
+
+.code-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all .3s;
+  cursor: pointer;
+}
+.code-card:hover {
+  border-color: rgba(255,255,255,.14);
+  transform: translateX(4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+
+.code-card-top {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 22px;
+}
+
+.code-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px; font-weight: 500;
+  flex-shrink: 0; min-width: 60px;
+  transition: all .3s;
+  position: relative;
+}
+
+.code-num::after {
+  content: 'COPY';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; letter-spacing: 2px;
+  background: inherit; border-radius: 4px;
+  opacity: 0; transition: opacity .2s;
+}
+.code-card:hover .code-num::after { opacity: 1; }
+.code-card:hover .code-num { opacity: 0; }
+
+.code-card-info { flex: 1; min-width: 0; }
+.code-name {
+  font-size: 15px; font-weight: 600; color: var(--white);
+  margin-bottom: 4px;
+}
+.code-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+.code-arrow {
+  flex-shrink: 0; color: var(--muted); font-size: 14px;
+  transition: transform .25s, color .25s;
+}
+.code-card:hover .code-arrow { transform: translateX(3px); color: var(--white); }
+
+.code-card-body {
+  display: none;
+  padding: 0 22px 20px;
+  border-top: 1px solid var(--border);
+}
+.code-card-body.open { display: block; }
+
+.code-body-inner { padding-top: 18px; }
+.cbd-desc {
+  font-size: 14px; color: var(--light); line-height: 1.75;
+  margin-bottom: 16px; font-weight: 300;
+}
+.cbd-example {
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+}
+.cbd-example-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cbd-example-code {
+  font-family: 'DM Mono', monospace; font-size: 12px;
+  color: var(--teal); line-height: 1.6;
+}
+.cbd-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.cbd-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 3px 10px; border-radius: 100px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  color: var(--light);
+}
+
+/* Colour per category */
+.sBasics .code-num { color: var(--c1); }
+.sBasics .code-card { border-left: 2px solid var(--c1); }
+.sVariables .code-num { color: var(--c2); }
+.sVariables .code-card { border-left: 2px solid var(--c2); }
+.sOperators .code-num { color: var(--c3); }
+.sOperators .code-card { border-left: 2px solid var(--c3); }
+.sConditionals .code-num { color: var(--c4); }
+.sConditionals .code-card { border-left: 2px solid var(--c4); }
+.sLoops .code-num { color: var(--c5); }
+.sLoops .code-card { border-left: 2px solid var(--c5); }
+.sFunctions .code-num { color: var(--c6); }
+.sFunctions .code-card { border-left: 2px solid var(--c6); }
+.sAdvanced .code-num { color: var(--c7); }
+.sAdvanced .code-card { border-left: 2px solid var(--c7); }
+
+/* ── SIDEBAR TOC ── */
+.sidebar { position: sticky; top: 80px; }
+.toc-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.toc-title {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.toc-list { display: flex; flex-direction: column; gap: 4px; }
+.toc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 8px;
+  text-decoration: none; font-size: 13px; color: var(--muted);
+  font-weight: 500; transition: all .2s;
+  border: 1px solid transparent;
+}
+.toc-item:hover { color: var(--white); background: rgba(255,255,255,.04); }
+.toc-item.active { color: var(--white); background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.08); }
+.toc-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* Share card */
+.share-card {
+  background: linear-gradient(135deg, rgba(0,229,195,.06), rgba(59,130,246,.04));
+  border: 1px solid rgba(0,229,195,.15);
+  border-radius: 16px; padding: 24px; text-align: center;
+  margin-bottom: 16px;
+}
+.share-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.share-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+.share-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #07111f; font-size: 13px; font-weight: 700;
+  text-decoration: none; transition: all .25s; cursor: pointer;
+  border: none; width: 100%;
+}
+.share-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,195,.25); }
+
+/* Stats card */
+.stats-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat-box {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; text-align: center;
+}
+.stat-n {
+  font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500;
+  line-height: 1; margin-bottom: 4px;
+}
+.stat-l { font-size: 10px; color: var(--muted); letter-spacing: .5px; }
+
+/* ── FOOTER ── */
+.blog-footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 48px;
+  max-width: 860px; margin: 0 auto;
+  text-align: center;
+}
+.footer-author {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin-bottom: 32px;
+}
+.footer-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 20px; color: #07111f;
+}
+.footer-name { font-size: 18px; font-weight: 700; }
+.footer-bio { font-size: 14px; color: var(--muted); max-width: 400px; line-height: 1.6; }
+.footer-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.footer-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px;
+  background: var(--panel); border: 1px solid var(--border);
+  text-decoration: none; font-size: 13px; color: var(--light);
+  font-weight: 500; transition: all .25s;
+}
+.footer-link:hover { color: var(--teal); border-color: rgba(0,229,195,.25); transform: translateY(-2px); }
+
+/* Copied toast */
+.toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: rgba(0,229,195,.15); border: 1px solid rgba(0,229,195,.3);
+  color: var(--teal); font-family: 'DM Mono', monospace; font-size: 12px;
+  padding: 10px 24px; border-radius: 100px; letter-spacing: 1px;
+  z-index: 500; transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+  opacity: 0;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* Reveal animation */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.v { opacity: 1; transform: translateY(0); }
+
+/* Mobile */
+@media(max-width: 900px) {
+  nav { padding: 0 20px; }
+  .blog-hero, .filter-wrap { padding-left: 20px; padding-right: 20px; }
+  .main-layout { grid-template-columns: 1fr; padding: 32px 20px 60px; }
+  .sidebar { position: static; }
+  .blog-footer { padding: 40px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<!-- NAV -->
+<nav>
+  <a href="https://anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
+  <div class="nav-right">
+    <a href="https://anjidevops.online/blog/" class="nav-link">← All Posts</a>
+    <span class="nav-tag">Blog</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="blog-hero">
+  <div class="blog-category"><div class="blog-category-dot"></div>Linux · Bash · DevOps Automation</div>
+  <h1 class="blog-title">Shell Scripting <em>Mastery</em><br>Complete Guide</h1>
+  <p class="blog-subtitle">Master Bash from basics to advanced. Variables, loops, functions, arrays, text processing with sed/awk, automation, and real-world DevOps examples.</p>
+  <div class="blog-meta">
+    <div class="meta-author">
+      <div class="meta-avatar">AY</div>
+      <div>
+        <div class="meta-name">Anji Yarra</div>
+        <div class="meta-role">AWS SAA-C03 · Cloud & DevOps Engineer</div>
+      </div>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-info">May 2026</div>
+    <div class="meta-divider"></div>
+    <div class="meta-info">~12 min read</div>
+    <div class="meta-divider"></div>
+    <div class="meta-info">70+ concepts</div>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-wrap">
+  <div class="filter-label">Filter by topic</div>
+  <div class="filters">
+    <button class="filter-btn active" data-cat="all">All Topics</button>
+    <button class="filter-btn" data-cat="basics"><span class="filter-dot" style="background:var(--c1)"></span>Basics</button>
+    <button class="filter-btn" data-cat="variables"><span class="filter-dot" style="background:var(--c2)"></span>Variables</button>
+    <button class="filter-btn" data-cat="operators"><span class="filter-dot" style="background:var(--c3)"></span>Operators</button>
+    <button class="filter-btn" data-cat="conditionals"><span class="filter-dot" style="background:var(--c4)"></span>Conditionals</button>
+    <button class="filter-btn" data-cat="loops"><span class="filter-dot" style="background:var(--c5)"></span>Loops</button>
+    <button class="filter-btn" data-cat="functions"><span class="filter-dot" style="background:var(--c6)"></span>Functions</button>
+    <button class="filter-btn" data-cat="advanced"><span class="filter-dot" style="background:var(--c7)"></span>Advanced</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-layout">
+  <div class="content">
+
+    <div class="intro-block reveal">
+      Shell scripting is the <strong>superpower of DevOps engineers</strong>. Whether you're automating deployments, managing infrastructure, processing logs, or building CI/CD pipelines — Bash is your daily toolkit. This comprehensive guide covers everything from <strong>your first shebang</strong> to <strong>production-grade automation</strong>, with real-world examples for AWS, Docker, and system administration.
+    </div>
+
+    <!-- BASICS -->
+    <div class="code-section sBasics reveal" id="sec-basics" data-cat="basics">
+      <div class="section-header" data-bg="Basics">
+        <div class="sh-badge">01</div>
+        <div class="sh-info">
+          <div class="sh-title">Basics & Getting Started</div>
+          <div class="sh-desc">Shebang, executable scripts, and script structure</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="#!/bin/bash">
+          <div class="code-card-top">
+            <div class="code-num">1</div>
+            <div class="code-card-info">
+              <div class="code-name">The Shebang</div>
+              <div class="code-summary">First line tells system which interpreter to use</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">The shebang (#!) is a magic number that tells your OS which interpreter should execute the script. Bash is standard on Linux and macOS.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Correct Usage</div>
+                <div class="cbd-example-code">#!/bin/bash<br><br>echo "Hello, World!"<br>echo "This runs with Bash interpreter"</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">First line</span><span class="cbd-tag">Interpreter</span><span class="cbd-tag">Mandatory</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="chmod +x">
+          <div class="code-card-top">
+            <div class="code-num">2</div>
+            <div class="code-card-info">
+              <div class="code-name">Make Executable</div>
+              <div class="code-summary">Add execute permission to run the script</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">By default, scripts aren't executable. Use chmod +x to add execute permission. Then run with ./scriptname.sh</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Make Script Executable</div>
+                <div class="cbd-example-code">chmod +x deploy.sh<br>./deploy.sh<br><br>Or run directly:<br>bash deploy.sh</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Permissions</span><span class="cbd-tag">Execution</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="variables">
+          <div class="code-card-top">
+            <div class="code-num">3</div>
+            <div class="code-card-info">
+              <div class="code-name">Script Structure</div>
+              <div class="code-summary">Professional script layout with header, variables, functions, main code</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Good scripts follow a clear structure: header with description, variable declarations, function definitions, then main logic.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Template</div>
+                <div class="cbd-example-code">#!/bin/bash<br># Script: backup.sh<br># Purpose: Daily backup of app data<br># Author: DevOps Team<br><br>set -e  # Exit on error<br><br># Variables<br>BACKUP_DIR="/backups"<br>SOURCE="/var/app"<br><br># Functions<br>log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"; }<br><br># Main<br>log "Starting backup"<br>tar -czf "$BACKUP_DIR/backup-$(date +%s).tar.gz" "$SOURCE"<br>log "Backup complete"</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Best practices</span><span class="cbd-tag">Production ready</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VARIABLES -->
+    <div class="code-section sVariables reveal" id="sec-variables" data-cat="variables">
+      <div class="section-header" data-bg="Variables">
+        <div class="sh-badge">02</div>
+        <div class="sh-info">
+          <div class="sh-title">Variables & Data Types</div>
+          <div class="sh-desc">Store and manipulate data dynamically</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="NAME=value">
+          <div class="code-card-top">
+            <div class="code-num">1</div>
+            <div class="code-card-info">
+              <div class="code-name">Variable Assignment</div>
+              <div class="code-summary">No spaces around = sign</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Variables store data. Assignment uses no spaces: NAME=value. Reference with $NAME. All values are strings in Bash.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Example</div>
+                <div class="cbd-example-code">REGION="us-east-1"<br>COUNT=5<br>echo "Region: $REGION, Count: $COUNT"<br><br>Output:<br>Region: us-east-1, Count: 5</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Strings</span><span class="cbd-tag">Numbers</span><span class="cbd-tag">No spaces</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="$(command)">
+          <div class="code-card-top">
+            <div class="code-num">2</div>
+            <div class="code-card-info">
+              <div class="code-name">Command Substitution</div>
+              <div class="code-summary">Capture output of a command into a variable</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Use $(command) to run a command and store its output. This is modern syntax; backticks `command` are deprecated.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Get Current Date</div>
+                <div class="cbd-example-code">TIMESTAMP=$(date +%Y%m%d_%H%M%S)<br>FILE="backup-$TIMESTAMP.tar.gz"<br>echo $FILE<br><br>Output:<br>backup-20260525_143022.tar.gz</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Modern syntax</span><span class="cbd-tag">date command</span><span class="cbd-tag">AWS CLI</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="$1, $2, $@">
+          <div class="code-card-top">
+            <div class="code-num">3</div>
+            <div class="code-card-info">
+              <div class="code-name">Special Variables</div>
+              <div class="code-summary">$0 (script name), $1-$9 (arguments), $@, $#, $$, $?</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">$0 is the script name, $1/$2 are arguments, $@ is all arguments, $# is argument count, $$ is PID, $? is exit status of last command.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Script: deploy.sh</div>
+                <div class="cbd-example-code">#!/bin/bash<br>echo "Script: $0"<br>echo "Args: $@"<br>echo "Arg count: $#"<br>echo "PID: $$"<br><br>$ bash deploy.sh staging us-east-1<br>Script: deploy.sh<br>Args: staging us-east-1<br>Arg count: 2<br>PID: 12345</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Positional args</span><span class="cbd-tag">Exit codes</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="$HOME, $USER, $PATH">
+          <div class="code-card-top">
+            <div class="code-num">4</div>
+            <div class="code-card-info">
+              <div class="code-name">Environment Variables</div>
+              <div class="code-summary">System-wide variables like HOME, USER, PATH</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Environment variables are inherited from the parent shell. Common ones: $HOME (user home), $USER (username), $PATH (where executables are searched).</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Example</div>
+                <div class="cbd-example-code">echo "Home: $HOME"<br>echo "User: $USER"<br>echo "PATH: $PATH"<br>echo "PWD: $PWD"<br><br>Output:<br>Home: /root<br>User: root<br>PATH: /usr/local/sbin:/usr/local/bin:...</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">System vars</span><span class="cbd-tag">Environment</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPERATORS -->
+    <div class="code-section sOperators reveal" id="sec-operators" data-cat="operators">
+      <div class="section-header" data-bg="Operators">
+        <div class="sh-badge">03</div>
+        <div class="sh-info">
+          <div class="sh-title">Operators</div>
+          <div class="sh-desc">Arithmetic, comparison, and logical operators</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="$(( ))">
+          <div class="code-card-top">
+            <div class="code-num">1</div>
+            <div class="code-card-info">
+              <div class="code-name">Arithmetic Operations</div>
+              <div class="code-summary">Use $(( )) for math: +, -, *, /, %</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Bash does integer arithmetic only. Use $(( expr )) syntax. Supports +, -, *, /, %, ++, --</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Math Examples</div>
+                <div class="cbd-example-code">A=10<br>B=3<br>echo $((A + B))  # 13<br>echo $((A * B))  # 30<br>echo $((A / B))  # 3<br>echo $((A % B))  # 1 (modulo)<br><br>COUNT=5<br>COUNT=$((COUNT + 1))<br>echo $COUNT  # 6</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Integer only</span><span class="cbd-tag">No spaces needed</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="[ $A -eq $B ]">
+          <div class="code-card-top">
+            <div class="code-num">2</div>
+            <div class="code-card-info">
+              <div class="code-name">Number Comparison</div>
+              <div class="code-summary">-eq, -ne, -lt, -le, -gt, -ge</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Compare numbers with -eq (equal), -ne (not equal), -lt (less than), -le (less or equal), -gt (greater), -ge (greater or equal).</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Examples</div>
+                <div class="cbd-example-code">if [ $count -eq 0 ]; then echo "Empty"; fi<br>if [ $age -ge 18 ]; then echo "Adult"; fi<br>if [ $score -lt 100 ]; then echo "Under limit"; fi</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Integers only</span><span class="cbd-tag">[ ] is test command</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="[ -f file ]">
+          <div class="code-card-top">
+            <div class="code-num">3</div>
+            <div class="code-card-info">
+              <div class="code-name">File Test Operators</div>
+              <div class="code-summary">-e (exists), -f (file), -d (directory), -r/-w/-x (permissions)</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Test file properties: -e (exists), -f (regular file), -d (directory), -r/-w/-x (readable/writable/executable), -s (size > 0)</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Common Patterns</div>
+                <div class="cbd-example-code">if [ -f "/etc/config.sh" ]; then source /etc/config.sh; fi<br>if [ -d "/var/log" ]; then ls /var/log; fi<br>if [ -x ./deploy.sh ]; then ./deploy.sh; fi<br>if [ -s file.txt ]; then echo "File has content"; fi</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">File checks</span><span class="cbd-tag">Common in scripts</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="&&, ||, !">
+          <div class="code-card-top">
+            <div class="code-num">4</div>
+            <div class="code-card-info">
+              <div class="code-name">Logical Operators</div>
+              <div class="code-summary">AND (&&), OR (||), NOT (!)</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Combine conditions: && (AND) runs if previous succeeds, || (OR) runs if previous fails, ! (NOT) inverts condition.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Examples</div>
+                <div class="cbd-example-code">cd /var/app && npm install && npm start<br><br>[ -f config.json ] || cp config.default.json config.json<br><br>[ ! -f /root/.ssh/id_rsa ] && ssh-keygen -t rsa</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Control flow</span><span class="cbd-tag">Error handling</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONDITIONALS -->
+    <div class="code-section sConditionals reveal" id="sec-conditionals" data-cat="conditionals">
+      <div class="section-header" data-bg="Conditionals">
+        <div class="sh-badge">04</div>
+        <div class="sh-info">
+          <div class="sh-title">Conditionals</div>
+          <div class="sh-desc">if/elif/else and case statements</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="if then fi">
+          <div class="code-card-top">
+            <div class="code-num">1</div>
+            <div class="code-card-info">
+              <div class="code-name">if/elif/else</div>
+              <div class="code-summary">Execute code based on conditions</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Use if/then/fi for single condition, elif for multiple, else for fallback. Note: 'fi' ends the statement (if backwards).</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Three-way Example</div>
+                <div class="cbd-example-code">if [ $status = "running" ]; then<br>  echo "Service is running"<br>elif [ $status = "stopped" ]; then<br>  echo "Service is stopped"<br>else<br>  echo "Service status unknown"<br>fi</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Most common</span><span class="cbd-tag">Readable</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="case esac">
+          <div class="code-card-top">
+            <div class="code-num">2</div>
+            <div class="code-card-info">
+              <div class="code-name">case Statement</div>
+              <div class="code-summary">Cleaner alternative to multiple if/elif</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">case is cleaner than many if/elif blocks. Pattern matching with * as wildcard. Ends with 'esac' (case backwards).</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Environment-based Logic</div>
+                <div class="cbd-example-code">case $ENV in<br>  production)<br>    REPLICAS=3<br>    ;;<br>  staging)<br>    REPLICAS=2<br>    ;;<br>  *)<br>    REPLICAS=1<br>    ;;<br>esac</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Pattern matching</span><span class="cbd-tag">Cleaner code</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="nested conditions">
+          <div class="code-card-top">
+            <div class="code-num">3</div>
+            <div class="code-card-info">
+              <div class="code-name">Nested Conditions</div>
+              <div class="code-summary">if inside if for complex logic</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">You can nest if statements. Better to use && or || operators for readability in most cases.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Example</div>
+                <div class="cbd-example-code">if [ -f "/var/lock/deploy.lock" ]; then<br>  if [ $USER = "root" ]; then<br>    echo "Deployment in progress by root"<br>  fi<br>fi<br><br># Better:<br>[ -f "/var/lock/deploy.lock" ] && [ $USER = "root" ] && echo "Deploying"</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Control flow</span><span class="cbd-tag">Readability</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOOPS -->
+    <div class="code-section sLoops reveal" id="sec-loops" data-cat="loops">
+      <div class="section-header" data-bg="Loops">
+        <div class="sh-badge">05</div>
+        <div class="sh-info">
+          <div class="sh-title">Loops</div>
+          <div class="sh-desc">for, while, and until loops</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="for i in">
+          <div class="code-card-top">
+            <div class="code-num">1</div>
+            <div class="code-card-info">
+              <div class="code-name">for Loop (Range & List)</div>
+              <div class="code-summary">Iterate over numbers or items</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">for loops iterate over a range {1..5}, a list (apple banana), or files. Syntax: for VAR in LIST; do ... done</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Three Patterns</div>
+                <div class="cbd-example-code"># Range<br>for i in {1..3}; do echo $i; done<br><br># List<br>for env in dev staging prod; do<br>  echo "Deploying to $env"<br>done<br><br># Files<br>for file in *.log; do<br>  gzip "$file"<br>done</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Range</span><span class="cbd-tag">Files</span><span class="cbd-tag">Most common</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="for ((i=0;i<10;i++))">
+          <div class="code-card-top">
+            <div class="code-num">2</div>
+            <div class="code-card-info">
+              <div class="code-name">for Loop (C-style)</div>
+              <div class="code-summary">Traditional format with init; condition; increment</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">C-style for loop: for ((init; condition; increment)). Double parentheses needed. Good when you need step size.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Examples</div>
+                <div class="cbd-example-code"># Count 0 to 9<br>for ((i=0; i<10; i++)); do<br>  echo $i<br>done<br><br># Every 2nd number<br>for ((i=0; i<10; i+=2)); do<br>  echo $i  # 0, 2, 4, 6, 8<br>done</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Increment</span><span class="cbd-tag">Familiar to C programmers</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="while [ ]">
+          <div class="code-card-top">
+            <div class="code-num">3</div>
+            <div class="code-card-info">
+              <div class="code-name">while Loop</div>
+              <div class="code-summary">Loop while condition is true</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">while runs as long as the condition is true. Exit when condition becomes false. Useful for reading lines from files.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Examples</div>
+                <div class="cbd-example-code"># Counter<br>COUNT=1<br>while [ $COUNT -le 3 ]; do<br>  echo $COUNT<br>  COUNT=$((COUNT + 1))<br>done<br><br># Read file<br>while IFS= read -r line; do<br>  echo "Processing: $line"<br>done < config.txt</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">File reading</span><span class="cbd-tag">Input processing</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="until [ ]">
+          <div class="code-card-top">
+            <div class="code-num">4</div>
+            <div class="code-card-info">
+              <div class="code-name">until Loop</div>
+              <div class="code-summary">Loop until condition becomes true (opposite of while)</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">until is the opposite of while. Runs while condition is FALSE, stops when true. Less common but useful for wait loops.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Wait for Service</div>
+                <div class="cbd-example-code"># Wait until server is up<br>until [ $count -gt 30 ]; do<br>  if curl -s http://localhost:8080 > /dev/null; then<br>    echo "Server is ready"<br>    break<br>  fi<br>  count=$((count + 1))<br>  sleep 1<br>done</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Waiting</span><span class="cbd-tag">Health checks</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="break, continue">
+          <div class="code-card-top">
+            <div class="code-num">5</div>
+            <div class="code-card-info">
+              <div class="code-name">Loop Control</div>
+              <div class="code-summary">break (exit) and continue (skip to next iteration)</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">break exits the loop completely. continue skips the rest of current iteration and starts next. Essential for complex loop logic.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Examples</div>
+                <div class="cbd-example-code"># Stop at first error<br>for file in *.txt; do<br>  [ ! -r "$file" ] && break<br>  process_file "$file"<br>done<br><br># Skip empty lines<br>while IFS= read -r line; do<br>  [ -z "$line" ] && continue<br>  echo "Non-empty: $line"<br>done < file.txt</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Control flow</span><span class="cbd-tag">Error handling</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FUNCTIONS -->
+    <div class="code-section sFunctions reveal" id="sec-functions" data-cat="functions">
+      <div class="section-header" data-bg="Functions">
+        <div class="sh-badge">06</div>
+        <div class="sh-info">
+          <div class="sh-title">Functions</div>
+          <div class="sh-desc">Reusable code blocks with parameters and return values</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="function_name()">
+          <div class="code-card-top">
+            <div class="code-num">1</div>
+            <div class="code-card-info">
+              <div class="code-name">Define a Function</div>
+              <div class="code-summary">function_name() { ... } or function function_name { ... }</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Functions group related commands. Two syntaxes work: function_name() or function function_name. The first is preferred (POSIX compliant).</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Define & Call</div>
+                <div class="cbd-example-code">greet() {<br>  echo "Hello, World!"<br>}<br><br>greet  # Call the function<br><br>Output:<br>Hello, World!</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Reusability</span><span class="cbd-tag">POSIX</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="$1, $2, $#, $@">
+          <div class="code-card-top">
+            <div class="code-num">2</div>
+            <div class="code-card-info">
+              <div class="code-name">Function Parameters</div>
+              <div class="code-summary">$1, $2 for arguments; $@, $# for all args and count</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Functions receive arguments just like scripts: $1 is first arg, $2 is second, $@ is all, $# is count. $0 inside a function is the function name.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Deploy Function</div>
+                <div class="cbd-example-code">deploy() {<br>  ENV=$1<br>  REGION=$2<br>  echo "Deploying to $ENV in $REGION"<br>  echo "All args: $@"<br>  echo "Arg count: $#"<br>}<br><br>deploy staging us-east-1<br><br>Output:<br>Deploying to staging in us-east-1<br>All args: staging us-east-1<br>Arg count: 2</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Arguments</span><span class="cbd-tag">Flexible</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="return value">
+          <div class="code-card-top">
+            <div class="code-num">3</div>
+            <div class="code-card-info">
+              <div class="code-name">Return Values</div>
+              <div class="code-summary">echo for output, return for exit code, $(...) to capture</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Functions can return data via echo (captured with $(...)) or return exit code (0=success, 1=failure). Both are used.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Examples</div>
+                <div class="cbd-example-code">add() {<br>  echo $(($1 + $2))<br>}<br><br>result=$(add 5 3)<br>echo "5 + 3 = $result"  # 5 + 3 = 8<br><br>is_file_readable() {<br>  [ -r "$1" ] && return 0 || return 1<br>}<br><br>if is_file_readable "/etc/passwd"; then<br>  echo "Readable"<br>fi</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Output capture</span><span class="cbd-tag">Exit codes</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="local VAR=value">
+          <div class="code-card-top">
+            <div class="code-num">4</div>
+            <div class="code-card-info">
+              <div class="code-name">Local Variables</div>
+              <div class="code-summary">Scope with 'local' keyword inside functions</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">By default, variables are global. Use 'local' inside functions to limit scope. Prevents accidental overwrites of global state.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Scope Example</div>
+                <div class="cbd-example-code">GLOBAL="I'm global"<br><br>my_function() {<br>  local LOCAL="I'm local"<br>  GLOBAL="Modified"<br>  echo "Inside: GLOBAL=$GLOBAL, LOCAL=$LOCAL"<br>}<br><br>my_function<br>echo "Outside: GLOBAL=$GLOBAL"<br>echo "Outside: LOCAL=$LOCAL"  # Empty<br><br>Output:<br>Inside: GLOBAL=Modified, LOCAL=I'm local<br>Outside: GLOBAL=Modified<br>Outside: LOCAL=</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Scope</span><span class="cbd-tag">Best practice</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADVANCED -->
+    <div class="code-section sAdvanced reveal" id="sec-advanced" data-cat="advanced">
+      <div class="section-header" data-bg="Advanced">
+        <div class="sh-badge">07</div>
+        <div class="sh-info">
+          <div class="sh-title">Advanced Topics</div>
+          <div class="sh-desc">Arrays, text processing, sed/awk, cron jobs, debugging</div>
+        </div>
+      </div>
+      <div class="codes-grid">
+        <div class="code-card" data-code="ARRAY=(...)">
+          <div class="code-card-top">
+            <div class="code-num">1</div>
+            <div class="code-card-info">
+              <div class="code-name">Arrays</div>
+              <div class="code-summary">Store multiple values in one variable</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Arrays store multiple values. Syntax: ARRAY=(item1 item2). Access with ${ARRAY[0]}, ${ARRAY[@]} for all, ${#ARRAY[@]} for length.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Array Operations</div>
+                <div class="cbd-example-code">REGIONS=(us-east-1 us-west-2 eu-west-1)<br><br>echo ${REGIONS[0]}  # us-east-1<br>echo ${REGIONS[@]}  # All items<br>echo ${#REGIONS[@]}  # 3<br><br>for region in ${REGIONS[@]}; do<br>  echo "Processing $region"<br>done</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Multiple values</span><span class="cbd-tag">Iteration</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="sed 's/old/new/'">
+          <div class="code-card-top">
+            <div class="code-num">2</div>
+            <div class="code-card-info">
+              <div class="code-name">sed - Stream Editor</div>
+              <div class="code-summary">Text substitution and manipulation</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">sed is powerful for text transformation. s/old/new/ replaces, g flag does global replacement, d deletes lines. Essential for config file updates.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Real-world Examples</div>
+                <div class="cbd-example-code"># Replace first match on each line<br>sed 's/localhost/127.0.0.1/' config.txt<br><br># Replace all matches (g flag)<br>sed 's/foo/bar/g' file.txt<br><br># Delete empty lines<br>sed '/^$/d' file.txt<br><br># Update config in-place<br>sed -i 's/OLD_VAL/NEW_VAL/g' /etc/config.conf</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Text transform</span><span class="cbd-tag">Config updates</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="awk '...'">
+          <div class="code-card-top">
+            <div class="code-num">3</div>
+            <div class="code-card-info">
+              <div class="code-name">awk - Text Processing</div>
+              <div class="code-summary">Extract columns, filter rows, aggregate data</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">awk is a full programming language for text. $1, $2 are fields. Use for log parsing, CSV extraction, and data aggregation in production systems.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Log Analysis Examples</div>
+                <div class="cbd-example-code"># Extract IP and status from Apache log<br>awk '{print $1, $9}' access.log<br><br># Count requests per IP<br>awk '{print $1}' access.log | sort | uniq -c<br><br># Sum column 2<br>awk '{sum += $2} END {print "Total: " sum}' data.txt<br><br># Filter lines where status > 400<br>awk '$9 > 400 {print $0}' access.log</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Log parsing</span><span class="cbd-tag">CSV processing</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="set -e, -u, -o pipefail">
+          <div class="code-card-top">
+            <div class="code-num">4</div>
+            <div class="code-card-info">
+              <div class="code-name">Error Handling</div>
+              <div class="code-summary">Exit on error, undefined variables, pipeline failures</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">Use 'set -e' to exit on error, 'set -u' for undefined var error, 'set -o pipefail' for pipeline failures. Production scripts must use these!</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Safe Script Template</div>
+                <div class="cbd-example-code">#!/bin/bash<br>set -euo pipefail<br><br># Now script exits if:<br># - Any command fails (-e)<br># - Undefined variable used (-u)<br># - Pipe command fails (pipefail)<br><br>echo "Starting safe deploy"<br>cd /opt/app || exit 1<br>npm install<br>npm run build<br>npm start</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Production ready</span><span class="cbd-tag">Safety</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="0 2 * * *">
+          <div class="code-card-top">
+            <div class="code-num">5</div>
+            <div class="code-card-info">
+              <div class="code-name">Cron Jobs</div>
+              <div class="code-summary">Schedule scripts to run automatically</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">crontab -e edits scheduled jobs. Format: minute hour day month dayofweek command. Essential for backups, health checks, cleanup tasks.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Cron Examples</div>
+                <div class="cbd-example-code"># Every day at 2:00 AM<br>0 2 * * * /opt/scripts/backup.sh<br><br># Every 6 hours<br>0 */6 * * * /opt/scripts/health-check.sh<br><br># Every Monday at 9 AM<br>0 9 * * 1 /opt/scripts/deploy.sh<br><br># Every 15 minutes<br>*/15 * * * * /opt/scripts/monitor.sh<br><br># View cron logs<br>grep CRON /var/log/syslog</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Scheduling</span><span class="cbd-tag">Automation</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-card" data-code="bash -x">
+          <div class="code-card-top">
+            <div class="code-num">6</div>
+            <div class="code-card-info">
+              <div class="code-name">Debugging</div>
+              <div class="code-summary">bash -x to trace execution, set -x for parts of script</div>
+            </div>
+            <div class="code-arrow">›</div>
+          </div>
+          <div class="code-card-body">
+            <div class="code-body-inner">
+              <p class="cbd-desc">bash -x runs script in debug mode, printing each command before execution. set -x enables in middle of script. Use for troubleshooting failures.</p>
+              <div class="cbd-example">
+                <div class="cbd-example-label">Debug Methods</div>
+                <div class="cbd-example-code"># Run entire script in debug<br>bash -x deploy.sh<br><br># Or in script:<br>#!/bin/bash<br>set -x  # Enable debug from here<br>cd /var/app<br>npm install<br>set +x  # Disable debug</div>
+              </div>
+              <div class="cbd-tags"><span class="cbd-tag">Troubleshooting</span><span class="cbd-tag">Testing</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="toc-card">
+      <div class="toc-title">On This Page</div>
+      <div class="toc-list">
+        <a href="#sec-basics" class="toc-item" data-sec="basics">
+          <span class="toc-dot" style="background:var(--c1)"></span>Basics
+        </a>
+        <a href="#sec-variables" class="toc-item" data-sec="variables">
+          <span class="toc-dot" style="background:var(--c2)"></span>Variables
+        </a>
+        <a href="#sec-operators" class="toc-item" data-sec="operators">
+          <span class="toc-dot" style="background:var(--c3)"></span>Operators
+        </a>
+        <a href="#sec-conditionals" class="toc-item" data-sec="conditionals">
+          <span class="toc-dot" style="background:var(--c4)"></span>Conditionals
+        </a>
+        <a href="#sec-loops" class="toc-item" data-sec="loops">
+          <span class="toc-dot" style="background:var(--c5)"></span>Loops
+        </a>
+        <a href="#sec-functions" class="toc-item" data-sec="functions">
+          <span class="toc-dot" style="background:var(--c6)"></span>Functions
+        </a>
+        <a href="#sec-advanced" class="toc-item" data-sec="advanced">
+          <span class="toc-dot" style="background:var(--c7)"></span>Advanced
+        </a>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="toc-title" style="margin-bottom:14px">Coverage</div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-n" style="color:var(--c1)">3</div><div class="stat-l">Basics</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c2)">4</div><div class="stat-l">Variables</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c3)">4</div><div class="stat-l">Operators</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c4)">3</div><div class="stat-l">Conditionals</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c5)">5</div><div class="stat-l">Loops</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--c6)">4</div><div class="stat-l">Functions</div></div>
+        <div class="stat-box" style="grid-column:1/-1"><div class="stat-n" style="color:var(--c7)">6</div><div class="stat-l">Advanced</div></div>
+      </div>
+    </div>
+
+    <div class="share-card">
+      <div class="share-title">Found this useful?</div>
+      <div class="share-sub">Share with your team on LinkedIn</div>
+      <button class="share-btn" onclick="shareLinkedIn()">
+        <span>Share on LinkedIn</span>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<div class="blog-footer">
+  <div class="footer-author">
+    <div class="footer-avatar">AY</div>
+    <div class="footer-name">Anji Yarra</div>
+    <div class="footer-bio">AWS SAA-C03 Certified Cloud & DevOps Engineer. Building production-grade automation and infrastructure.</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://anjidevops.online" class="footer-link">🏠 anjidevops.online</a>
+    <a href="https://www.linkedin.com/in/anjiyarra/" target="_blank" class="footer-link">💼 LinkedIn</a>
+    <a href="https://anjidevops.online/blog/" class="footer-link">📚 More Posts</a>
+    <a href="mailto:anjiyarra.aws@gmail.com" class="footer-link">✉️ Contact</a>
+  </div>
+</div>
+
+<script>
+// Progress bar
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const p = (scrollY / (document.body.scrollHeight - innerHeight)) * 100;
+  prog.style.width = p + '%';
+});
+
+// Card expand/collapse
+document.querySelectorAll('.code-card').forEach(card => {
+  card.addEventListener('click', e => {
+    if (e.target.closest('.share-btn')) return;
+    const body = card.querySelector('.code-card-body');
+    const isOpen = body.classList.contains('open');
+    document.querySelectorAll('.code-card-body.open').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.code-arrow').forEach(a => a.textContent = '›');
+    if (!isOpen) {
+      body.classList.add('open');
+      card.querySelector('.code-arrow').textContent = '⌄';
+    }
+    const code = card.dataset.code;
+    if (code) {
+      navigator.clipboard?.writeText(code).catch(() => {});
+      const toast = document.getElementById('toast');
+      toast.textContent = `Copied: ${code}`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+  });
+});
+
+// Filter tabs
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('.code-section').forEach(sec => {
+      if (cat === 'all' || sec.dataset.cat === cat) {
+        sec.style.display = '';
+      } else {
+        sec.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Sidebar TOC
+const sections = document.querySelectorAll('.code-section');
+const tocItems = document.querySelectorAll('.toc-item');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocItems.forEach(t => t.classList.remove('active'));
+      const id = e.target.id.replace('sec-','');
+      const active = document.querySelector(`.toc-item[data-sec="${id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => io.observe(s));
+
+// Scroll reveal
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// LinkedIn share
+function shareLinkedIn() {
+  const url = encodeURIComponent('https://anjidevops.online/blog/shell-scripting/');
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+}
+</script>
+</body>
+</html>
