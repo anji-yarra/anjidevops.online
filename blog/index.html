@@ -1,128 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DevOps and Cloud Engineering blog posts by AnjiDevOps">
-    <meta name="author" content="AnjiDevOps">
-    
-    <title>Blog - AnjiDevOps</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DevOps and Cloud Engineering blog posts by AnjiDevOps">
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<title>Blog - AnjiDevOps</title>
 
-        body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 40px 20px;
-        }
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    body {
+        font-family: 'Georgia', serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 40px 20px;
+        color: #0f172a;
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
 
-        header h1 {
-            font-size: 2.5em;
-            color: #0f172a;
-            margin-bottom: 10px;
-        }
+    /* HEADER (clean + like your site style) */
+    header {
+        text-align: center;
+        margin-bottom: 45px;
+    }
 
-        header p {
-            color: #64748b;
-            font-size: 1.1em;
-        }
+    header h1 {
+        font-size: 2.6em;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
 
-        .blog-post {
-            background: white;
-            padding: 30px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #ef4444;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-        }
+    header p {
+        color: #64748b;
+        font-size: 1.1em;
+    }
 
-        .blog-post:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        }
+    /* BLOG CARD */
+    .blog-post {
+        background: #ffffff;
+        padding: 28px;
+        margin-bottom: 20px;
+        border-radius: 14px;
+        border-left: 4px solid #ef4444;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        transition: 0.25s ease;
+    }
 
-        .blog-post h2 {
-            color: #0f172a;
-            margin-bottom: 10px;
-            font-size: 1.5em;
-        }
+    .blog-post:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    }
 
-        .date {
-            color: #64748b;
-            font-size: 0.9em;
-            margin-bottom: 12px;
-        }
+    .blog-post h2 {
+        color: #0f172a;
+        font-size: 1.5em;
+        margin-bottom: 8px;
+    }
 
-        .blog-post p {
-            color: #475569;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
+    .date {
+        color: #64748b;
+        font-size: 0.9em;
+        margin-bottom: 12px;
+    }
 
-        .blog-post a {
-            color: #ef4444;
-            text-decoration: none;
-            font-weight: 600;
-        }
+    .blog-post p {
+        color: #475569;
+        line-height: 1.7;
+        margin-bottom: 14px;
+    }
 
-        .blog-post a:hover {
-            color: #dc2626;
-        }
+    /* TAGS */
+    .tag {
+        display: inline-block;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        margin-right: 6px;
+        transition: 0.2s ease;
+    }
 
-        .tag {
-            display: inline-block;
-            background: #f1f5f9;
-            color: #475569;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-right: 8px;
-        }
-    </style>
+    .tag:hover {
+        background: #ef4444;
+        color: #fff;
+    }
+
+    /* LINK */
+    .read-more {
+        display: inline-block;
+        margin-top: 12px;
+        color: #ef4444;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+    .read-more:hover {
+        color: #dc2626;
+        text-decoration: underline;
+    }
+</style>
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <header>
-            <h1>📚 DevOps & Cloud Blog</h1>
-            <p>Articles on AWS, DevOps, and Web Development</p>
-        </header>
+    <header>
+        <h1>📚 DevOps & Cloud Blog</h1>
+        <p>Articles on AWS, DevOps, Kubernetes, and Web Development</p>
+    </header>
 
-        <div class="blog-post">
-            <h2>HTTP Error Codes Explained: A Complete Guide</h2>
-            <p class="date">📅 May 2026</p>
-            <p>
-                A comprehensive guide to understanding HTTP status codes. Learn what each code means,
-                when they occur, and how to handle them with real-world examples.
-            </p>
+    <div class="blog-post">
+        <h2>HTTP Error Codes Explained: A Complete Guide</h2>
+        <div class="date">📅 May 2026</div>
 
-            <p>
-                <span class="tag">#HTTP</span>
-                <span class="tag">#API</span>
-                <span class="tag">#WebDevelopment</span>
-            </p>
+        <p>
+            A practical guide to HTTP status codes from a DevOps perspective.
+            Learn how APIs respond, why errors happen, and how to debug production issues.
+        </p>
 
-            <!-- FIXED LINK FOR YOUR DOMAIN -->
-            <a href="https://anjidevops.online/blog/http-error-codes/">
-                Read Full Article →
-            </a>
+        <div>
+            <span class="tag">HTTP</span>
+            <span class="tag">API</span>
+            <span class="tag">DevOps</span>
         </div>
 
+        <a class="read-more" href="https://anjidevops.online/blog/http-error-codes/">
+            Read Full Article →
+        </a>
     </div>
+
+</div>
 
 </body>
 </html>
