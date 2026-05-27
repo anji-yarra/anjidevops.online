@@ -3,1246 +3,1917 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Complete Shell Scripting guide covering Bash from basics to advanced automation. Perfect for DevOps engineers and system administrators.">
-<meta name="keywords" content="shell scripting, bash, linux, devops, automation, sysadmin, tutorial">
+<meta name="description" content="Complete comprehensive guide to Bash shell scripting for DevOps engineers and system administrators.">
+<meta name="keywords" content="shell scripting, bash, linux, devops, automation, tutorial, guide">
 <meta name="author" content="Anji Yarra">
-<meta property="og:title" content="Shell Scripting Mastery: Complete Guide | AnjiDevOps">
-<meta property="og:description" content="Master Bash shell scripting with comprehensive examples covering variables, loops, functions, arrays, and advanced automation techniques.">
-<meta property="og:url" content="https://anjidevops.online/blog/shell-scripting/">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="AnjiDevOps">
-<title>Shell Scripting Mastery: Complete Guide | AnjiDevOps</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta property="og:title" content="Shell Scripting Complete Guide | AnjiDevOps">
+<meta property="og:description" content="Master Bash from basics to production-level automation with 100+ practical examples.">
+<meta property="og:url" content="https://www.anjidevops.online/blog/shell-scripting/">
+<title>Shell Scripting Complete Guide | AnjiDevOps</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #07111f;
-  --navy:     #0c1a30;
-  --panel:    rgba(12,26,48,0.8);
-  --border:   rgba(255,255,255,0.07);
-  --white:    #f8fafc;
-  --muted:    #64748b;
-  --light:    #94a3b8;
-  /* Category colours */
-  --c1:  #8b5cf6; --c1bg: rgba(139,92,246,0.1);  --c1b: rgba(139,92,246,0.25);
-  --c2:  #06b6d4; --c2bg: rgba(6,182,212,0.08);  --c2b: rgba(6,182,212,0.25);
-  --c3:  #f59e0b; --c3bg: rgba(245,158,11,0.08); --c3b: rgba(245,158,11,0.25);
-  --c4:  #10b981; --c4bg: rgba(16,185,129,0.08); --c4b: rgba(16,185,129,0.25);
-  --c5:  #3b82f6; --c5bg: rgba(59,130,246,0.08); --c5b: rgba(59,130,246,0.25);
-  --teal: #00e5c3;
-  --blue: #3b82f6;
+--bg: #07111f;
+--panel: rgba(12,26,48,0.8);
+--border: rgba(255,255,255,0.07);
+--white: #f8fafc;
+--muted: #64748b;
+--light: #94a3b8;
+--c1: #8b5cf6;
+--c2: #06b6d4;
+--c3: #f59e0b;
+--c4: #10b981;
+--c5: #3b82f6;
+--teal: #00e5c3;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; background: var(--bg); }
-
 body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
+background: var(--bg);
+color: var(--white);
+font-family: 'Plus Jakarta Sans', sans-serif;
+min-height: 100vh;
+line-height: 1.6;
 }
 
-/* Subtle mesh bg */
 body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 700px 500px at 10% 10%, rgba(0,229,195,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 600px 400px at 90% 85%, rgba(59,130,246,.07) 0%, transparent 60%);
+content: '';
+position: fixed;
+inset: 0;
+z-index: 0;
+pointer-events: none;
+background: radial-gradient(ellipse 700px 500px at 10% 10%, rgba(0,229,195,.08) 0%, transparent 60%),
+radial-gradient(ellipse 600px 400px at 90% 85%, rgba(59,130,246,.08) 0%, transparent 60%);
 }
 
-/* ── PROGRESS BAR ── */
-#prog {
-  position: fixed; top: 0; left: 0; height: 2.5px; z-index: 999;
-  background: linear-gradient(90deg, var(--teal), var(--blue), #a855f7);
-  width: 0%; transition: width .1s;
-}
+#prog { position: fixed; top: 0; left: 0; height: 2.5px; z-index: 999; background: linear-gradient(90deg, #00e5c3, #3b82f6, #a855f7); width: 0%; }
 
-/* ── NAV ── */
 nav {
-  position: sticky; top: 0; z-index: 200;
-  background: rgba(7,17,31,.85);
-  backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 48px;
-  height: 60px;
-  display: flex; align-items: center; justify-content: space-between;
+position: sticky;
+top: 0;
+z-index: 200;
+background: rgba(7,17,31,.95);
+backdrop-filter: blur(24px);
+border-bottom: 1px solid var(--border);
+padding: 0 48px;
+height: 60px;
+display: flex;
+align-items: center;
+justify-content: space-between;
 }
-.nav-logo {
-  font-family: 'DM Mono', monospace;
-  font-size: 13px; color: var(--teal); letter-spacing: 1px;
-  text-decoration: none;
-}
+
+.nav-logo { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--teal); letter-spacing: 1.5px; text-decoration: none; font-weight: 600; }
 .nav-logo span { color: var(--light); }
 .nav-right { display: flex; align-items: center; gap: 24px; }
-.nav-link {
-  font-size: 13px; color: var(--muted); text-decoration: none;
-  transition: color .2s; font-weight: 500;
-}
+.nav-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; font-weight: 500; }
 .nav-link:hover { color: var(--white); }
-.nav-tag {
-  font-family: 'DM Mono', monospace; font-size: 10px;
-  padding: 4px 12px; border-radius: 100px;
-  background: rgba(0,229,195,.08); border: 1px solid rgba(0,229,195,.2);
-  color: var(--teal); letter-spacing: 1px;
-}
+.nav-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 14px; border-radius: 100px; background: rgba(0,229,195,.1); border: 1px solid rgba(0,229,195,.25); color: var(--teal); letter-spacing: 1px; font-weight: 600; }
 
-/* ── HERO ── */
-.blog-hero {
-  position: relative; z-index: 1;
-  padding: 80px 0 64px;
-  max-width: 860px; margin: 0 auto;
-  padding-left: 48px; padding-right: 48px;
-  border-bottom: 1px solid var(--border);
-}
-
-.blog-category {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'DM Mono', monospace; font-size: 10px;
-  color: var(--teal); letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 24px;
-}
-.blog-category-dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; }
-
-.blog-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(38px, 6vw, 64px);
-  font-weight: 400; line-height: 1.1;
-  color: var(--white); letter-spacing: -.5px;
-  margin-bottom: 20px;
-}
+.blog-hero { position: relative; z-index: 1; padding: 100px 48px 60px; max-width: 900px; margin: 0 auto; border-bottom: 1px solid var(--border); }
+.blog-category { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--teal); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 24px; font-weight: 600; }
+.blog-category-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; }
+.blog-title { font-family: 'Instrument Serif', serif; font-size: clamp(44px, 7vw, 72px); font-weight: 400; line-height: 1.15; color: var(--white); letter-spacing: -0.8px; margin-bottom: 24px; }
 .blog-title em { color: var(--teal); font-style: italic; }
+.blog-subtitle { font-size: 18px; color: var(--light); line-height: 1.8; max-width: 650px; margin-bottom: 36px; font-weight: 300; }
 
-.blog-subtitle {
-  font-size: 17px; color: var(--light); line-height: 1.7;
-  max-width: 600px; margin-bottom: 36px; font-weight: 300;
-}
+.blog-meta { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; font-size: 13px; }
+.meta-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #00e5c3, #3b82f6); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #07111f; }
+.meta-name { font-size: 14px; font-weight: 600; color: var(--white); }
+.meta-role { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.meta-divider { width: 1px; height: 32px; background: var(--border); }
+.meta-info { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
 
-.blog-meta {
-  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
-}
-.meta-author {
-  display: flex; align-items: center; gap: 10px;
-}
-.meta-avatar {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--teal), var(--blue));
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 13px; color: #07111f;
-}
-.meta-name { font-size: 14px; font-weight: 600; }
-.meta-role { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
-.meta-divider { width: 1px; height: 28px; background: var(--border); }
-.meta-info { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
-
-/* ── FILTER TABS ── */
-.filter-wrap {
-  position: relative; z-index: 1;
-  max-width: 860px; margin: 0 auto;
-  padding: 32px 48px 0;
-}
-.filter-label {
-  font-family: 'DM Mono', monospace; font-size: 10px;
-  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.filters {
-  display: flex; gap: 8px; flex-wrap: wrap;
-}
-.filter-btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 7px 16px; border-radius: 100px;
-  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
-  letter-spacing: .5px; cursor: pointer;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.03);
-  color: var(--muted);
-  transition: all .25s;
-}
-.filter-btn:hover { color: var(--white); border-color: rgba(255,255,255,.15); }
-.filter-btn.active { color: var(--white); }
-.filter-btn[data-cat="all"].active { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
-.filter-btn[data-cat="basics"].active { background: var(--c1bg); border-color: var(--c1b); color: var(--c1); }
-.filter-btn[data-cat="variables"].active { background: var(--c2bg); border-color: var(--c2b); color: var(--c2); }
-.filter-btn[data-cat="operators"].active { background: var(--c3bg); border-color: var(--c3b); color: var(--c3); }
-.filter-btn[data-cat="control"].active { background: var(--c4bg); border-color: var(--c4b); color: var(--c4); }
-.filter-btn[data-cat="advanced"].active { background: var(--c5bg); border-color: var(--c5b); color: var(--c5); }
+.filter-wrap { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 36px 48px 0; }
+.filter-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 16px; font-weight: 600; }
+.filters { display: flex; gap: 10px; flex-wrap: wrap; }
+.filter-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 100px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,.03); color: var(--muted); transition: all .25s; }
+.filter-btn:hover { color: var(--white); border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.05); }
+.filter-btn.active { color: var(--white); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
 .filter-dot { width: 7px; height: 7px; border-radius: 50%; }
 
-/* ── MAIN LAYOUT ── */
-.main-layout {
-  position: relative; z-index: 1;
-  max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 240px;
-  gap: 48px; padding: 48px 48px 80px;
-  align-items: start;
-}
-
-/* ── CONTENT ── */
+.main-layout { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 56px; padding: 56px 48px 80px; align-items: start; }
 .content { min-width: 0; }
 
-/* Intro text */
-.intro-block {
-  font-size: 16px; color: var(--light); line-height: 1.85;
-  margin-bottom: 56px; font-weight: 300;
-  border-left: 2px solid var(--teal);
-  padding-left: 20px;
-}
+.intro-block { font-size: 16px; color: var(--light); line-height: 1.85; margin-bottom: 64px; font-weight: 300; border-left: 3px solid var(--teal); padding: 24px; border-radius: 8px; background: rgba(0,229,195,.03); }
 .intro-block strong { color: var(--white); font-weight: 600; }
 
-/* Section header */
-.code-section { margin-bottom: 48px; }
-.section-header {
-  display: flex; align-items: center; gap: 16px;
-  padding: 20px 24px; border-radius: 14px;
-  margin-bottom: 20px;
-  position: relative; overflow: hidden;
-}
-.section-header::before {
-  content: attr(data-bg);
-  position: absolute; right: 20px; top: 50%;
-  transform: translateY(-50%);
-  font-family: 'Instrument Serif', serif;
-  font-size: 80px; font-weight: 400; opacity: .06;
-  pointer-events: none; color: white;
-}
-.sh-badge {
-  font-family: 'DM Mono', monospace;
-  font-size: 22px; font-weight: 500;
-  padding: 6px 16px; border-radius: 8px;
-  letter-spacing: 1px; flex-shrink: 0;
-}
-.sh-info {}
-.sh-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: 22px; font-weight: 400; margin-bottom: 3px;
-}
-.sh-desc { font-size: 12px; color: rgba(255,255,255,.55); font-family: 'DM Mono', monospace; letter-spacing: .5px; }
+.code-section { margin-bottom: 56px; }
+.section-header { display: flex; align-items: center; gap: 20px; padding: 28px 32px; border-radius: 14px; margin-bottom: 28px; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.08); }
+.section-header::before { content: attr(data-bg); position: absolute; right: 32px; top: 50%; transform: translateY(-50%); font-family: 'Instrument Serif', serif; font-size: 88px; font-weight: 400; opacity: .04; pointer-events: none; color: white; }
+.sh-badge { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; padding: 8px 18px; border-radius: 8px; flex-shrink: 0; min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
+.sh-info { position: relative; z-index: 2; }
+.sh-title { font-family: 'Instrument Serif', serif; font-size: 24px; font-weight: 400; margin-bottom: 6px; }
+.sh-desc { font-size: 13px; color: rgba(255,255,255,.6); font-family: 'JetBrains Mono', monospace; }
 
-/* Basics */
-.sbasics .section-header { background: var(--c1bg); border: 1px solid var(--c1b); }
-.sbasics .sh-badge { background: var(--c1bg); color: var(--c1); border: 1px solid var(--c1b); }
+.sbasics .section-header { background: linear-gradient(135deg, rgba(139,92,246,.12) 0%, rgba(139,92,246,.04) 100%); border-color: rgba(139,92,246,.2); }
+.sbasics .sh-badge { background: rgba(139,92,246,.2); color: var(--c1); }
 .sbasics .sh-title { color: var(--c1); }
-/* Variables */
-.svariables .section-header { background: var(--c2bg); border: 1px solid var(--c2b); }
-.svariables .sh-badge { background: var(--c2bg); color: var(--c2); border: 1px solid var(--c2b); }
+.svariables .section-header { background: linear-gradient(135deg, rgba(6,182,212,.12) 0%, rgba(6,182,212,.04) 100%); border-color: rgba(6,182,212,.2); }
+.svariables .sh-badge { background: rgba(6,182,212,.2); color: var(--c2); }
 .svariables .sh-title { color: var(--c2); }
-/* Operators */
-.soperators .section-header { background: var(--c3bg); border: 1px solid var(--c3b); }
-.soperators .sh-badge { background: var(--c3bg); color: var(--c3); border: 1px solid var(--c3b); }
+.soperators .section-header { background: linear-gradient(135deg, rgba(245,158,11,.12) 0%, rgba(245,158,11,.04) 100%); border-color: rgba(245,158,11,.2); }
+.soperators .sh-badge { background: rgba(245,158,11,.2); color: var(--c3); }
 .soperators .sh-title { color: var(--c3); }
-/* Control Flow */
-.scontrol .section-header { background: var(--c4bg); border: 1px solid var(--c4b); }
-.scontrol .sh-badge { background: var(--c4bg); color: var(--c4); border: 1px solid var(--c4b); }
+.scontrol .section-header { background: linear-gradient(135deg, rgba(16,185,129,.12) 0%, rgba(16,185,129,.04) 100%); border-color: rgba(16,185,129,.2); }
+.scontrol .sh-badge { background: rgba(16,185,129,.2); color: var(--c4); }
 .scontrol .sh-title { color: var(--c4); }
-/* Advanced */
-.sadvanced .section-header { background: var(--c5bg); border: 1px solid var(--c5b); }
-.sadvanced .sh-badge { background: var(--c5bg); color: var(--c5); border: 1px solid var(--c5b); }
+.sadvanced .section-header { background: linear-gradient(135deg, rgba(59,130,246,.12) 0%, rgba(59,130,246,.04) 100%); border-color: rgba(59,130,246,.2); }
+.sadvanced .sh-badge { background: rgba(59,130,246,.2); color: var(--c5); }
 .sadvanced .sh-title { color: var(--c5); }
 
-/* ── TOPIC CARDS ── */
-.topics-grid { display: flex; flex-direction: column; gap: 12px; }
-
-.topic-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  transition: all .3s;
-  cursor: pointer;
-}
-.topic-card:hover {
-  border-color: rgba(255,255,255,.14);
-  transform: translateX(4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,.3);
-}
-
-.topic-card-top {
-  display: flex; align-items: center; gap: 16px;
-  padding: 18px 22px;
-}
-
-.topic-name {
-  font-family: 'DM Mono', monospace;
-  font-size: 14px; font-weight: 500;
-  flex-shrink: 0; min-width: 60px;
-  color: var(--light);
-}
-
+.topics-grid { display: flex; flex-direction: column; gap: 16px; }
+.topic-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: all .3s; cursor: pointer; }
+.topic-card:hover { border-color: rgba(255,255,255,.14); transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+.topic-card-top { display: flex; align-items: center; gap: 18px; padding: 22px 26px; }
+.topic-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; flex-shrink: 0; min-width: 80px; color: var(--light); }
 .topic-card-info { flex: 1; min-width: 0; }
-.topic-title {
-  font-size: 15px; font-weight: 600; color: var(--white);
-  margin-bottom: 4px;
-}
-.topic-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.topic-title { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.topic-summary { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.topic-arrow { flex-shrink: 0; color: var(--muted); font-size: 18px; transition: transform .3s; }
+.topic-card:hover .topic-arrow { transform: translateX(4px); color: var(--white); }
 
-.topic-arrow {
-  flex-shrink: 0; color: var(--muted); font-size: 14px;
-  transition: transform .25s, color .25s;
-}
-.topic-card:hover .topic-arrow { transform: translateX(3px); color: var(--white); }
-
-.topic-card-body {
-  display: none;
-  padding: 0 22px 20px;
-  border-top: 1px solid var(--border);
-}
+.topic-card-body { display: none; padding: 0 26px 24px; border-top: 1px solid var(--border); }
 .topic-card-body.open { display: block; }
+.topic-body-inner { padding-top: 24px; }
 
-.topic-body-inner { padding-top: 18px; }
-.tbi-desc {
-  font-size: 14px; color: var(--light); line-height: 1.75;
-  margin-bottom: 16px; font-weight: 300;
-}
-.tbi-example {
-  background: rgba(0,0,0,.3);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 8px;
-  padding: 14px 18px;
-  margin-bottom: 12px;
-}
-.tbi-example-label {
-  font-family: 'DM Mono', monospace; font-size: 9px;
-  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.tbi-example-code {
-  font-family: 'DM Mono', monospace; font-size: 12px;
-  color: var(--teal); line-height: 1.6;
-}
-.tbi-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.tbi-tag {
-  font-family: 'DM Mono', monospace; font-size: 10px;
-  padding: 3px 10px; border-radius: 100px;
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.07);
-  color: var(--light);
-}
+.tbi-desc { font-size: 15px; color: var(--light); line-height: 1.85; margin-bottom: 20px; }
+.tbi-explanation { background: rgba(0,229,195,.07); border: 1.5px solid rgba(0,229,195,.2); border-left: 4px solid var(--teal); padding: 18px 22px; border-radius: 10px; margin-bottom: 24px; font-size: 14px; color: var(--light); line-height: 1.8; }
+.tbi-explanation strong { color: var(--teal); font-weight: 600; }
+.tbi-explanation em { color: var(--white); font-style: italic; }
 
-/* Colour per category */
+.tbi-example { background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0; margin-bottom: 24px; overflow: hidden; }
+.tbi-example-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; padding: 12px 18px; background: rgba(0,0,0,.6); border-bottom: 1px solid rgba(255,255,255,.06); font-weight: 600; }
+.tbi-example-code { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #00e5c3; line-height: 1.9; white-space: pre-wrap; word-break: break-word; padding: 18px; overflow-x: auto; }
+.tbi-example-code .comment { color: #64748b; }
+.tbi-example-code .output { color: #10b981; }
+
+.tbi-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.tbi-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 12px; border-radius: 100px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: var(--light); font-weight: 500; }
+
 .sbasics .topic-name { color: var(--c1); }
-.sbasics .topic-card { border-left: 2px solid var(--c1); }
+.sbasics .topic-card { border-left: 3px solid var(--c1); }
 .svariables .topic-name { color: var(--c2); }
-.svariables .topic-card { border-left: 2px solid var(--c2); }
+.svariables .topic-card { border-left: 3px solid var(--c2); }
 .soperators .topic-name { color: var(--c3); }
-.soperators .topic-card { border-left: 2px solid var(--c3); }
+.soperators .topic-card { border-left: 3px solid var(--c3); }
 .scontrol .topic-name { color: var(--c4); }
-.scontrol .topic-card { border-left: 2px solid var(--c4); }
+.scontrol .topic-card { border-left: 3px solid var(--c4); }
 .sadvanced .topic-name { color: var(--c5); }
-.sadvanced .topic-card { border-left: 2px solid var(--c5); }
+.sadvanced .topic-card { border-left: 3px solid var(--c5); }
 
-/* ── SIDEBAR TOC ── */
-.sidebar { position: sticky; top: 80px; }
-.toc-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 16px;
-}
-.toc-title {
-  font-family: 'DM Mono', monospace; font-size: 10px;
-  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 16px;
-}
-.toc-list { display: flex; flex-direction: column; gap: 4px; }
-.toc-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 12px; border-radius: 8px;
-  text-decoration: none; font-size: 13px; color: var(--muted);
-  font-weight: 500; transition: all .2s;
-  border: 1px solid transparent;
-}
+.sidebar { position: sticky; top: 100px; height: fit-content; }
+.toc-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+.toc-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 18px; font-weight: 700; }
+.toc-list { display: flex; flex-direction: column; gap: 6px; }
+.toc-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 13px; color: var(--muted); font-weight: 500; transition: all .2s; border: 1px solid transparent; }
 .toc-item:hover { color: var(--white); background: rgba(255,255,255,.04); }
-.toc-item.active { color: var(--white); background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.08); }
+.toc-item.active { color: var(--white); background: rgba(255,255,255,.08); border-color: rgba(0,229,195,.2); }
 .toc-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
-/* Share card */
-.share-card {
-  background: linear-gradient(135deg, rgba(0,229,195,.06), rgba(59,130,246,.04));
-  border: 1px solid rgba(0,229,195,.15);
-  border-radius: 16px; padding: 24px; text-align: center;
-  margin-bottom: 16px;
-}
-.share-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
-.share-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
-.share-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 10px 20px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--teal), var(--blue));
-  color: #07111f; font-size: 13px; font-weight: 700;
-  text-decoration: none; transition: all .25s; cursor: pointer;
-  border: none; width: 100%;
-}
-.share-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,195,.25); }
+.stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.stat-box { background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+.stat-n { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+.stat-l { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
 
-/* Stats card */
-.stats-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 16px; padding: 24px;
-}
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.stat-box {
-  background: rgba(255,255,255,.02); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px; text-align: center;
-}
-.stat-n {
-  font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500;
-  line-height: 1; margin-bottom: 4px;
-}
-.stat-l { font-size: 10px; color: var(--muted); letter-spacing: .5px; }
+.share-card { background: linear-gradient(135deg, rgba(0,229,195,.08), rgba(59,130,246,.05)); border: 1.5px solid rgba(0,229,195,.2); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 20px; }
+.share-title { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+.share-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; background: linear-gradient(135deg, #00e5c3, #3b82f6); color: #07111f; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer; border: none; width: 100%; transition: all .25s; }
+.share-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,229,195,.3); }
 
-/* ── FOOTER ── */
-.blog-footer {
-  position: relative; z-index: 1;
-  border-top: 1px solid var(--border);
-  padding: 48px;
-  max-width: 860px; margin: 0 auto;
-  text-align: center;
-}
-.footer-author {
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-  margin-bottom: 32px;
-}
-.footer-avatar {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--teal), var(--blue));
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 20px; color: #07111f;
-}
-.footer-name { font-size: 18px; font-weight: 700; }
-.footer-bio { font-size: 14px; color: var(--muted); max-width: 400px; line-height: 1.6; }
-.footer-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.footer-link {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 20px; border-radius: 10px;
-  background: var(--panel); border: 1px solid var(--border);
-  text-decoration: none; font-size: 13px; color: var(--light);
-  font-weight: 500; transition: all .25s;
-}
-.footer-link:hover { color: var(--teal); border-color: rgba(0,229,195,.25); transform: translateY(-2px); }
+.blog-footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 56px 48px; max-width: 900px; margin: 0 auto; text-align: center; }
+.footer-author { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 36px; }
+.footer-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #00e5c3, #3b82f6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 24px; color: #07111f; }
+.footer-name { font-size: 20px; font-weight: 700; color: var(--white); }
+.footer-bio { font-size: 14px; color: var(--muted); max-width: 450px; line-height: 1.7; }
+.footer-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.footer-link { display: flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 10px; background: var(--panel); border: 1px solid var(--border); text-decoration: none; font-size: 13px; color: var(--light); font-weight: 500; transition: all .25s; }
+.footer-link:hover { color: var(--teal); border-color: rgba(0,229,195,.25); background: rgba(0,229,195,.05); }
 
-/* Copied toast */
-.toast {
-  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
-  background: rgba(0,229,195,.15); border: 1px solid rgba(0,229,195,.3);
-  color: var(--teal); font-family: 'DM Mono', monospace; font-size: 12px;
-  padding: 10px 24px; border-radius: 100px; letter-spacing: 1px;
-  z-index: 500; transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
-  opacity: 0;
-}
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-/* Reveal animation */
 .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.v { opacity: 1; transform: translateY(0); }
 
-/* Mobile */
-@media(max-width: 900px) {
-  nav { padding: 0 20px; }
-  .blog-hero, .filter-wrap { padding-left: 20px; padding-right: 20px; }
-  .main-layout { grid-template-columns: 1fr; padding: 32px 20px 60px; }
-  .sidebar { position: static; }
-  .blog-footer { padding: 40px 20px; }
-}
+@media(max-width: 1024px) { .main-layout { grid-template-columns: 1fr; gap: 40px; } .sidebar { position: static; } }
+@media(max-width: 900px) { nav { padding: 0 24px; } .blog-hero { padding: 70px 24px 50px; } .filter-wrap { padding: 28px 24px 0; } .main-layout { padding: 40px 24px 60px; } }
+@media(max-width: 640px) { nav { padding: 0 16px; } .blog-hero { padding: 50px 16px 40px; } .filter-wrap { padding: 24px 16px 0; } .main-layout { padding: 32px 16px 50px; } }
 </style>
 </head>
 <body>
 
 <div id="prog"></div>
-<div class="toast" id="toast">Copied to clipboard!</div>
 
-<!-- NAV -->
 <nav>
-  <a href="https://anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
-  <div class="nav-right">
-    <a href="https://anjidevops.online/blog/" class="nav-link">← All Posts</a>
-    <span class="nav-tag">Blog</span>
-  </div>
+<a href="https://www.anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
+<div class="nav-right">
+<a href="https://www.anjidevops.online/blog/" class="nav-link">← All Posts</a>
+<span class="nav-tag">Blog</span>
+</div>
 </nav>
 
-<!-- HERO -->
 <div class="blog-hero">
-  <div class="blog-category"><div class="blog-category-dot"></div>DevOps · Automation · Linux</div>
-  <h1 class="blog-title">Shell Scripting <em>Mastery</em><br>Complete Guide</h1>
-  <p class="blog-subtitle">Master Bash from basics to advanced — variables, loops, functions, arrays, text processing, and real-world automation techniques. For DevOps engineers, system administrators, and developers.</p>
-  <div class="blog-meta">
-    <div class="meta-author">
-      <div class="meta-avatar">AY</div>
-      <div>
-        <div class="meta-name">Anji Yarra</div>
-        <div class="meta-role">AWS SAA-C03 · Cloud & DevOps Engineer</div>
-      </div>
-    </div>
-    <div class="meta-divider"></div>
-    <div class="meta-info">May 2026</div>
-    <div class="meta-divider"></div>
-    <div class="meta-info">~12 min read</div>
-    <div class="meta-divider"></div>
-    <div class="meta-info">50+ examples</div>
-  </div>
+<div class="blog-category"><div class="blog-category-dot"></div>DevOps · Linux · Automation</div>
+<h1 class="blog-title">Shell Scripting <em>Complete Guide</em></h1>
+<p class="blog-subtitle">Master Bash from absolute basics to production-level automation. Learn variables, loops, functions, error handling, and real-world DevOps patterns with 100+ practical examples.</p>
+<div class="blog-meta">
+<div style="display: flex; align-items: center; gap: 12px;">
+<div class="meta-avatar">AY</div>
+<div>
+<div class="meta-name">Anji Yarra</div>
+<div class="meta-role">AWS SAA-C03 · Cloud & DevOps Engineer</div>
+</div>
+</div>
+<div class="meta-divider"></div>
+<div class="meta-info">📚 ~25 min read</div>
+<div class="meta-divider"></div>
+<div class="meta-info">💻 100+ examples</div>
+</div>
 </div>
 
-<!-- FILTERS -->
 <div class="filter-wrap">
-  <div class="filter-label">Filter by topic</div>
-  <div class="filters">
-    <button class="filter-btn active" data-cat="all">All Topics</button>
-    <button class="filter-btn" data-cat="basics"><span class="filter-dot" style="background:var(--c1)"></span>Basics</button>
-    <button class="filter-btn" data-cat="variables"><span class="filter-dot" style="background:var(--c2)"></span>Variables</button>
-    <button class="filter-btn" data-cat="operators"><span class="filter-dot" style="background:var(--c3)"></span>Operators</button>
-    <button class="filter-btn" data-cat="control"><span class="filter-dot" style="background:var(--c4)"></span>Control Flow</button>
-    <button class="filter-btn" data-cat="advanced"><span class="filter-dot" style="background:var(--c5)"></span>Advanced</button>
-  </div>
+<div class="filter-label">Filter Topics</div>
+<div class="filters">
+<button class="filter-btn active" data-cat="all">All</button>
+<button class="filter-btn" data-cat="basics"><span class="filter-dot" style="background:var(--c1)"></span>Basics</button>
+<button class="filter-btn" data-cat="variables"><span class="filter-dot" style="background:var(--c2)"></span>Variables</button>
+<button class="filter-btn" data-cat="operators"><span class="filter-dot" style="background:var(--c3)"></span>Operators</button>
+<button class="filter-btn" data-cat="control"><span class="filter-dot" style="background:var(--c4)"></span>Control</button>
+<button class="filter-btn" data-cat="advanced"><span class="filter-dot" style="background:var(--c5)"></span>Advanced</button>
+</div>
 </div>
 
-<!-- MAIN -->
 <div class="main-layout">
-  <div class="content">
+<div class="content">
+<div class="intro-block reveal">
+Shell scripting is <strong>essential for DevOps engineers</strong>. Every day you'll write scripts to automate deployments, manage infrastructure, process logs, and handle system administration. Learning bash properly—not just copy-pasting—makes you significantly more productive and helps you write reliable automation that won't break at 3 AM in production.
+</div>
 
-    <div class="intro-block reveal">
-      Shell scripting is the <strong>backbone of DevOps automation</strong>. Whether you're deploying infrastructure, monitoring systems, or processing logs, bash is everywhere. In <strong>AWS</strong>, you'll use shell scripts in EC2 user data, Lambda, Systems Manager, and deployment pipelines. Mastering shell scripting saves hours and prevents errors — you'll write once, run reliably.
-    </div>
+<!-- SECTION 1: BASICS -->
+<div class="code-section sbasics reveal" id="sec-basics" data-cat="basics">
+<div class="section-header" data-bg="1">
+<div class="sh-badge">1</div>
+<div class="sh-info">
+<div class="sh-title">Basics & Getting Started</div>
+<div class="sh-desc">Shebang, permissions, echo, comments</div>
+</div>
+</div>
+<div class="topics-grid">
 
-    <!-- Basics -->
-    <div class="code-section sbasics reveal" id="sec-basics" data-cat="basics">
-      <div class="section-header" data-bg="1">
-        <div class="sh-badge">1</div>
-        <div class="sh-info">
-          <div class="sh-title">Basics & Getting Started</div>
-          <div class="sh-desc">Shebang, executable scripts, first program</div>
-        </div>
-      </div>
-      <div class="topics-grid">
-        <div class="topic-card" data-topic="shebang">
-          <div class="topic-card-top">
-            <div class="topic-name">#!/bin/bash</div>
-            <div class="topic-card-info">
-              <div class="topic-title">The Shebang</div>
-              <div class="topic-summary">Tells the system which interpreter to use for this script</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">The shebang (#!) is the first line of every script. It specifies the interpreter. Always use #!/bin/bash for maximum compatibility on Linux/Mac systems.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">#!/bin/bash
-# Your script starts here
-echo "Hello, World!"</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Mandatory</span><span class="tbi-tag">First line</span><span class="tbi-tag">Bash compatible</span></div>
-            </div>
-          </div>
-        </div>
+<div class="topic-card" data-topic="shebang">
+<div class="topic-card-top">
+<div class="topic-name">#!/bin/bash</div>
+<div class="topic-card-info">
+<div class="topic-title">The Shebang Line</div>
+<div class="topic-summary">Tells the system which interpreter to use</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">The shebang (#!) must be the first line of every script. It tells Linux which interpreter to execute the script with. #!/bin/bash means "run this using the bash interpreter located at /bin/bash".</p>
 
-        <div class="topic-card" data-topic="executable">
-          <div class="topic-card-top">
-            <div class="topic-name">chmod +x</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Making Scripts Executable</div>
-              <div class="topic-summary">Add execute permission so you can run the script</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Without execute permission, you can't run a script directly. chmod +x adds execute permission for all users. Then use ./scriptname.sh to run it from the current directory.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Commands</div>
-                <div class="tbi-example-code">chmod +x hello.sh
-./hello.sh          # Runs the script
-bash hello.sh       # Also works (runs explicitly with bash)</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Permissions</span><span class="tbi-tag">chmod</span><span class="tbi-tag">Executable</span></div>
-            </div>
-          </div>
-        </div>
+<div class="tbi-explanation">
+<strong>Why it matters:</strong> Without a shebang, your system doesn't know whether to use bash, python, perl, or something else. With it, you can run ./script.sh directly instead of typing bash script.sh every time. The shebang is also called a "magic number"—it's special.
+</div>
 
-        <div class="topic-card" data-topic="first-script">
-          <div class="topic-card-top">
-            <div class="topic-name">echo</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Your First Script</div>
-              <div class="topic-summary">Print text to the terminal — the hello world of bash</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">echo outputs text to stdout. It's the most basic command. Every string you want to print to the terminal goes through echo.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example Script</div>
-                <div class="tbi-example-code">#!/bin/bash
-echo "Welcome to Shell Scripting"
-echo "This is line 2"</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Output</span><span class="tbi-tag">Stdout</span><span class="tbi-tag">Print</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="topic-card" data-topic="comments">
-          <div class="topic-card-top">
-            <div class="topic-name">#</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Comments</div>
-              <div class="topic-summary">Document your code — lines that don't execute</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Comments start with # and are ignored by the interpreter. Always add comments explaining the purpose of your script and complex sections. The only exception: #!/bin/bash is a comment that doubles as a directive.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Good Comments</div>
-                <div class="tbi-example-code">#!/bin/bash
-# Backup script for production database
+<div class="tbi-example">
+<div class="tbi-example-label">Script with shebang</div>
+<div class="tbi-example-code">#!/bin/bash
+<span class="comment"># This is a comment - bash ignores everything after #
 # Author: Anji Yarra
-# Date: May 2026
+# Purpose: Demonstrate shebang and basic script</span>
 
-# Connect to RDS instance
-DB_HOST="prod-db.region.rds.amazonaws.com"</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Documentation</span><span class="tbi-tag">#symbol</span><span class="tbi-tag">Ignored</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+echo "Hello DevOps World!"
+echo "This is my first bash script"
+echo "Date: $(date +%Y-%m-%d)"
+</div>
+</div>
 
-    <!-- Variables -->
-    <div class="code-section svariables reveal" id="sec-variables" data-cat="variables">
-      <div class="section-header" data-bg="2">
-        <div class="sh-badge">2</div>
-        <div class="sh-info">
-          <div class="sh-title">Variables & Data</div>
-          <div class="sh-desc">Store and manipulate text and numbers</div>
-        </div>
-      </div>
-      <div class="topics-grid">
-        <div class="topic-card" data-topic="var-assign">
-          <div class="topic-card-top">
-            <div class="topic-name">VAR=</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Variable Assignment</div>
-              <div class="topic-summary">Create a variable and store a value — no $ when assigning</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Variables store values. To assign: NAME=value (no spaces). To use: $NAME. Common mistake: using $ on the left side of assignment — always wrong.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Correct vs Wrong</div>
-                <div class="tbi-example-code">✓ NAME="Alice"      # Correct
-✗ $NAME="Alice"     # Wrong
-✗ NAME = "Alice"    # Wrong (spaces)</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Assignment</span><span class="tbi-tag">No $</span><span class="tbi-tag">String</span></div>
-            </div>
-          </div>
-        </div>
+<div class="tbi-tags"><span class="tbi-tag">First line</span><span class="tbi-tag">Required</span><span class="tbi-tag">Interpreter</span></div>
+</div>
+</div>
+</div>
 
-        <div class="topic-card" data-topic="var-use">
-          <div class="topic-card-top">
-            <div class="topic-name">$VAR</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Using Variables</div>
-              <div class="topic-summary">Access the value stored in a variable with $</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Prefix the variable name with $ to access its value. Without $, bash treats it as literal text. Always quote variables in echo to avoid word splitting.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">NAME="Cloud Engineer"
-echo $NAME              # Cloud Engineer
-echo "$NAME is AWS certified"  # Cloud Engineer is AWS certified</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Dollar sign</span><span class="tbi-tag">Quote variables</span><span class="tbi-tag">Word splitting</span></div>
-            </div>
-          </div>
-        </div>
+<div class="topic-card" data-topic="chmod">
+<div class="topic-card-top">
+<div class="topic-name">chmod +x</div>
+<div class="topic-card-info">
+<div class="topic-title">Making Scripts Executable</div>
+<div class="topic-summary">Grant execute permission to run directly</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">By default, files don't have execute permission. Use chmod +x to add execute permission. Then you can run ./script.sh directly instead of bash script.sh. Without execute permission, Linux treats it as a regular file, not a program.</p>
 
-        <div class="topic-card" data-topic="command-sub">
-          <div class="topic-card-top">
-            <div class="topic-name">$()</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Command Substitution</div>
-              <div class="topic-summary">Save the output of a command into a variable</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Use $(command) to run a command and capture its output. Modern syntax is $(). Old backtick syntax `command` still works but is discouraged.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">CURRENT_USER=$(whoami)
+<div class="tbi-explanation">
+<strong>How it works:</strong> chmod = change mode (permissions). +x = add execute. You can also use chmod 755 (owner: rwx, others: rx) or chmod 700 (owner only). Once executable, bash can start the shebang interpreter automatically. This is one of the most fundamental Unix concepts.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Making a script executable</div>
+<div class="tbi-example-code"><span class="comment"># 1. Create a script file</span>
+cat > hello.sh << 'EOF'
+#!/bin/bash
+echo "This script is now executable!"
+EOF
+
+<span class="comment"># 2. Check current permissions (not executable)</span>
+ls -la hello.sh
+<span class="output"># -rw-r--r-- user group 62 May 26 hello.sh</span>
+
+<span class="comment"># 3. Make it executable</span>
+chmod +x hello.sh
+
+<span class="comment"># 4. Check permissions (now executable - note the x)</span>
+ls -la hello.sh
+<span class="output"># -rwxr-xr-x user group 62 May 26 hello.sh</span>
+
+<span class="comment"># 5. Run it directly (no bash needed)</span>
+./hello.sh
+<span class="output"># This script is now executable!</span>
+
+<span class="comment"># Without chmod +x, you'd get "Permission denied"</span>
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Permissions</span><span class="tbi-tag">Execute</span><span class="tbi-tag">chmod 755</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="echo">
+<div class="topic-card-top">
+<div class="topic-name">echo</div>
+<div class="topic-card-info">
+<div class="topic-title">Print Output to Screen</div>
+<div class="topic-summary">Display text and variables</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">echo writes text to stdout (your terminal). It's how scripts communicate with users. By default echo adds a newline at the end. Use -n flag to suppress it. echo can display variables, command output, and any text.</p>
+
+<div class="tbi-explanation">
+<strong>stdin/stdout/stderr:</strong> Every Linux process has three data streams. stdin = input from keyboard/files, stdout = normal output to terminal, stderr = error messages. echo writes to stdout. You can redirect: echo "text" > file.txt (save to file), echo "text" >> file.txt (append), echo "error" >&2 (send to stderr).
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Echo examples</div>
+<div class="tbi-example-code"><span class="comment"># Basic echo - prints text with newline</span>
+echo "Hello World"
+<span class="output"># Output: Hello World</span>
+
+<span class="comment"># Multiple lines</span>
+echo "Line 1"
+echo "Line 2"
+<span class="output"># Output: Line 1
+# Line 2</span>
+
+<span class="comment"># No newline with -n flag</span>
+echo -n "Enter your name: "
+<span class="output"># Output: Enter your name: [cursor waits for input]</span>
+
+<span class="comment"># Variables in echo (always quote to prevent word splitting)</span>
+NAME="Alice"
+VERSION="3.2.1"
+echo "Welcome $NAME to version $VERSION"
+<span class="output"># Output: Welcome Alice to version 3.2.1</span>
+
+<span class="comment"># Save output to file</span>
+echo "Deployment started at $(date)" > deploy.log
+
+<span class="comment"># Append to file</span>
+echo "Status: Success" >> deploy.log
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">stdout</span><span class="tbi-tag">Print</span><span class="tbi-tag">-n flag</span><span class="tbi-tag">Redirection</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="comments">
+<div class="topic-card-top">
+<div class="topic-name">#</div>
+<div class="topic-card-info">
+<div class="topic-title">Comments & Documentation</div>
+<div class="topic-summary">Add notes that bash ignores</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Comments start with # and are completely ignored by bash. They're for humans to read. Good comments explain WHY you're doing something, not WHAT (the code shows that). Always add a header block explaining the script's purpose, author, and usage.</p>
+
+<div class="tbi-explanation">
+<strong>Comment best practices:</strong> Start with a header explaining purpose/author/usage. Comment complex logic explaining the approach. Don't comment obvious code. For functions, document parameters and return values. Comments are essential for production scripts—future you will thank present you.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Proper commenting in production script</div>
+<div class="tbi-example-code">#!/bin/bash
+<span class="comment">########################################
+# Database Backup Script
+########################################
+# Author: Anji Yarra
+# Purpose: Automated daily backup of production databases
+# Usage: ./backup.sh [database-name]
+# Cron: 0 2 * * * /usr/local/bin/backup.sh
+########################################</span>
+
+<span class="comment"># Configuration - easier to find and modify</span>
+DB_NAME="${1:-production_db}"
+BACKUP_DIR="/backups/postgresql"
+RETENTION_DAYS=30
+
+<span class="comment"># Stop application so database is idle for backup</span>
+systemctl stop myapp
+
+<span class="comment"># Create backup with timestamp for unique naming</span>
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+BACKUP_FILE="$BACKUP_DIR/db-$TIMESTAMP.sql.gz"
+pg_dump "$DB_NAME" | gzip > "$BACKUP_FILE"
+
+<span class="comment"># Restart application immediately</span>
+systemctl start myapp
+
+<span class="comment"># Clean old backups to save disk space</span>
+find "$BACKUP_DIR" -name "db-*.sql.gz" -mtime +$RETENTION_DAYS -delete
+
+echo "Backup completed: $BACKUP_FILE"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Documentation</span><span class="tbi-tag">Ignored</span><span class="tbi-tag">Header blocks</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SECTION 2: VARIABLES -->
+<div class="code-section svariables reveal" id="sec-variables" data-cat="variables">
+<div class="section-header" data-bg="2">
+<div class="sh-badge">2</div>
+<div class="sh-info">
+<div class="sh-title">Variables & Data</div>
+<div class="sh-desc">Store, access, and use data</div>
+</div>
+</div>
+<div class="topics-grid">
+
+<div class="topic-card" data-topic="var-assign">
+<div class="topic-card-top">
+<div class="topic-name">NAME=value</div>
+<div class="topic-card-info">
+<div class="topic-title">Variable Assignment</div>
+<div class="topic-summary">Create and store values</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Variables store values for later use. Syntax: NAME=value with NO SPACES around =. Variable names are case-sensitive (NAME and name are different). By convention, system variables use UPPERCASE, local variables use lowercase.</p>
+
+<div class="tbi-explanation">
+<strong>Common mistake:</strong> Spaces break assignment! NAME = value fails because bash thinks you're running a command called NAME. Always use NAME=value with zero spaces. Variables can contain text, numbers, paths, or command output.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Variable assignment patterns</div>
+<div class="tbi-example-code"><span class="comment"># String variables</span>
+USERNAME="alice"
+SERVER="prod-db-01"
+ENVIRONMENT="production"
+
+<span class="comment"># Numeric variables (stored as text, used as numbers)</span>
+PORT=5432
+MAX_CONNECTIONS=200
+TIMEOUT=30
+
+<span class="comment"># Path variables</span>
+CONFIG_DIR="/etc/myapp"
+LOG_FILE="/var/log/app.log"
+BACKUP_PATH="/backups/$(date +%Y-%m-%d)"
+
+<span class="comment"># Boolean-like (bash has no true boolean)</span>
+ENABLE_DEBUG="true"
+AUTO_RESTART="false"
+
+<span class="comment"># Multi-line values</span>
+DEPLOYMENT_INFO="
+App: MyApplication
+Version: 3.2.1
+Environment: Production
+"
+
+echo "Server: $SERVER on port $PORT"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">No spaces</span><span class="tbi-tag">Case-sensitive</span><span class="tbi-tag">UPPERCASE conv</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="var-access">
+<div class="topic-card-top">
+<div class="topic-name">$VARIABLE</div>
+<div class="topic-card-info">
+<div class="topic-title">Accessing Variables</div>
+<div class="topic-summary">Use the $ prefix to get values</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Use $ to read a variable. Without $, bash treats the name as literal text. Always quote variables to prevent word splitting—spaces in values break your commands if unquoted. This is one of the most common bugs in shell scripts.</p>
+
+<div class="tbi-explanation">
+<strong>Word splitting:</strong> If VAR="hello world" and you use $VAR without quotes, bash splits it into two arguments: "hello" and "world". Use "$VAR" to keep it as one value. This causes subtle bugs: mkdir $DIR might fail if $DIR has spaces, but mkdir "$DIR" works perfectly.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Accessing variables correctly</div>
+<div class="tbi-example-code"><span class="comment"># Assign values first</span>
+APP_NAME="MyApplication"
+ENV="production"
+VERSION="2.5.1"
+
+<span class="comment"># Access with $ prefix</span>
+echo "Running $APP_NAME in $ENV"
+<span class="output"># Output: Running MyApplication in production</span>
+
+<span class="comment"># Without $, treated as literal text (WRONG)</span>
+echo "APP_NAME"
+<span class="output"># Output: APP_NAME (not MyApplication)</span>
+
+<span class="comment"># CRITICAL: Always quote variables!</span>
+DIR_WITH_SPACES="/var/log/my application"
+
+<span class="comment"># BAD: Without quotes, splits on space</span>
+ls $DIR_WITH_SPACES <span class="comment"># Fails or gives wrong output</span>
+
+<span class="comment"># GOOD: With quotes, works correctly</span>
+ls "$DIR_WITH_SPACES" <span class="comment"># Lists the correct directory</span>
+
+<span class="comment"># Use variables in paths</span>
+CONFIG_FILE="/etc/app/$APP_NAME/config.conf"
+BACKUP_DIR="/backups/$APP_NAME-$(date +%Y-%m-%d)"
+mkdir -p "$BACKUP_DIR"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">$ prefix</span><span class="tbi-tag">Always quote</span><span class="tbi-tag">Word splitting</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="cmd-sub">
+<div class="topic-card-top">
+<div class="topic-name">$(command)</div>
+<div class="topic-card-info">
+<div class="topic-title">Command Substitution</div>
+<div class="topic-summary">Run commands, save output to variables</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Command substitution $(command) runs a command and saves its output to a variable. This is one of bash's most powerful features. Use $() syntax (modern and nestable), not backticks (deprecated and harder to read).</p>
+
+<div class="tbi-explanation">
+<strong>Why it's powerful:</strong> Instead of manually typing dates or results, TIMESTAMP=$(date) gets today's date automatically. Combined with loops and functions, this enables dynamic, flexible automation. Your script adapts to the environment instead of being hardcoded.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Command substitution examples</div>
+<div class="tbi-example-code"><span class="comment"># Capture date/time</span>
 TODAY=$(date +%Y-%m-%d)
-echo "User $CURRENT_USER logged in on $TODAY"</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Capture output</span><span class="tbi-tag">Modern syntax</span><span class="tbi-tag">Backticks deprecated</span></div>
-            </div>
-          </div>
-        </div>
+NOW=$(date +%H:%M:%S)
+MONTH=$(date +%B)
 
-        <div class="topic-card" data-topic="special-vars">
-          <div class="topic-card-top">
-            <div class="topic-name">$1 $# $$</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Special Variables</div>
-              <div class="topic-summary">Bash provides variables with automatic values</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Bash automatically sets variables: $0=script name, $1=$2=$3=arguments, $#=number of arguments, $?=exit code of last command, $$=process ID.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example Script</div>
-                <div class="tbi-example-code">#!/bin/bash
-echo "Script: $0"
-echo "First arg: $1"
-echo "Total args: $#"
-echo "Last exit code: $?"</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Arguments</span><span class="tbi-tag">$#</span><span class="tbi-tag">$?</span><span class="tbi-tag">Automatic</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+echo "Date: $TODAY"
+echo "Time: $NOW"
+echo "Month: $MONTH"
 
-    <!-- Operators -->
-    <div class="code-section soperators reveal" id="sec-operators" data-cat="operators">
-      <div class="section-header" data-bg="3">
-        <div class="sh-badge">3</div>
-        <div class="sh-info">
-          <div class="sh-title">Operators</div>
-          <div class="sh-desc">Arithmetic, comparison, logical, file tests</div>
-        </div>
-      </div>
-      <div class="topics-grid">
-        <div class="topic-card" data-topic="arithmetic">
-          <div class="topic-card-top">
-            <div class="topic-name">$((...))</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Arithmetic Operations</div>
-              <div class="topic-summary">Do math: +, -, *, /, %</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Use $(( )) for arithmetic. Inside the double parentheses, you don't need $ for variables. Supports: +, -, *, /, % (modulo), ++, --.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Examples</div>
-                <div class="tbi-example-code">A=10
-B=3
-echo $((A + B))     # 13
-echo $((A * B))     # 30
-echo $((A / B))     # 3
-echo $((A % B))     # 1</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Math</span><span class="tbi-tag">Double parens</span><span class="tbi-tag">No $</span></div>
-            </div>
-          </div>
-        </div>
+<span class="comment"># Get system information</span>
+CURRENT_USER=$(whoami)
+HOSTNAME=$(hostname)
+KERNEL=$(uname -r)
 
-        <div class="topic-card" data-topic="comparison">
-          <div class="topic-card-top">
-            <div class="topic-name">-eq -lt -gt</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Number Comparison</div>
-              <div class="topic-summary">Compare: -eq, -ne, -lt, -le, -gt, -ge</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Compare numbers with test operators inside [ ]. Don't use = or <: they're for strings. Use -eq for "equal to", -lt for "less than", etc.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Comparison Operators</div>
-                <div class="tbi-example-code">[ $A -eq $B ]   # Equal to
-[ $A -ne $B ]   # Not equal
-[ $A -lt $B ]   # Less than
-[ $A -le $B ]   # Less or equal
-[ $A -gt $B ]   # Greater than
-[ $A -ge $B ]   # Greater or equal</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Numbers only</span><span class="tbi-tag">Square brackets</span><span class="tbi-tag">Test command</span></div>
-            </div>
-          </div>
-        </div>
+echo "Running as: $CURRENT_USER on $HOSTNAME"
+echo "Kernel: $KERNEL"
 
-        <div class="topic-card" data-topic="file-test">
-          <div class="topic-card-top">
-            <div class="topic-name">-f -d -e</div>
-            <div class="topic-card-info">
-              <div class="topic-title">File Tests</div>
-              <div class="topic-summary">Check: file exists, is directory, readable, writable</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Test file properties: -e (exists), -f (is file), -d (is directory), -r (readable), -w (writable), -x (executable), -s (non-empty).</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">if [ -f "config.json" ]; then
-  echo "Config file exists"
+<span class="comment"># Count things</span>
+FILE_COUNT=$(ls -1 /tmp | wc -l)
+PROCESS_COUNT=$(ps aux | wc -l)
+DISK_USAGE=$(df -h / | tail -1 | awk '{print $5}')
+
+echo "Files in /tmp: $FILE_COUNT"
+echo "Running processes: $PROCESS_COUNT"
+echo "Disk usage: $DISK_USAGE"
+
+<span class="comment"># Create timestamped filenames (very useful)</span>
+BACKUP_FILE="/backups/db-$(date +%Y%m%d_%H%M%S).sql.gz"
+LOG_FILE="/var/log/deploy-$(date +%Y-%m-%d).log"
+
+<span class="comment"># Use in conditionals</span>
+CURRENT_HOUR=$(date +%H)
+if [ "$CURRENT_HOUR" -ge 22 ]; then
+echo "Late night deployment, proceed with caution"
+fi
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">$()</span><span class="tbi-tag">Capture output</span><span class="tbi-tag">Modern syntax</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="special-vars">
+<div class="topic-card-top">
+<div class="topic-name">$1 $# $? $$</div>
+<div class="topic-card-info">
+<div class="topic-title">Special Built-in Variables</div>
+<div class="topic-summary">Access automatic bash values</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Bash automatically creates special variables: $0=script name, $1/$2/$3=arguments, $#=argument count, $?=exit code of last command, $$=process ID. These enable scripts to be flexible and handle errors.</p>
+
+<div class="tbi-explanation">
+<strong>Practical use:</strong> Check $# before using $1 (prevents "argument not found" errors). Check $? after critical commands to detect failures. Use $$ for unique temp files. Arguments let one script handle multiple scenarios: deploy.sh production v2.5 vs deploy.sh staging v2.4 use identical code with different data.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Special variables in action</div>
+<div class="tbi-example-code">#!/bin/bash
+<span class="comment"># Script name: deploy.sh
+# Usage: ./deploy.sh <env> <version> [--force]</span>
+
+<span class="comment"># $0 is the script name itself</span>
+SCRIPT_NAME="$0"
+echo "Running: $SCRIPT_NAME"
+
+<span class="comment"># $# is total argument count</span>
+if [ $# -lt 2 ]; then
+echo "ERROR: Need at least 2 arguments"
+echo "Usage: $SCRIPT_NAME <environment> <version>"
+exit 1
 fi
 
-if [ -d "/var/log" ]; then
-  echo "Log directory found"
-fi</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Files</span><span class="tbi-tag">Directories</span><span class="tbi-tag">Permissions</span></div>
-            </div>
-          </div>
-        </div>
+<span class="comment"># $1, $2, $3 are individual arguments</span>
+ENVIRONMENT="$1"
+VERSION="$2"
+FORCE_DEPLOY="$3"
 
-        <div class="topic-card" data-topic="logical">
-          <div class="topic-card-top">
-            <div class="topic-name">&&  ||  !</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Logical Operators</div>
-              <div class="topic-summary">AND, OR, NOT — combine conditions</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">AND (&&): both must be true. OR (||): at least one true. NOT (!): negates the condition.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Examples</div>
-                <div class="tbi-example-code">[ $AGE -gt 18 ] && echo "Adult"
-[ -f "file.txt" ] || echo "File missing"
-[ ! -d "/tmp" ] && echo "/tmp doesn't exist"</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">AND</span><span class="tbi-tag">OR</span><span class="tbi-tag">NOT</span><span class="tbi-tag">Conditions</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+echo "Deploying version $VERSION to $ENVIRONMENT"
 
-    <!-- Control Flow -->
-    <div class="code-section scontrol reveal" id="sec-control" data-cat="control">
-      <div class="section-header" data-bg="4">
-        <div class="sh-badge">4</div>
-        <div class="sh-info">
-          <div class="sh-title">Control Flow</div>
-          <div class="sh-desc">if/else, for loops, while loops, case statements</div>
-        </div>
-      </div>
-      <div class="topics-grid">
-        <div class="topic-card" data-topic="if">
-          <div class="topic-card-top">
-            <div class="topic-name">if then fi</div>
-            <div class="topic-card-info">
-              <div class="topic-title">if/else Conditionals</div>
-              <div class="topic-summary">Execute code based on conditions</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">if tests a condition. If true, execute the then block. Use elif for multiple branches, else for the fallback. Always end with fi.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">if [ $AGE -ge 18 ]; then
-  echo "Adult"
-elif [ $AGE -ge 13 ]; then
-  echo "Teenager"
+<span class="comment"># Run a command and check $? (exit code)</span>
+npm test
+if [ $? -ne 0 ]; then
+echo "ERROR: Tests failed, aborting deployment"
+exit 1
+fi
+
+<span class="comment"># $$ is this script's process ID (useful for temp files)</span>
+TEMP_LOG="/tmp/deploy-$$.log"
+echo "Logging to: $TEMP_LOG"
+
+npm run build >> "$TEMP_LOG" 2>&1
+if [ $? -eq 0 ]; then
+echo "✓ Build successful"
 else
-  echo "Child"
-fi</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Conditionals</span><span class="tbi-tag">then fi</span><span class="tbi-tag">elif</span></div>
-            </div>
-          </div>
-        </div>
+echo "✗ Build failed (see $TEMP_LOG)"
+exit 1
+fi
 
-        <div class="topic-card" data-topic="for">
-          <div class="topic-card-top">
-            <div class="topic-name">for do done</div>
-            <div class="topic-card-info">
-              <div class="topic-title">for Loops</div>
-              <div class="topic-summary">Iterate over ranges, lists, or files</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">for loops iterate. Common syntaxes: for i in {1..10}, for item in list, for ((i=0; i<10; i++)). Always end with done.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Examples</div>
-                <div class="tbi-example-code">for i in {1..5}; do
-  echo "Number: $i"
+<span class="comment"># Display all arguments</span>
+echo "Total arguments: $#"
+echo "All arguments: $@"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">$0 name</span><span class="tbi-tag">$1 args</span><span class="tbi-tag">$# count</span><span class="tbi-tag">$? exit</span><span class="tbi-tag">$$ PID</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SECTION 3: OPERATORS -->
+<div class="code-section soperators reveal" id="sec-operators" data-cat="operators">
+<div class="section-header" data-bg="3">
+<div class="sh-badge">3</div>
+<div class="sh-info">
+<div class="sh-title">Operators & Comparisons</div>
+<div class="sh-desc">Math, conditions, file tests, logic</div>
+</div>
+</div>
+<div class="topics-grid">
+
+<div class="topic-card" data-topic="arithmetic">
+<div class="topic-card-top">
+<div class="topic-name">$((...))</div>
+<div class="topic-card-info">
+<div class="topic-title">Arithmetic Operations</div>
+<div class="topic-summary">Do math: +, -, *, /, %</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Use $(( )) to perform integer arithmetic. Inside, you don't need $ before variables. Supports +, -, *, /, % (modulo), ++, --. Bash normally treats everything as text, so $(( )) tells bash "treat these as numbers".</p>
+
+<div class="tbi-explanation">
+<strong>Why separate from text:</strong> Without $(( )), "5" + "3" is text concatenation, not math. Modulo (%) is useful for: checking if even/odd, wrapping counters, cycling through values. Integer arithmetic only—use bc or awk for decimals.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Arithmetic examples</div>
+<div class="tbi-example-code"><span class="comment"># Basic math operations</span>
+A=10
+B=3
+
+SUM=$((A + B))
+echo "Sum: $SUM"
+<span class="output"># Output: Sum: 13</span>
+
+DIFF=$((A - B))
+PRODUCT=$((A * B))
+QUOTIENT=$((A / B)) <span class="comment"># Integer division</span>
+REMAINDER=$((A % B))
+
+echo "10 - 3 = $DIFF"
+echo "10 * 3 = $PRODUCT"
+echo "10 / 3 = $QUOTIENT" <span class="output"># 3, not 3.333</span>
+echo "10 % 3 = $REMAINDER" <span class="output"># 1 (the remainder)</span>
+
+<span class="comment"># Increment/decrement</span>
+COUNTER=0
+COUNTER=$((COUNTER + 1))
+echo "Counter: $COUNTER"
+
+<span class="comment"># Check if even or odd using modulo</span>
+NUMBER=42
+if [ $((NUMBER % 2)) -eq 0 ]; then
+echo "$NUMBER is even"
+else
+echo "$NUMBER is odd"
+fi
+
+<span class="comment"># Useful for loops</span>
+for ((i=1; i<=5; i++)); do
+echo "Iteration $i"
 done
+</div>
+</div>
 
-for file in *.log; do
-  echo "Processing $file"
-done</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Loop</span><span class="tbi-tag">Iterate</span><span class="tbi-tag">done</span></div>
-            </div>
-          </div>
-        </div>
+<div class="tbi-tags"><span class="tbi-tag">Integer math</span><span class="tbi-tag">$((...))</span><span class="tbi-tag">Modulo %</span></div>
+</div>
+</div>
+</div>
 
-        <div class="topic-card" data-topic="while">
-          <div class="topic-card-top">
-            <div class="topic-name">while do done</div>
-            <div class="topic-card-info">
-              <div class="topic-title">while Loops</div>
-              <div class="topic-summary">Loop while condition is true</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">while loops run as long as condition is true. Common for reading files or processing data. Always ensure the condition eventually becomes false to avoid infinite loops.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">COUNT=1
-while [ $COUNT -le 5 ]; do
-  echo "Count: $COUNT"
-  COUNT=$((COUNT + 1))
-done</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Loop</span><span class="tbi-tag">Condition</span><span class="tbi-tag">done</span></div>
-            </div>
-          </div>
-        </div>
+<div class="topic-card" data-topic="comparison-num">
+<div class="topic-card-top">
+<div class="topic-name">-eq -lt -gt</div>
+<div class="topic-card-info">
+<div class="topic-title">Number Comparisons</div>
+<div class="topic-summary">Compare numbers: equal, less, greater</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Use -eq, -ne, -lt, -le, -gt, -ge inside [ ] for number comparisons. Don't use = or < (those are for text). [ ] is the test command—it evaluates conditions and returns true/false.</p>
 
-        <div class="topic-card" data-topic="case">
-          <div class="topic-card-top">
-            <div class="topic-name">case esac</div>
-            <div class="topic-card-info">
-              <div class="topic-title">case Statements</div>
-              <div class="topic-summary">Switch on value — cleaner than multiple if/elif</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">case evaluates a value against patterns. Cleaner than if-elif-else when checking one variable against many values. Each pattern ends with ;;.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">case $DAY in
-  Monday) echo "Start of week" ;;
-  Friday) echo "TGIF" ;;
-  Saturday|Sunday) echo "Weekend" ;;
-  *) echo "Weekday" ;;
-esac</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Switch</span><span class="tbi-tag">Pattern matching</span><span class="tbi-tag">esac</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="tbi-explanation">
+<strong>Text vs number:</strong> [ "5" = "10" ] is false (comparing text), but [ 5 -lt 10 ] is true (comparing numbers). Use -eq/-lt for numbers, = for text. This matters for sorting and logic correctness.
+</div>
 
-    <!-- Advanced -->
-    <div class="code-section sadvanced reveal" id="sec-advanced" data-cat="advanced">
-      <div class="section-header" data-bg="5">
-        <div class="sh-badge">5</div>
-        <div class="sh-info">
-          <div class="sh-title">Advanced Topics</div>
-          <div class="sh-desc">Functions, arrays, text processing, error handling</div>
-        </div>
-      </div>
-      <div class="topics-grid">
-        <div class="topic-card" data-topic="functions">
-          <div class="topic-card-top">
-            <div class="topic-name">function()</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Functions</div>
-              <div class="topic-summary">Reusable code blocks with parameters</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Functions group code for reuse. Define with function_name() { }. Call by name. Access arguments via $1, $2, etc. Return values with return or echo.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">greet() {
-  echo "Hello, $1!"
+<div class="tbi-example">
+<div class="tbi-example-label">Number comparison patterns</div>
+<div class="tbi-example-code"><span class="comment"># Comparison operators</span>
+AGE=25
+THRESHOLD=18
+
+<span class="comment"># Equal (-eq) and Not equal (-ne)</span>
+if [ $AGE -eq 25 ]; then
+echo "Age is exactly 25"
+fi
+
+if [ $AGE -ne 18 ]; then
+echo "Age is not 18"
+fi
+
+<span class="comment"># Less than (-lt) and Less or equal (-le)</span>
+if [ $THRESHOLD -lt $AGE ]; then
+echo "$THRESHOLD is less than $AGE"
+fi
+
+if [ $THRESHOLD -le $AGE ]; then
+echo "$THRESHOLD is <= $AGE"
+fi
+
+<span class="comment"># Greater than (-gt) and Greater or equal (-ge)</span>
+if [ $AGE -gt 18 ]; then
+echo "Is an adult"
+fi
+
+if [ $AGE -ge 21 ]; then
+echo "Can drink"
+fi
+
+<span class="comment"># Practical: Check resource usage and alert</span>
+CPU_USAGE=85
+MEMORY_USAGE=92
+
+if [ $CPU_USAGE -gt 80 ]; then
+echo "WARNING: High CPU ($CPU_USAGE%)"
+fi
+
+if [ $MEMORY_USAGE -gt 90 ]; then
+echo "CRITICAL: Memory almost full ($MEMORY_USAGE%)"
+fi
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">[ ]</span><span class="tbi-tag">-eq -lt -gt</span><span class="tbi-tag">Numbers</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="file-test">
+<div class="topic-card-top">
+<div class="topic-name">-f -d -e</div>
+<div class="topic-card-info">
+<div class="topic-title">File Tests</div>
+<div class="topic-summary">Check file existence and properties</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Test files with [ -f file ] (is file?), [ -d dir ] (is directory?), [ -e path ] (exists?), [ -r ] (readable?), [ -w ] (writable?), [ -x ] (executable?), [ -s ] (non-empty?). Essential for safe, production-grade scripts.</p>
+
+<div class="tbi-explanation">
+<strong>Why test first:</strong> Never blindly access files—always test first. This prevents "file not found" errors, permission issues, and wrong file operations. Safe scripts test before reading, writing, or executing. This makes debugging much easier and prevents silent failures.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">File testing patterns</div>
+<div class="tbi-example-code"><span class="comment"># Check if file exists and is readable</span>
+CONFIG_FILE="/etc/app/config.conf"
+
+if [ -f "$CONFIG_FILE" ]; then
+echo "Config file found"
+source "$CONFIG_FILE" <span class="comment"># Load it safely</span>
+else
+echo "ERROR: Config file missing"
+exit 1
+fi
+
+<span class="comment"># Check if directory exists, create if not</span>
+BACKUP_DIR="/backups"
+
+if [ -d "$BACKUP_DIR" ]; then
+echo "Backup directory exists"
+else
+echo "Creating backup directory..."
+mkdir -p "$BACKUP_DIR"
+fi
+
+<span class="comment"># Check if writable before backup</span>
+if [ -w "$BACKUP_DIR" ]; then
+cp -r /data "$BACKUP_DIR/data-$(date +%Y-%m-%d)"
+echo "✓ Backup completed"
+else
+echo "ERROR: Cannot write to backup directory"
+exit 1
+fi
+
+<span class="comment"># Check if file is not empty</span>
+LOGFILE="/var/log/app.log"
+
+if [ -s "$LOGFILE" ]; then
+echo "Log has content"
+tail -f "$LOGFILE"
+else
+echo "Log file is empty"
+fi
+
+<span class="comment"># Check if executable (script/binary)</span>
+DEPLOY_SCRIPT="/usr/local/bin/deploy.sh"
+
+if [ -x "$DEPLOY_SCRIPT" ]; then
+$DEPLOY_SCRIPT <span class="comment"># Safe to run</span>
+else
+echo "Deploy script not executable"
+chmod +x "$DEPLOY_SCRIPT"
+fi
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">-f file</span><span class="tbi-tag">-d dir</span><span class="tbi-tag">-e -r -w -x -s</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="logical-ops">
+<div class="topic-card-top">
+<div class="topic-name">&& || !</div>
+<div class="topic-card-info">
+<div class="topic-title">Logical Operators</div>
+<div class="topic-summary">AND, OR, NOT—combine conditions</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Combine conditions: && (AND—both true), || (OR—at least one true), ! (NOT—negate). && runs right side only if left succeeds. || runs right side only if left fails. This enables powerful conditional logic and error handling.</p>
+
+<div class="tbi-explanation">
+<strong>Short-circuit evaluation:</strong> [ $A -gt 0 ] && echo "positive" only echoes if test passes. cmd1 || cmd2 runs cmd2 only if cmd1 fails. This is how you chain commands: mkdir dir || exit 1 means "make dir, if it fails then exit".
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Logical operator examples</div>
+<div class="tbi-example-code"><span class="comment"># AND (&&) - both conditions must be true</span>
+USERNAME="alice"
+PASSWORD="correct123"
+
+if [ "$USERNAME" = "alice" ] && [ "$PASSWORD" = "correct123" ]; then
+echo "✓ Login successful"
+else
+echo "✗ Login failed"
+fi
+
+<span class="comment"># OR (||) - at least one must be true</span>
+DAY_OF_WEEK=$(date +%A)
+
+if [ "$DAY_OF_WEEK" = "Saturday" ] || [ "$DAY_OF_WEEK" = "Sunday" ]; then
+echo "It's the weekend!"
+fi
+
+<span class="comment"># NOT (!) - negate/invert condition</span>
+if [ ! -f "/tmp/lock" ]; then
+echo "Lock file doesn't exist, safe to proceed"
+touch "/tmp/lock"
+fi
+
+<span class="comment"># Chaining commands - stop if any step fails</span>
+npm test && npm build && npm deploy
+
+<span class="comment"># Error handling pattern</span>
+cp important.txt backup.txt || {
+echo "ERROR: Backup failed"
+exit 1
 }
 
-greet "Alice"    # Calls the function
-greet "Bob"      # Calls again</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Reusable</span><span class="tbi-tag">Parameters</span><span class="tbi-tag">Modular</span></div>
-            </div>
-          </div>
-        </div>
+<span class="comment"># Check multiple conditions</span>
+FILE1="data1.txt"
+FILE2="data2.txt"
+FILE3="data3.txt"
 
-        <div class="topic-card" data-topic="arrays">
-          <div class="topic-card-top">
-            <div class="topic-name">ARRAY=()</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Arrays</div>
-              <div class="topic-summary">Store lists of values — strings or numbers</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">Arrays store lists. Create with (space-separated values). Access with ${array[index]}. Use ${#array[@]} for length and ${array[@]} for all elements.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Example</div>
-                <div class="tbi-example-code">FRUITS=(apple banana orange)
-echo ${FRUITS[0]}    # apple
-echo ${FRUITS[@]}    # All: apple banana orange
-echo ${#FRUITS[@]}   # Length: 3</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Lists</span><span class="tbi-tag">Index</span><span class="tbi-tag">Iterate</span></div>
-            </div>
-          </div>
-        </div>
+if [ -f "$FILE1" ] && [ -f "$FILE2" ] && [ -f "$FILE3" ]; then
+echo "All required files present, proceeding"
+else
+echo "Missing required files"
+exit 1
+fi
+</div>
+</div>
 
-        <div class="topic-card" data-topic="sed">
-          <div class="topic-card-top">
-            <div class="topic-name">sed</div>
-            <div class="topic-card-info">
-              <div class="topic-title">sed — Stream Editor</div>
-              <div class="topic-summary">Powerful text replacement and manipulation</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">sed modifies text. Common use: sed 's/old/new/g' replaces all occurrences of "old" with "new" in a file. The g flag means "global" (all on each line).</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Examples</div>
-                <div class="tbi-example-code">sed 's/ERROR/ALERT/g' log.txt    # Replace all
-sed '2d' file.txt                 # Delete line 2
-sed -i 's/old/new/g' file.txt     # In-place edit</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Text processing</span><span class="tbi-tag">Regex</span><span class="tbi-tag">Replace</span></div>
-            </div>
-          </div>
-        </div>
+<div class="tbi-tags"><span class="tbi-tag">&&</span><span class="tbi-tag">||</span><span class="tbi-tag">!</span><span class="tbi-tag">Chaining</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-        <div class="topic-card" data-topic="awk">
-          <div class="topic-card-top">
-            <div class="topic-name">awk</div>
-            <div class="topic-card-info">
-              <div class="topic-title">awk — Column Processing</div>
-              <div class="topic-summary">Extract and process columns from text</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">awk processes text in columns. Use $1, $2, etc. for columns. Common: awk '{print $1, $3}' shows columns 1 and 3. Perfect for parsing log files.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Examples</div>
-                <div class="tbi-example-code">awk '{print $1}' access.log           # 1st column
-awk '{sum += $2} END {print sum}' data.txt  # Sum column 2
-awk -F: '{print $1}' /etc/passwd    # Parse /etc/passwd</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Columns</span><span class="tbi-tag">$1 $2</span><span class="tbi-tag">Delimiter</span></div>
-            </div>
-          </div>
-        </div>
+<!-- SECTION 4: CONTROL FLOW -->
+<div class="code-section scontrol reveal" id="sec-control" data-cat="control">
+<div class="section-header" data-bg="4">
+<div class="sh-badge">4</div>
+<div class="sh-info">
+<div class="sh-title">Control Flow & Loops</div>
+<div class="sh-desc">if/else, for, while, case statements</div>
+</div>
+</div>
+<div class="topics-grid">
 
-        <div class="topic-card" data-topic="error-handling">
-          <div class="topic-card-top">
-            <div class="topic-name">set -e</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Error Handling</div>
-              <div class="topic-summary">Make scripts fail fast on errors</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">set -e makes the script exit if any command fails. set -u errors on undefined variables. set -o pipefail exits if any pipe fails. Add these at the top for robust scripts.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Best Practice</div>
-                <div class="tbi-example-code">#!/bin/bash
-set -e              # Exit on error
-set -u              # Error on undefined vars
-set -o pipefail     # Pipe failures exit script
+<div class="topic-card" data-topic="if-else">
+<div class="topic-card-top">
+<div class="topic-name">if then fi</div>
+<div class="topic-card-info">
+<div class="topic-title">If/Else Conditionals</div>
+<div class="topic-summary">Execute code based on conditions</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">if tests a condition. If true, execute the then block. Use elif for multiple branches, else for the fallback. Always end with fi. This is how you make scripts make decisions.</p>
 
-# Rest of script...</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Robustness</span><span class="tbi-tag">Fail fast</span><span class="tbi-tag">Debugging</span></div>
-            </div>
-          </div>
-        </div>
+<div class="tbi-explanation">
+<strong>Structure:</strong> if [ condition ]; then ... elif [ condition2 ]; then ... else ... fi. The semicolon after ] is required. You can have multiple elif branches. Always quote variables: [ "$VAR" = "value" ] not [ $VAR = value ].
+</div>
 
-        <div class="topic-card" data-topic="cron">
-          <div class="topic-card-top">
-            <div class="topic-name">crontab</div>
-            <div class="topic-card-info">
-              <div class="topic-title">Cron Jobs — Scheduled Scripts</div>
-              <div class="topic-summary">Run scripts automatically on a schedule</div>
-            </div>
-            <div class="topic-arrow">›</div>
-          </div>
-          <div class="topic-card-body">
-            <div class="topic-body-inner">
-              <p class="tbi-desc">crontab schedules scripts to run at specific times. Format: minute hour day month weekday command. Perfect for backups, health checks, log rotation.</p>
-              <div class="tbi-example">
-                <div class="tbi-example-label">Examples</div>
-                <div class="tbi-example-code">0 2 * * * /home/user/backup.sh    # Daily at 2 AM
-*/15 * * * * /home/user/check.sh  # Every 15 minutes
-0 0 1 * * /home/user/monthly.sh   # 1st of month</div>
-              </div>
-              <div class="tbi-tags"><span class="tbi-tag">Automation</span><span class="tbi-tag">Schedule</span><span class="tbi-tag">Maintenance</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="tbi-example">
+<div class="tbi-example-label">If/else patterns</div>
+<div class="tbi-example-code">#!/bin/bash
 
-  </div><!-- /content -->
+<span class="comment"># Simple if/else</span>
+AGE=20
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="toc-card">
-      <div class="toc-title">On This Page</div>
-      <div class="toc-list">
-        <a href="#sec-basics" class="toc-item" data-sec="basics">
-          <span class="toc-dot" style="background:var(--c1)"></span>Basics
-        </a>
-        <a href="#sec-variables" class="toc-item" data-sec="variables">
-          <span class="toc-dot" style="background:var(--c2)"></span>Variables
-        </a>
-        <a href="#sec-operators" class="toc-item" data-sec="operators">
-          <span class="toc-dot" style="background:var(--c3)"></span>Operators
-        </a>
-        <a href="#sec-control" class="toc-item" data-sec="control">
-          <span class="toc-dot" style="background:var(--c4)"></span>Control Flow
-        </a>
-        <a href="#sec-advanced" class="toc-item" data-sec="advanced">
-          <span class="toc-dot" style="background:var(--c5)"></span>Advanced
-        </a>
-      </div>
-    </div>
+if [ $AGE -ge 18 ]; then
+echo "Adult"
+else
+echo "Minor"
+fi
 
-    <div class="stats-card">
-      <div class="toc-title" style="margin-bottom:14px">Coverage</div>
-      <div class="stats-grid">
-        <div class="stat-box"><div class="stat-n" style="color:var(--c1)">4</div><div class="stat-l">Basics</div></div>
-        <div class="stat-box"><div class="stat-n" style="color:var(--c2)">4</div><div class="stat-l">Variables</div></div>
-        <div class="stat-box"><div class="stat-n" style="color:var(--c3)">4</div><div class="stat-l">Operators</div></div>
-        <div class="stat-box"><div class="stat-n" style="color:var(--c4)">4</div><div class="stat-l">Control Flow</div></div>
-        <div class="stat-box" style="grid-column:1/-1"><div class="stat-n" style="color:var(--c5)">6</div><div class="stat-l">Advanced Topics</div></div>
-      </div>
-    </div>
+<span class="comment"># Multiple branches with elif</span>
+if [ $AGE -lt 13 ]; then
+echo "Child"
+elif [ $AGE -lt 18 ]; then
+echo "Teenager"
+elif [ $AGE -lt 65 ]; then
+echo "Adult"
+else
+echo "Senior"
+fi
 
-    <div class="share-card">
-      <div class="share-title">Found this useful?</div>
-      <div class="share-sub">Share with your DevOps team on LinkedIn</div>
-      <button class="share-btn" onclick="shareLinkedIn()">
-        <span>Share on LinkedIn</span>
-      </button>
-    </div>
-  </aside>
+<span class="comment"># Check file and act accordingly</span>
+BACKUP_FILE="/backups/database.sql.gz"
+
+if [ -f "$BACKUP_FILE" ]; then
+echo "Backup exists"
+SIZE=$(ls -lh "$BACKUP_FILE" | awk '{print $5}')
+echo "Size: $SIZE"
+elif [ -d "/backups" ]; then
+echo "Backups directory exists but file missing"
+echo "Starting backup..."
+else
+echo "ERROR: Backups directory missing"
+mkdir -p "/backups"
+fi
+
+<span class="comment"># Validate script arguments</span>
+if [ $# -lt 2 ]; then
+echo "Usage: $0 <env> <version>"
+exit 1
+fi
+
+ENV="$1"
+VERSION="$2"
+
+if [ "$ENV" != "prod" ] && [ "$ENV" != "staging" ]; then
+echo "ERROR: Invalid environment (use prod or staging)"
+exit 1
+fi
+
+echo "Deploying v$VERSION to $ENV"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Conditionals</span><span class="tbi-tag">then fi</span><span class="tbi-tag">elif</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="for-loop">
+<div class="topic-card-top">
+<div class="topic-name">for do done</div>
+<div class="topic-card-info">
+<div class="topic-title">For Loops</div>
+<div class="topic-summary">Iterate over ranges, lists, or files</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">for loops iterate over lists, ranges, or files. Common syntaxes: for i in {1..10}, for file in *.log, for ((i=0; i<10; i++)). Always end with done. This is how you automate repetitive tasks.</p>
+
+<div class="tbi-explanation">
+<strong>Three loop styles:</strong> for var in list (iterate a list), for ((init; condition; increment)) (C-style), for var in $(command) (iterate command output). Each is useful for different scenarios. Loops are essential for batch operations.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">For loop patterns</div>
+<div class="tbi-example-code"><span class="comment"># Iterate over range</span>
+for i in {1..5}; do
+echo "Number: $i"
+done
+
+<span class="comment"># Iterate over list</span>
+SERVERS="web1 web2 web3 db1 cache1"
+
+for server in $SERVERS; do
+echo "Checking $server..."
+ping -c 1 "$server" > /dev/null
+if [ $? -eq 0 ]; then
+echo "✓ $server is UP"
+else
+echo "✗ $server is DOWN"
+fi
+done
+
+<span class="comment"># Iterate over files</span>
+for logfile in /var/log/*.log; do
+if [ -f "$logfile" ]; then
+lines=$(wc -l < "$logfile")
+echo "$(basename $logfile): $lines lines"
+fi
+done
+
+<span class="comment"># C-style loop (for when you need counter)</span>
+for ((i=1; i<=3; i++)); do
+echo "Attempt $i of 3"
+sleep 1
+done
+
+<span class="comment"># Iterate command output</span>
+echo "Processing all processes:"
+for pid in $(ps aux | grep myapp | grep -v grep | awk '{print $2}'); do
+echo "PID: $pid"
+kill -0 "$pid" && echo " ✓ Still running"
+done
+
+<span class="comment"># Practical: Backup multiple databases</span>
+DATABASES=(prod_app analytics payments)
+BACKUP_DIR="/backups/$(date +%Y-%m-%d)"
+mkdir -p "$BACKUP_DIR"
+
+for db in "${DATABASES[@]}"; do
+echo "Backing up $db..."
+mysqldump "$db" | gzip > "$BACKUP_DIR/$db.sql.gz"
+echo " ✓ $db backed up"
+done
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Loop</span><span class="tbi-tag">Iterate</span><span class="tbi-tag">done</span><span class="tbi-tag">Range</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="while-loop">
+<div class="topic-card-top">
+<div class="topic-name">while do done</div>
+<div class="topic-card-info">
+<div class="topic-title">While Loops</div>
+<div class="topic-summary">Loop while condition is true</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">while loops run as long as a condition is true. Useful for reading files, waiting for conditions, retries. Always ensure the condition eventually becomes false to avoid infinite loops. Common pattern: read input, process it, check condition.</p>
+
+<div class="tbi-explanation">
+<strong>When to use:</strong> while is perfect for reading files line by line, waiting for events, retry logic. Beware infinite loops—always have a way out. Use break to exit early, continue to skip to next iteration.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">While loop patterns</div>
+<div class="tbi-example-code"><span class="comment"># Simple counter loop</span>
+COUNT=1
+while [ $COUNT -le 5 ]; do
+echo "Count: $COUNT"
+COUNT=$((COUNT + 1))
+done
+
+<span class="comment"># Read file line by line</span>
+while read line; do
+echo "Processing: $line"
+done < /path/to/file.txt
+
+<span class="comment"># Read input from user</span>
+while true; do
+read -p "Enter command (or 'quit'): " cmd
+
+if [ "$cmd" = "quit" ]; then
+echo "Goodbye"
+break <span class="comment"># Exit loop</span>
+fi
+
+eval "$cmd"
+done
+
+<span class="comment"># Retry logic (retry up to 3 times)</span>
+RETRY_COUNT=0
+MAX_RETRIES=3
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+echo "Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES..."
+
+if curl -s "https://api.example.com/health" > /dev/null; then
+echo "✓ API is responsive"
+break
+fi
+
+RETRY_COUNT=$((RETRY_COUNT + 1))
+if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+echo " API not responding, retrying in 5 seconds..."
+sleep 5
+fi
+done
+
+if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+echo "✗ API still not responding after $MAX_RETRIES attempts"
+exit 1
+fi
+
+<span class="comment"># Monitor process and restart if needed</span>
+while true; do
+if ! pgrep -x "myapp" > /dev/null; then
+echo "Process died, restarting..."
+/usr/local/bin/myapp &
+fi
+sleep 10 <span class="comment"># Check every 10 seconds</span>
+done
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Loop</span><span class="tbi-tag">Condition</span><span class="tbi-tag">break</span><span class="tbi-tag">File reading</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="case-stmt">
+<div class="topic-card-top">
+<div class="topic-name">case esac</div>
+<div class="topic-card-info">
+<div class="topic-title">Case Statements</div>
+<div class="topic-summary">Switch on value—cleaner than if/elif</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">case evaluates a value against patterns. Much cleaner than multiple if/elif when checking one variable. Each pattern ends with ;;. Use * as default fallback. Supports wildcards for pattern matching.</p>
+
+<div class="tbi-explanation">
+<strong>Pattern syntax:</strong> case $VAR in pattern1) code;; pattern2) code;; *) default;; esac. Patterns can use wildcards: "dev*" matches "dev", "development", "develop", etc. Very powerful for command routing and handling options.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Case statement patterns</div>
+<div class="tbi-example-code"><span class="comment"># Simple case statement</span>
+DAY=$(date +%A)
+
+case "$DAY" in
+Monday)
+echo "Start of work week"
+;;
+Friday)
+echo "Almost weekend!"
+;;
+Saturday|Sunday)
+echo "It's the weekend"
+;;
+*)
+echo "Regular weekday"
+;;
+esac
+
+<span class="comment"># Handle script arguments/options</span>
+COMMAND="$1"
+
+case "$COMMAND" in
+start)
+systemctl start myapp
+echo "Application started"
+;;
+stop)
+systemctl stop myapp
+echo "Application stopped"
+;;
+restart)
+systemctl restart myapp
+echo "Application restarted"
+;;
+status)
+systemctl status myapp
+;;
+*)
+echo "Usage: $0 {start|stop|restart|status}"
+exit 1
+;;
+esac
+
+<span class="comment"># Environment-specific logic</span>
+ENV="$1"
+
+case "$ENV" in
+prod|production)
+DB_HOST="prod-db.example.com"
+API_URL="https://api.example.com"
+DEBUG="false"
+;;
+staging|stage)
+DB_HOST="staging-db.example.com"
+API_URL="https://staging-api.example.com"
+DEBUG="false"
+;;
+dev|development|local)
+DB_HOST="localhost"
+API_URL="http://localhost:3000"
+DEBUG="true"
+;;
+*)
+echo "ERROR: Unknown environment: $ENV"
+echo "Use: prod, staging, or dev"
+exit 1
+;;
+esac
+
+echo "Configuring for $ENV..."
+echo " DB: $DB_HOST"
+echo " API: $API_URL"
+echo " Debug: $DEBUG"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Switch</span><span class="tbi-tag">Pattern matching</span><span class="tbi-tag">esac</span><span class="tbi-tag">Cleaner</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SECTION 5: ADVANCED -->
+<div class="code-section sadvanced reveal" id="sec-advanced" data-cat="advanced">
+<div class="section-header" data-bg="5">
+<div class="sh-badge">5</div>
+<div class="sh-info">
+<div class="sh-title">Advanced Topics</div>
+<div class="sh-desc">Functions, arrays, text processing, error handling</div>
+</div>
+</div>
+<div class="topics-grid">
+
+<div class="topic-card" data-topic="functions">
+<div class="topic-card-top">
+<div class="topic-name">function() {}</div>
+<div class="topic-card-info">
+<div class="topic-title">Functions</div>
+<div class="topic-summary">Reusable code blocks with parameters</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Functions group code for reuse and organization. Define with function_name() { }. Call by name. Access arguments via $1, $2, etc. Return values with return (0-255) or echo. This is essential for maintainable scripts.</p>
+
+<div class="tbi-explanation">
+<strong>Benefits:</strong> Reduce code duplication, improve readability, enable testing of individual pieces, make scripts modular. Local variables (local VAR=value) don't affect global scope. Always document parameters and return values in comments.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Function patterns</div>
+<div class="tbi-example-code">#!/bin/bash
+
+<span class="comment"># Simple function</span>
+greet() {
+local name="$1"
+echo "Hello, $name!"
+}
+
+greet "Alice"
+greet "Bob"
+
+<span class="comment"># Function with return value (0=success)</span>
+check_file_exists() {
+local filepath="$1"
+
+if [ -f "$filepath" ]; then
+echo "File exists: $filepath"
+return 0
+else
+echo "File not found: $filepath"
+return 1
+fi
+}
+
+<span class="comment"># Use return value to decide next step</span>
+if check_file_exists "/etc/passwd"; then
+echo "System file is present"
+else
+echo "ERROR: System file missing"
+exit 1
+fi
+
+<span class="comment"># Function returning data via echo</span>
+get_file_size() {
+local file="$1"
+if [ -f "$file" ]; then
+du -h "$file" | awk '{print $1}'
+fi
+}
+
+SIZE=$(get_file_size "/var/log/syslog")
+echo "Log file size: $SIZE"
+
+<span class="comment"># Function with multiple parameters</span>
+deploy_service() {
+local service="$1"
+local version="$2"
+local environment="$3"
+
+echo "Deploying $service v$version to $environment"
+echo " Downloading artifact..."
+sleep 1
+echo " Stopping current version..."
+systemctl stop "$service"
+echo " Starting v$version..."
+systemctl start "$service"
+echo " ✓ Deployment complete"
+}
+
+deploy_service "myapp" "2.5.1" "production"
+
+<span class="comment"># Error handling in functions</span>
+safe_backup() {
+local source="$1"
+local destination="$2"
+
+if [ ! -d "$source" ]; then
+echo "ERROR: Source directory not found: $source"
+return 1
+fi
+
+if [ ! -w "$destination" ]; then
+echo "ERROR: Cannot write to destination: $destination"
+return 2
+fi
+
+cp -r "$source" "$destination/backup-$(date +%Y-%m-%d)"
+echo "✓ Backup completed to $destination"
+return 0
+}
+
+safe_backup "/data" "/backups" || {
+echo "Backup failed with code $?"
+exit 1
+}
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Reusable</span><span class="tbi-tag">Parameters</span><span class="tbi-tag">Return values</span><span class="tbi-tag">Modular</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="arrays">
+<div class="topic-card-top">
+<div class="topic-name">array=()</div>
+<div class="topic-card-info">
+<div class="topic-title">Arrays</div>
+<div class="topic-summary">Store lists of values</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Arrays store lists of values. Create with (space-separated). Access with ${array[index]}. Use ${#array[@]} for length, ${array[@]} for all elements, ${array[@]:start:length} for slices. Useful for batch operations.</p>
+
+<div class="tbi-explanation">
+<strong>Array basics:</strong> Index starts at 0. Associative arrays use string keys instead of numbers (bash 4.0+). "${array[@]}" gives all elements, "${array[@]}" expands each element as a separate word, essential for loops.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Array patterns</div>
+<div class="tbi-example-code"><span class="comment"># Create array with values</span>
+FRUITS=(apple banana orange grape cherry)
+
+<span class="comment"># Access by index (0-based)</span>
+echo "First fruit: ${FRUITS[0]}" <span class="output"># apple</span>
+echo "Third fruit: ${FRUITS[2]}" <span class="output"># orange</span>
+
+<span class="comment"># Length of array</span>
+echo "Total fruits: ${#FRUITS[@]}" <span class="output"># 5</span>
+
+<span class="comment"># Loop through array</span>
+for fruit in "${FRUITS[@]}"; do
+echo "Fruit: $fruit"
+done
+
+<span class="comment"># Add to array</span>
+FRUITS+=(watermelon)
+echo "Now have ${#FRUITS[@]} fruits"
+
+<span class="comment"># Practical: Process multiple servers</span>
+SERVERS=(
+"web1.example.com"
+"web2.example.com"
+"api1.example.com"
+"db1.example.com"
+)
+
+for server in "${SERVERS[@]}"; do
+echo "Checking $server..."
+ssh "$server" "uptime"
+done
+
+<span class="comment"># Associative array (key-value pairs)</span>
+declare -A COLORS
+COLORS[primary]="blue"
+COLORS[secondary]="green"
+COLORS[accent]="gold"
+
+echo "Primary color: ${COLORS[primary]}"
+echo "Secondary color: ${COLORS[secondary]}"
+
+<span class="comment"># Loop through associative array</span>
+for color_name in "${!COLORS[@]}"; do
+echo "$color_name = ${COLORS[$color_name]}"
+done
+
+<span class="comment"># Store command outputs in array</span>
+RUNNING_PIDS=($(ps aux | grep myapp | grep -v grep | awk '{print $2}'))
+
+if [ ${#RUNNING_PIDS[@]} -gt 0 ]; then
+echo "Found ${#RUNNING_PIDS[@]} running processes"
+for pid in "${RUNNING_PIDS[@]}"; do
+echo " PID: $pid"
+done
+else
+echo "No running processes found"
+fi
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Lists</span><span class="tbi-tag">Index</span><span class="tbi-tag">Iterate</span><span class="tbi-tag">Key-value</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="text-processing">
+<div class="topic-card-top">
+<div class="topic-name">sed & awk</div>
+<div class="topic-card-info">
+<div class="topic-title">Text Processing</div>
+<div class="topic-summary">Powerful text manipulation tools</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">sed (stream editor) and awk are powerful text processing tools. sed modifies text (find/replace, delete lines). awk processes text in columns/fields. Both use regex. Essential for log analysis, data transformation, and text manipulation.</p>
+
+<div class="tbi-explanation">
+<strong>sed vs awk:</strong> sed is for line-by-line text replacement/deletion. awk is for processing columnar data. Both support regex. sed 's/old/new/g' replaces all occurrences. awk '{print $1, $3}' prints columns 1 and 3. Combining these with pipes creates powerful data pipelines.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Text processing examples</div>
+<div class="tbi-example-code"><span class="comment"># sed: Replace text (s = substitute, g = global)</span>
+echo "Hello World" | sed 's/World/DevOps/'
+<span class="output"># Output: Hello DevOps</span>
+
+<span class="comment"># sed: Replace in file (use -i for in-place)</span>
+sed 's/ERROR/ALERT/g' error.log
+
+<span class="comment"># sed: Delete lines matching pattern</span>
+sed '/^#/d' config.conf <span class="comment"># Remove comment lines</span>
+sed '10d' file.txt <span class="comment"># Delete line 10</span>
+
+<span class="comment"># awk: Print specific columns</span>
+ps aux | awk '{print $1, $2, $11}' <span class="comment"># user, PID, command</span>
+
+<span class="comment"># awk: Sum a column</span>
+awk '{sum += $1} END {print "Total: " sum}' numbers.txt
+
+<span class="comment"># awk: Print lines matching condition</span>
+awk '$3 > 100 {print $0}' data.txt <span class="comment"># Print if 3rd column > 100</span>
+
+<span class="comment"># Practical: Parse /etc/passwd</span>
+awk -F: '{print $1, $3, $6}' /etc/passwd <span class="comment"># user, UID, home</span>
+
+<span class="comment"># Practical: Extract data from log</span>
+grep "ERROR" app.log | awk '{print $1, $2}' | sort | uniq -c
+
+<span class="comment"># Combine sed and awk in pipeline</span>
+cat deploy.log |
+sed 's/\[.*\]//' | <span class="comment"># Remove timestamps</span>
+grep "Deploy" |
+awk '{print $2, $3}' | <span class="comment"># Extract relevant fields</span>
+sort | uniq
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">sed</span><span class="tbi-tag">awk</span><span class="tbi-tag">Text processing</span><span class="tbi-tag">Regex</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="error-handling">
+<div class="topic-card-top">
+<div class="topic-name">set -e -u</div>
+<div class="topic-card-info">
+<div class="topic-title">Error Handling & Robustness</div>
+<div class="topic-summary">Make scripts fail safely and predictably</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">set -e exits script if any command fails. set -u errors on undefined variables. set -o pipefail exits if any command in a pipe fails. These prevent scripts from continuing after errors—essential for production scripts.</p>
+
+<div class="tbi-explanation">
+<strong>Why critical:</strong> Without set -e, scripts continue even when commands fail silently. This leads to partial deployments, incomplete backups, and hard-to-debug issues. set -e catches problems early. set -u prevents typos from silently using empty values.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Error handling patterns</div>
+<div class="tbi-example-code">#!/bin/bash
+<span class="comment"># Add these at the top of production scripts</span>
+set -e <span class="comment"># Exit on error</span>
+set -u <span class="comment"># Error on undefined variables</span>
+set -o pipefail <span class="comment"># Pipe failures cause exit</span>
+
+<span class="comment"># Now any error stops the script</span>
+mkdir -p "$BACKUP_DIR" <span class="comment"># If this fails, script exits</span>
+cp -r /data "$BACKUP_DIR" <span class="comment"># Won't run if mkdir failed</span>
+
+<span class="comment"># Without set -e, would continue below...
+# Dangerous: backup might be incomplete but script succeeds!</span>
+
+echo "✓ Backup completed successfully"
+
+<span class="comment"># Trap errors for cleanup</span>
+cleanup() {
+local exit_code=$?
+echo "Script failed with exit code $exit_code"
+rm -f /tmp/temp-$$.log <span class="comment"># Clean temp files</span>
+exit $exit_code
+}
+
+trap cleanup EXIT <span class="comment"># Call cleanup on exit</span>
+
+<span class="comment"># Example: Deployment with error handling</span>
+#!/bin/bash
+set -e
+set -u
+set -o pipefail
+
+APP_DIR="/opt/myapp"
+BACKUP_DIR="/opt/backups"
+
+echo "Stopping application..."
+systemctl stop myapp
+
+echo "Backing up current version..."
+cp -r "$APP_DIR" "$BACKUP_DIR/backup-$(date +%Y-%m-%d_%H-%M-%S)"
+
+echo "Deploying new version..."
+tar -xzf /tmp/release.tar.gz -C "$APP_DIR"
+
+echo "Starting application..."
+systemctl start myapp
+
+echo "Running health check..."
+curl -f http://localhost:3000/health > /dev/null
+
+echo "✓ Deployment successful"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">set -e</span><span class="tbi-tag">set -u</span><span class="tbi-tag">pipefail</span><span class="tbi-tag">trap</span></div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" data-topic="best-practices">
+<div class="topic-card-top">
+<div class="topic-name">Best Practices</div>
+<div class="topic-card-info">
+<div class="topic-title">Production-Grade Script Writing</div>
+<div class="topic-summary">Guidelines for reliable, maintainable scripts</div>
+</div>
+<div class="topic-arrow">›</div>
+</div>
+<div class="topic-card-body">
+<div class="topic-body-inner">
+<p class="tbi-desc">Production scripts require care: validate inputs, log operations, handle errors, use clear variable names, quote everything, test before production, document thoroughly. These practices separate scripts that work from scripts you can trust with critical operations.</p>
+
+<div class="tbi-explanation">
+<strong>Philosophy:</strong> Assume your script will run in production at the worst possible time. Write code defensively: validate inputs, test file existence, handle errors gracefully, provide clear error messages. Future you (or someone else) will need to debug this at 3 AM.
+</div>
+
+<div class="tbi-example">
+<div class="tbi-example-label">Production script template</div>
+<div class="tbi-example-code">#!/bin/bash
+<span class="comment">########################################
+# Production Database Backup Script
+########################################
+# Author: Anji Yarra
+# Purpose: Daily automated database backup
+# Usage: ./backup.sh [database-name]
+# Cron: 0 2 * * * /usr/local/bin/backup.sh production_db
+# Log: /var/log/backup.log
+########################################</span>
+
+<span class="comment"># Strict error handling</span>
+set -e <span class="comment"># Exit on any error</span>
+set -u <span class="comment"># Error on undefined variables</span>
+set -o pipefail <span class="comment"># Pipe failures exit</span>
+
+<span class="comment"># Configuration</span>
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_NAME="$(basename "$0")"
+readonly LOG_FILE="/var/log/backup.log"
+readonly DB_NAME="${1:-production_db}"
+readonly BACKUP_DIR="/backups/$(date +%Y-%m-%d)"
+readonly RETENTION_DAYS=30
+
+<span class="comment"># Color for output</span>
+readonly GREEN='\033[0;32m'
+readonly RED='\033[0;31m'
+readonly NC='\033[0m'
+
+<span class="comment"># Logging function</span>
+log() {
+local level="$1"
+shift
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$level] $*" | tee -a "$LOG_FILE"
+}
+
+<span class="comment"># Error handler</span>
+error_exit() {
+log "ERROR" "$1"
+exit 1
+}
+
+<span class="comment"># Validate inputs</span>
+validate_inputs() {
+if [ -z "$DB_NAME" ]; then
+error_exit "Database name cannot be empty"
+fi
+
+log "INFO" "Starting backup of $DB_NAME"
+}
+
+<span class="comment"># Create backup</span>
+create_backup() {
+mkdir -p "$BACKUP_DIR"
+
+log "INFO" "Creating backup..."
+local backup_file="$BACKUP_DIR/${DB_NAME}-$(date +%H-%M-%S).sql.gz"
+
+if mysqldump "$DB_NAME" | gzip > "$backup_file"; then
+log "INFO" "✓ Backup created: $backup_file"
+return 0
+else
+error_exit "Failed to create backup"
+fi
+}
+
+<span class="comment"># Cleanup old backups</span>
+cleanup_old_backups() {
+log "INFO" "Cleaning old backups (retention: $RETENTION_DAYS days)"
+find /backups -name "*.sql.gz" -mtime +$RETENTION_DAYS -delete
+log "INFO" "✓ Cleanup complete"
+}
+
+<span class="comment"># Main execution</span>
+main() {
+validate_inputs
+create_backup
+cleanup_old_backups
+log "INFO" "✓ Backup process completed successfully"
+}
+
+<span class="comment"># Error trap</span>
+trap 'error_exit "Script terminated unexpectedly"' ERR
+
+main "$@"
+</div>
+</div>
+
+<div class="tbi-tags"><span class="tbi-tag">Validation</span><span class="tbi-tag">Logging</span><span class="tbi-tag">Error handling</span><span class="tbi-tag">Comments</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- /content -->
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<div class="toc-card">
+<div class="toc-title">Table of Contents</div>
+<div class="toc-list">
+<a href="#sec-basics" class="toc-item" data-sec="basics">
+<span class="toc-dot" style="background:var(--c1)"></span>Basics
+</a>
+<a href="#sec-variables" class="toc-item" data-sec="variables">
+<span class="toc-dot" style="background:var(--c2)"></span>Variables
+</a>
+<a href="#sec-operators" class="toc-item" data-sec="operators">
+<span class="toc-dot" style="background:var(--c3)"></span>Operators
+</a>
+<a href="#sec-control" class="toc-item" data-sec="control">
+<span class="toc-dot" style="background:var(--c4)"></span>Control Flow
+</a>
+<a href="#sec-advanced" class="toc-item" data-sec="advanced">
+<span class="toc-dot" style="background:var(--c5)"></span>Advanced
+</a>
+</div>
+</div>
+
+<div class="stats-card">
+<div class="toc-title">Coverage</div>
+<div class="stats-grid">
+<div class="stat-box"><div class="stat-n" style="color:var(--c1)">4</div><div class="stat-l">Basics</div></div>
+<div class="stat-box"><div class="stat-n" style="color:var(--c2)">4</div><div class="stat-l">Variables</div></div>
+<div class="stat-box"><div class="stat-n" style="color:var(--c3)">4</div><div class="stat-l">Operators</div></div>
+<div class="stat-box"><div class="stat-n" style="color:var(--c4)">4</div><div class="stat-l">Control</div></div>
+<div class="stat-box" style="grid-column:1/-1"><div class="stat-n" style="color:var(--c5)">6</div><div class="stat-l">Advanced</div></div>
+</div>
+</div>
+
+<div class="share-card">
+<div class="share-title">Found Useful?</div>
+<div class="share-sub">Share with your DevOps team on LinkedIn</div>
+<button class="share-btn" onclick="shareLinkedIn()">Share Article</button>
+</div>
+</aside>
 </div>
 
 <!-- FOOTER -->
 <div class="blog-footer">
-  <div class="footer-author">
-    <div class="footer-avatar">AY</div>
-    <div class="footer-name">Anji Yarra</div>
-    <div class="footer-bio">AWS SAA-C03 Certified Cloud & DevOps Engineer. Building production-grade infrastructure on AWS. Expert in shell scripting, Linux, and automation.</div>
-  </div>
-  <div class="footer-links">
-    <a href="https://anjidevops.online" class="footer-link">🏠 anjidevops.online</a>
-    <a href="https://www.linkedin.com/in/anjiyarra/" target="_blank" class="footer-link">💼 LinkedIn</a>
-    <a href="https://anjidevops.online/blog/" class="footer-link">📚 More Posts</a>
-    <a href="mailto:anjiyarra.aws@gmail.com" class="footer-link">✉️ Contact</a>
-  </div>
+<div class="footer-author">
+<div class="footer-avatar">AY</div>
+<div class="footer-name">Anji Yarra</div>
+<div class="footer-bio">AWS SAA-C03 Certified Cloud & DevOps Engineer. Passionate about automation, infrastructure, and building reliable systems that scale.</div>
+</div>
+<div class="footer-links">
+<a href="https://www.anjidevops.online" class="footer-link">🏠 Home</a>
+<a href="https://www.linkedin.com/in/anjiyarra/" target="_blank" class="footer-link">💼 LinkedIn</a>
+<a href="https://www.anjidevops.online/blog/" class="footer-link">📚 All Posts</a>
+<a href="mailto:anjiyarra.aws@gmail.com" class="footer-link">✉️ Email</a>
+</div>
 </div>
 
 <script>
-// Progress bar
 const prog = document.getElementById('prog');
 window.addEventListener('scroll', () => {
-  const p = (scrollY / (document.body.scrollHeight - innerHeight)) * 100;
-  prog.style.width = p + '%';
+const p = scrollY / (document.body.scrollHeight - innerHeight);
+prog.style.width = (p * 100) + '%';
 });
 
-// Card expand/collapse
 document.querySelectorAll('.topic-card').forEach(card => {
-  card.addEventListener('click', e => {
-    if (e.target.closest('.share-btn')) return;
-    const body = card.querySelector('.topic-card-body');
-    const isOpen = body.classList.contains('open');
-    // Close all
-    document.querySelectorAll('.topic-card-body.open').forEach(b => b.classList.remove('open'));
-    document.querySelectorAll('.topic-arrow').forEach(a => a.textContent = '›');
-    if (!isOpen) {
-      body.classList.add('open');
-      card.querySelector('.topic-arrow').textContent = '⌄';
-    }
-    // Copy topic name
-    const topic = card.dataset.topic;
-    if (topic) {
-      navigator.clipboard?.writeText(topic).catch(() => {});
-      const toast = document.getElementById('toast');
-      toast.textContent = `Copied: ${topic}`;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-  });
+card.addEventListener('click', () => {
+const body = card.querySelector('.topic-card-body');
+document.querySelectorAll('.topic-card-body.open').forEach(b => b.classList.remove('open'));
+body.classList.add('open');
+});
 });
 
-// Filter tabs
 document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat;
-    document.querySelectorAll('.code-section').forEach(sec => {
-      if (cat === 'all' || sec.dataset.cat === cat) {
-        sec.style.display = '';
-      } else {
-        sec.style.display = 'none';
-      }
-    });
-  });
+btn.addEventListener('click', () => {
+document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+const cat = btn.dataset.cat;
+document.querySelectorAll('.code-section').forEach(sec => {
+sec.style.display = (cat === 'all' || sec.dataset.cat === cat) ? '' : 'none';
+});
+});
 });
 
-// Sidebar TOC active state
 const sections = document.querySelectorAll('.code-section');
 const tocItems = document.querySelectorAll('.toc-item');
 const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      tocItems.forEach(t => t.classList.remove('active'));
-      const id = e.target.id.replace('sec-','');
-      const active = document.querySelector(`.toc-item[data-sec="${id}"]`);
-      if (active) active.classList.add('active');
-    }
-  });
+entries.forEach(e => {
+if (e.isIntersecting) {
+tocItems.forEach(t => t.classList.remove('active'));
+const id = e.target.id.replace('sec-','');
+document.querySelector(`.toc-item[data-sec="${id}"]`)?.classList.add('active');
+}
+});
 }, { threshold: 0.3 });
 sections.forEach(s => io.observe(s));
 
-// Scroll reveal
 const revObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-// LinkedIn share
 function shareLinkedIn() {
-  const url = encodeURIComponent('https://anjidevops.online/blog/shell-scripting/');
-  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+const url = encodeURIComponent('https://www.anjidevops.online/blog/shell-scripting/');
+window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
 }
 </script>
+
 </body>
 </html>
