@@ -670,6 +670,11 @@ exit 1
 fi
 
 <span class="comment"># $1, $2, $3 are individual arguments</span>
+
+<span class="comment"># bash script.sh prod 2.3.0 false</span>
+
+<span class="comment"># $1=prod, $2=2.3.0 , $3=false are individual arguments</span>
+  
 ENVIRONMENT="$1"
 VERSION="$2"
 FORCE_DEPLOY="$3"
