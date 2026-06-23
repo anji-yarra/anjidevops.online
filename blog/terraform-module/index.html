@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terraform Modules - Complete Guide with Examples | Anji DevOps</title>
+    <meta name="description" content="Learn Terraform modules with detailed examples. Master reusable infrastructure code, module structure, and best practices.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f7fa;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 3px solid #FF9900;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .table-of-contents {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #FF9900;
+        }
+
+        .table-of-contents h2 {
+            color: #FF9900;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .table-of-contents ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .table-of-contents li {
+            margin: 8px 0;
+        }
+
+        .table-of-contents a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .table-of-contents a:hover {
+            text-decoration: underline;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #222;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-left: 4px solid #FF9900;
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            color: #444;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #FF9900;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .highlight-green {
+            color: #6a9955;
+        }
+
+        .highlight-blue {
+            color: #569cd6;
+        }
+
+        .highlight-orange {
+            color: #FF9900;
+        }
+
+        .note {
+            background: #fffacd;
+            border-left: 4px solid #FF9900;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .note strong {
+            color: #FF7800;
+        }
+
+        .example-box {
+            background: #f0f8ff;
+            border: 1px solid #0066cc;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .example-box h4 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .file-structure {
+            background: #f4f4f4;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #FF9900;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .comparison-table tr:hover {
+            background: #f0f8ff;
+        }
+
+        .key-point {
+            background: #e8f4f8;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .key-point strong {
+            color: #0066cc;
+        }
+
+        .tip {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .tip strong {
+            color: #2e7d32;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .author-info {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .step {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            border-left: 4px solid #FF9900;
+        }
+
+        .step strong {
+            color: #FF9900;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            pre {
+                font-size: 0.85em;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Terraform Modules: Complete Guide with Examples</h1>
+            <p class="meta">
+                📅 Published: January 2026<br>
+                👤 Author: Anji Yarra<br>
+                📖 Reading Time: 15 minutes<br>
+                🏷️ Tags: Terraform, IaC, DevOps, AWS
+            </p>
+        </header>
+
+        <div class="table-of-contents">
+            <h2>📑 Table of Contents</h2>
+            <ul>
+                <li><a href="#what-are-modules">What Are Terraform Modules?</a></li>
+                <li><a href="#why-use-modules">Why Use Modules?</a></li>
+                <li><a href="#module-structure">Understanding Module Structure</a></li>
+                <li><a href="#first-module">Creating Your First Module</a></li>
+                <li><a href="#using-modules">Using Modules in Your Code</a></li>
+                <li><a href="#input-variables">Input Variables (Module Parameters)</a></li>
+                <li><a href="#outputs">Module Outputs</a></li>
+                <li><a href="#real-world-example">Real-World Example: VPC Module</a></li>
+                <li><a href="#best-practices">Best Practices</a></li>
+                <li><a href="#common-mistakes">Common Mistakes to Avoid</a></li>
+                <li><a href="#advanced-topics">Advanced Topics</a></li>
+            </ul>
+        </div>
+
+        <h2 id="what-are-modules">What Are Terraform Modules?</h2>
+
+        <p>
+            A <strong>Terraform module</strong> is a reusable container for multiple resources that are used together. Think of it as a building block that groups related infrastructure code into a single package you can use multiple times.
+        </p>
+
+        <div class="key-point">
+            <strong>Simple Definition:</strong> A module is a folder containing Terraform files that defines a set of infrastructure resources as a single unit.
+        </div>
+
+        <h3>Real-World Analogy</h3>
+
+        <p>
+            Imagine you're building a house. Without modules, you'd build each house from scratch, writing down every detail (brick by brick, room by room). With modules, you create a "blueprint" once, then use it to build multiple houses without repeating the work.
+        </p>
+
+        <p><strong>Same concept with Terraform modules:</strong></p>
+        <ul>
+            <li>🏠 Without modules: Write VPC configuration in every project</li>
+            <li>✅ With modules: Create a VPC module once, use it in 10 projects</li>
+        </ul>
+
+        <h2 id="why-use-modules">Why Use Terraform Modules?</h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Benefit</th>
+                    <th>Without Modules</th>
+                    <th>With Modules</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Code Reusability</strong></td>
+                    <td>Copy-paste same code everywhere ❌</td>
+                    <td>Write once, use everywhere ✅</td>
+                </tr>
+                <tr>
+                    <td><strong>Maintainability</strong></td>
+                    <td>Update code in 10 places 😞</td>
+                    <td>Update module, affects all uses ✅</td>
+                </tr>
+                <tr>
+                    <td><strong>Organization</strong></td>
+                    <td>One huge file (1000+ lines) 🤯</td>
+                    <td>Organized into logical modules ✅</td>
+                </tr>
+                <tr>
+                    <td><strong>Consistency</strong></td>
+                    <td>Each person configures differently</td>
+                    <td>Same configuration every time ✅</td>
+                </tr>
+                <tr>
+                    <td><strong>Testing</strong></td>
+                    <td>Hard to test individual parts</td>
+                    <td>Test modules independently ✅</td>
+                </tr>
+                <tr>
+                    <td><strong>Scaling</strong></td>
+                    <td>Complex infrastructure = messy code</td>
+                    <td>Compose modules for complexity ✅</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            <strong>Real-world example:</strong> If you have 5 AWS projects needing identical VPC setup (public/private subnets, NAT Gateway, etc.), without modules you'd copy 200+ lines of code 5 times. With modules, write once, use 5 times!
+        </div>
+
+        <h2 id="module-structure">Understanding Module Structure</h2>
+
+        <h3>Basic Module Layout</h3>
+
+        <p>A module is simply a directory with Terraform files. Here's the simplest structure:</p>
+
+        <div class="file-structure">
+my-module/<br>
+├── main.tf           # Resource definitions<br>
+├── variables.tf      # Input parameters<br>
+├── outputs.tf        # Return values<br>
+└── README.md         # Documentation
+        </div>
+
+        <h3>What Each File Does</h3>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Purpose</th>
+                    <th>Example Content</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>main.tf</code></td>
+                    <td>Actual resource definitions (VPC, EC2, RDS, etc.)</td>
+                    <td>resource blocks that create AWS resources</td>
+                </tr>
+                <tr>
+                    <td><code>variables.tf</code></td>
+                    <td>Input variables (parameters the module accepts)</td>
+                    <td>variable "vpc_cidr" { default = "10.0.0.0/16" }</td>
+                </tr>
+                <tr>
+                    <td><code>outputs.tf</code></td>
+                    <td>Outputs (values the module returns)</td>
+                    <td>output "vpc_id" { value = aws_vpc.main.id }</td>
+                </tr>
+                <tr>
+                    <td><code>README.md</code></td>
+                    <td>Documentation (how to use the module)</td>
+                    <td>Module description and usage examples</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="first-module">Creating Your First Module</h2>
+
+        <h3>Step 1: Create the Module Structure</h3>
+
+        <p>Create a directory for your module:</p>
+
+        <pre><code>mkdir -p terraform/modules/aws_vpc
+cd terraform/modules/aws_vpc</code></pre>
+
+        <h3>Step 2: Create variables.tf</h3>
+
+        <p>This file defines what parameters users can pass to your module:</p>
+
+        <pre><code><span class="highlight-blue"># File: variables.tf</span>
+<span class="highlight-blue"># These are the inputs to our module</span>
+
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "environment" {
+  description = "Environment name (prod, staging, dev)"
+  type        = string
+  default     = "dev"
+}
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway for private subnets?"
+  type        = bool
+  default     = false
+}
+
+variable "tags" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Environment = "dev"
+    ManagedBy   = "Terraform"
+  }
+}</code></pre>
+
+        <h3>Step 3: Create main.tf</h3>
+
+        <p>This file actually creates the resources:</p>
+
+        <pre><code><span class="highlight-blue"># File: main.tf</span>
+<span class="highlight-blue"># The actual resource definitions</span>
+
+<span class="highlight-blue"># Create VPC</span>
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.environment}-vpc"
+    }
+  )
+}
+
+<span class="highlight-blue"># Create Internet Gateway</span>
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.environment}-igw"
+    }
+  )
+}
+
+<span class="highlight-blue"># Create Public Subnet</span>
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = data.aws_availability_zones.available.names[0]
+  map_public_ip_on_launch = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.environment}-public-subnet"
+    }
+  )
+}
+
+<span class="highlight-blue"># Create Private Subnet</span>
+resource "aws_subnet" "private" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.10.0/24"
+  availability_zone = data.aws_availability_zones.available.names[0]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.environment}-private-subnet"
+    }
+  )
+}
+
+<span class="highlight-blue"># Fetch available AZs</span>
+data "aws_availability_zones" "available" {
+  state = "available"
+}</code></pre>
+
+        <h3>Step 4: Create outputs.tf</h3>
+
+        <p>This file defines what the module returns to the caller:</p>
+
+        <pre><code><span class="highlight-blue"># File: outputs.tf</span>
+<span class="highlight-blue"># These are the outputs - what the module returns</span>
+
+output "vpc_id" {
+  description = "The ID of the VPC"
+  value       = aws_vpc.main.id
+}
+
+output "public_subnet_id" {
+  description = "The ID of the public subnet"
+  value       = aws_subnet.public.id
+}
+
+output "private_subnet_id" {
+  description = "The ID of the private subnet"
+  value       = aws_subnet.private.id
+}
+
+output "internet_gateway_id" {
+  description = "The ID of the Internet Gateway"
+  value       = aws_internet_gateway.main.id
+}</code></pre>
+
+        <h3>Step 5: Create README.md</h3>
+
+        <p>Document how to use your module:</p>
+
+        <pre><code><span class="highlight-blue"># VPC Module</span>
+
+Creates an AWS VPC with public and private subnets.
+
+## Usage
+
+```hcl
+module "vpc" {
+  source = "./modules/aws_vpc"
+
+  vpc_cidr    = "10.0.0.0/16"
+  environment = "production"
+  
+  tags = {
+    Owner = "DevOps Team"
+  }
+}
+```
+
+## Inputs
+
+- `vpc_cidr` - CIDR block for VPC (default: "10.0.0.0/16")
+- `environment` - Environment name (default: "dev")
+- `enable_nat_gateway` - Enable NAT Gateway (default: false)
+- `tags` - Tags to apply to resources
+
+## Outputs
+
+- `vpc_id` - VPC ID
+- `public_subnet_id` - Public subnet ID
+- `private_subnet_id` - Private subnet ID
+</code></pre>
+
+        <h2 id="using-modules">Using Modules in Your Code</h2>
+
+        <h3>Basic Module Usage</h3>
+
+        <p>Now that you've created a module, use it in your main Terraform code:</p>
+
+        <pre><code><span class="highlight-blue"># File: main.tf (in your project root)</span>
+<span class="highlight-blue"># This is where you USE the module you created</span>
+
+module "vpc" {
+  source = "./modules/aws_vpc"
+
+  vpc_cidr    = "10.0.0.0/16"
+  environment = "production"
+  
+  tags = {
+    Owner = "Infrastructure Team"
+  }
+}
+
+<span class="highlight-blue"># Access outputs from the module</span>
+resource "aws_instance" "web" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t3.micro"
+  subnet_id     = module.vpc.public_subnet_id
+
+  tags = {
+    Name = "web-server"
+  }
+}</code></pre>
+
+        <div class="key-point">
+            <strong>Key syntax:</strong> <code>module.vpc.public_subnet_id</code> means: "Take the <code>public_subnet_id</code> output from the <code>vpc</code> module"
+        </div>
+
+        <h3>Using Multiple Instances of the Same Module</h3>
+
+        <p>Use the same module multiple times with different configurations:</p>
+
+        <pre><code><span class="highlight-blue"># Create VPC for production</span>
+module "vpc_prod" {
+  source = "./modules/aws_vpc"
+
+  vpc_cidr    = "10.1.0.0/16"
+  environment = "production"
+}
+
+<span class="highlight-blue"># Create VPC for staging</span>
+module "vpc_staging" {
+  source = "./modules/aws_vpc"
+
+  vpc_cidr    = "10.2.0.0/16"
+  environment = "staging"
+}
+
+<span class="highlight-blue"># Create VPC for development</span>
+module "vpc_dev" {
+  source = "./modules/aws_vpc"
+
+  vpc_cidr    = "10.3.0.0/16"
+  environment = "dev"
+}</code></pre>
+
+        <p>Now you have three complete VPCs with just 30 lines of code instead of 300!</p>
+
+        <h2 id="input-variables">Input Variables (Module Parameters)</h2>
+
+        <h3>Types of Variables</h3>
+
+        <pre><code><span class="highlight-blue"># String variable</span>
+variable "environment" {
+  type    = string
+  default = "dev"
+}
+
+<span class="highlight-blue"># Number variable</span>
+variable "instance_count" {
+  type    = number
+  default = 2
+}
+
+<span class="highlight-blue"># Boolean variable</span>
+variable "enable_monitoring" {
+  type    = bool
+  default = true
+}
+
+<span class="highlight-blue"># List variable</span>
+variable "availability_zones" {
+  type    = list(string)
+  default = ["us-east-1a", "us-east-1b"]
+}
+
+<span class="highlight-blue"># Map variable</span>
+variable "tags" {
+  type = map(string)
+  default = {
+    Owner       = "DevOps"
+    Environment = "Production"
+  }
+}
+
+<span class="highlight-blue"># Object variable (complex type)</span>
+variable "instance_config" {
+  type = object({
+    instance_type = string
+    volume_size   = number
+    environment   = string
+  })
+  default = {
+    instance_type = "t3.micro"
+    volume_size   = 20
+    environment   = "dev"
+  }
+}</code></pre>
+
+        <h3>Making Variables Required</h3>
+
+        <pre><code><span class="highlight-blue"># This variable MUST be provided (no default)</span>
+variable "database_password" {
+  type        = string
+  description = "Master password for RDS database"
+  
+  <span class="highlight-orange"># No default = required</span>
+}
+
+<span class="highlight-blue"># Usage:</span>
+module "database" {
+  source = "./modules/rds"
+  
+  database_password = "SuperSecretPassword123!"
+}</code></pre>
+
+        <h2 id="outputs">Module Outputs</h2>
+
+        <h3>Returning Values from Modules</h3>
+
+        <p>Outputs allow your module to return data that other parts of your code can use:</p>
+
+        <pre><code><span class="highlight-blue"># File: modules/database/outputs.tf</span>
+
+output "database_endpoint" {
+  description = "Database connection endpoint"
+  value       = aws_db_instance.main.endpoint
+}
+
+output "database_id" {
+  description = "Database identifier"
+  value       = aws_db_instance.main.id
+}
+
+output "database_port" {
+  description = "Database port"
+  value       = aws_db_instance.main.port
+}
+
+output "database_name" {
+  description = "Database name"
+  value       = aws_db_instance.main.name
+}</code></pre>
+
+        <h3>Using Module Outputs</h3>
+
+        <pre><code><span class="highlight-blue"># Use outputs from database module</span>
+module "database" {
+  source = "./modules/database"
+  
+  db_name = "myapp"
+}
+
+<span class="highlight-blue"># Now use the outputs</span>
+resource "aws_instance" "app" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t3.micro"
+
+  <span class="highlight-orange"># Access database endpoint from module output</span>
+  environment = [
+    {
+      name  = "DB_ENDPOINT"
+      value = module.database.database_endpoint
+    }
+  ]
+}</code></pre>
+
+        <h2 id="real-world-example">Real-World Example: VPC Module</h2>
+
+        <h3>Scenario</h3>
+
+        <p>You need to create VPCs for 3 environments (prod, staging, dev) with consistent configurations.</p>
+
+        <h3>Solution with Module</h3>
+
+        <div class="file-structure">
+terraform/<br>
+├── modules/<br>
+│   └── aws_vpc/<br>
+│       ├── main.tf<br>
+│       ├── variables.tf<br>
+│       ├── outputs.tf<br>
+│       └── README.md<br>
+├── environments/<br>
+│   ├── prod.tf<br>
+│   ├── staging.tf<br>
+│   └── dev.tf<br>
+└── main.tf
+        </div>
+
+        <h3>modules/aws_vpc/main.tf</h3>
+
+        <pre><code><span class="highlight-blue"># Create VPC</span>
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  tags = {
+    Name        = "${var.environment}-vpc"
+    Environment = var.environment
+  }
+}
+
+<span class="highlight-blue"># Create public subnet</span>
+resource "aws_subnet" "public" {
+  count             = 2
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.${var.vpc_third_octet}.${count.index}.0/24"
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.environment}-public-subnet-${count.index + 1}"
+  }
+}
+
+<span class="highlight-blue"># Create private subnet</span>
+resource "aws_subnet" "private" {
+  count             = 2
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.${var.vpc_third_octet}.${count.index + 10}.0/24"
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+
+  tags = {
+    Name = "${var.environment}-private-subnet-${count.index + 1}"
+  }
+}
+
+<span class="highlight-blue"># Internet Gateway</span>
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "${var.environment}-igw"
+  }
+}
+
+<span class="highlight-blue"># NAT Gateway for private subnet internet access</span>
+resource "aws_eip" "nat" {
+  count  = var.enable_nat ? 1 : 0
+  domain = "vpc"
+
+  depends_on = [aws_internet_gateway.main]
+
+  tags = {
+    Name = "${var.environment}-nat-eip"
+  }
+}
+
+resource "aws_nat_gateway" "main" {
+  count         = var.enable_nat ? 1 : 0
+  allocation_id = aws_eip.nat[0].id
+  subnet_id     = aws_subnet.public[0].id
+
+  tags = {
+    Name = "${var.environment}-nat-gw"
+  }
+
+  depends_on = [aws_internet_gateway.main]
+}
+
+<span class="highlight-blue"># Get available AZs</span>
+data "aws_availability_zones" "available" {
+  state = "available"
+}</code></pre>
+
+        <h3>modules/aws_vpc/variables.tf</h3>
+
+        <pre><code>variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+}
+
+variable "vpc_third_octet" {
+  description = "Third octet of VPC CIDR (10.X.0.0/16)"
+  type        = number
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "enable_nat" {
+  description = "Enable NAT Gateway?"
+  type        = bool
+  default     = false
+}</code></pre>
+
+        <h3>modules/aws_vpc/outputs.tf</h3>
+
+        <pre><code>output "vpc_id" {
+  value = aws_vpc.main.id
+}
+
+output "public_subnet_ids" {
+  value = aws_subnet.public[*].id
+}
+
+output "private_subnet_ids" {
+  value = aws_subnet.private[*].id
+}</code></pre>
+
+        <h3>environments/prod.tf</h3>
+
+        <pre><code>module "vpc_prod" {
+  source = "../modules/aws_vpc"
+
+  vpc_cidr       = "10.1.0.0/16"
+  vpc_third_octet = 1
+  environment    = "production"
+  enable_nat     = true
+}
+
+output "prod_vpc_id" {
+  value = module.vpc_prod.vpc_id
+}</code></pre>
+
+        <h3>environments/staging.tf</h3>
+
+        <pre><code>module "vpc_staging" {
+  source = "../modules/aws_vpc"
+
+  vpc_cidr        = "10.2.0.0/16"
+  vpc_third_octet = 2
+  environment     = "staging"
+  enable_nat      = true
+}
+
+output "staging_vpc_id" {
+  value = module.vpc_staging.vpc_id
+}</code></pre>
+
+        <h3>environments/dev.tf</h3>
+
+        <pre><code>module "vpc_dev" {
+  source = "../modules/aws_vpc"
+
+  vpc_cidr        = "10.3.0.0/16"
+  vpc_third_octet = 3
+  environment     = "dev"
+  enable_nat      = false
+}
+
+output "dev_vpc_id" {
+  value = module.vpc_dev.vpc_id
+}</code></pre>
+
+        <h3>Result</h3>
+
+        <p>✅ Created 3 complete VPCs with consistent configuration<br>
+        ✅ 100 lines of reusable module code<br>
+        ✅ 50 lines of environment-specific code<br>
+        ✅ Any changes to VPC setup = update one file = affects all 3 environments</p>
+
+        <h2 id="best-practices">Best Practices</h2>
+
+        <h3>1. Keep Modules Focused</h3>
+
+        <p>Each module should do one thing well. Don't create one giant module for everything.</p>
+
+        <pre><code><span class="highlight-green">✅ GOOD: Separate modules for VPC, EC2, RDS, Security Groups</span>
+
+module "vpc" {
+  source = "./modules/vpc"
+}
+
+module "rds" {
+  source = "./modules/rds"
+}
+
+module "security_group" {
+  source = "./modules/security_group"
+}
+
+<span class="highlight-orange">❌ BAD: One module trying to do everything</span>
+
+module "everything" {
+  source = "./modules/everything"
+  # VPC, RDS, EC2, Load Balancer, Monitoring, etc.
+}</code></pre>
+
+        <h3>2. Always Document Your Modules</h3>
+
+        <pre><code><span class="highlight-blue"># modules/my_module/README.md</span>
+
+# My Module
+
+## What it does
+Creates a security group allowing HTTP/HTTPS traffic
+
+## Usage
+```hcl
+module "web_sg" {
+  source = "./modules/security_group"
+  
+  vpc_id = aws_vpc.main.id
+  name   = "web-sg"
+}
+```
+
+## Inputs
+- vpc_id (required): VPC ID where SG is created
+- name (required): Name of security group
+
+## Outputs
+- id: Security group ID</code></pre>
+
+        <h3>3. Use Descriptive Variable Names</h3>
+
+        <pre><code><span class="highlight-green">✅ GOOD</span>
+variable "database_instance_type" { }
+variable "enable_encryption" { }
+variable "backup_retention_days" { }
+
+<span class="highlight-orange">❌ BAD</span>
+variable "db_type" { }
+variable "encrypt" { }
+variable "backup_days" { }</code></pre>
+
+        <h3>4. Add Type Constraints</h3>
+
+        <pre><code><span class="highlight-green">✅ GOOD: Type specified</span>
+variable "instance_count" {
+  type = number
+  description = "Number of instances"
+}
+
+<span class="highlight-orange">❌ BAD: No type constraint</span>
+variable "instance_count" {
+  description = "Number of instances"
+}</code></pre>
+
+        <h3>5. Set Sensible Defaults</h3>
+
+        <pre><code>variable "environment" {
+  type    = string
+  default = "dev"
+  description = "Environment (dev, staging, prod)"
+}
+
+variable "enable_monitoring" {
+  type    = bool
+  default = true
+  description = "Enable CloudWatch monitoring"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t3.micro"
+  description = "EC2 instance type"
+}</code></pre>
+
+        <h3>6. Use Consistent Naming</h3>
+
+        <pre><code><span class="highlight-green">✅ GOOD: Consistent naming</span>
+resource "aws_vpc" "main" { }
+resource "aws_subnet" "main" { }
+resource "aws_security_group" "main" { }
+
+<span class="highlight-orange">❌ BAD: Inconsistent naming</span>
+resource "aws_vpc" "vpc" { }
+resource "aws_subnet" "subnet_one" { }
+resource "aws_security_group" "sg" { }</code></pre>
+
+        <h2 id="common-mistakes">Common Mistakes to Avoid</h2>
+
+        <div class="step">
+            <strong>❌ Mistake 1: Hardcoding Values</strong><br>
+            Don't hardcode values that should be variables.
+            <pre><code><span class="highlight-orange">❌ DON'T DO THIS:</span>
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"  # Hardcoded!
+}
+
+<span class="highlight-green">✅ DO THIS INSTEAD:</span>
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr  # Use variable
+}</code></pre>
+        </div>
+
+        <div class="step">
+            <strong>❌ Mistake 2: No Descriptions</strong><br>
+            Always add descriptions to variables and outputs.
+            <pre><code><span class="highlight-orange">❌ Confusing:</span>
+variable "x" { }
+output "y" { value = aws_instance.main.id }
+
+<span class="highlight-green">✅ Clear:</span>
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+}
+output "instance_id" {
+  description = "ID of the created EC2 instance"
+  value       = aws_instance.main.id
+}</code></pre>
+        </div>
+
+        <div class="step">
+            <strong>❌ Mistake 3: Creating Huge Modules</strong><br>
+            Don't put everything in one module.
+            <pre><code><span class="highlight-orange">❌ 500-line module doing everything</span>
+
+<span class="highlight-green">✅ Separate, focused modules</span>
+- modules/vpc/
+- modules/rds/
+- modules/ec2/
+- modules/security_group/</code></pre>
+        </div>
+
+        <div class="step">
+            <strong>❌ Mistake 4: Not Testing Modules</strong><br>
+            Test your modules with different variable values.
+            <pre><code><span class="highlight-green">✅ Create test configurations:</span>
+test/
+├── minimal_config.tf    # Use all defaults
+├── full_config.tf       # Override all variables
+└── edge_cases.tf        # Test boundary conditions</code></pre>
+        </div>
+
+        <h2 id="advanced-topics">Advanced Topics</h2>
+
+        <h3>1. Module Versioning</h3>
+
+        <p>Use Git tags or Terraform module registry for versioning:</p>
+
+        <pre><code><span class="highlight-blue"># Source from GitHub with version tag</span>
+module "vpc" {
+  source = "git::https://github.com/myorg/terraform-aws-vpc.git?ref=v1.2.0"
+
+  vpc_cidr = "10.0.0.0/16"
+}
+
+<span class="highlight-blue"># Source from Terraform Registry</span>
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  version = "~> 3.0"
+
+  vpc_cidr = "10.0.0.0/16"
+}</code></pre>
+
+        <h3>2. For_each for Multiple Resources</h3>
+
+        <p>Create multiple instances with different configurations:</p>
+
+        <pre><code>variable "subnets" {
+  type = map(string)
+  default = {
+    public-1a  = "10.0.1.0/24"
+    public-1b  = "10.0.2.0/24"
+    private-1a = "10.0.10.0/24"
+    private-1b = "10.0.11.0/24"
+  }
+}
+
+resource "aws_subnet" "main" {
+  for_each = var.subnets
+
+  vpc_id     = aws_vpc.main.id
+  cidr_block = each.value
+
+  tags = {
+    Name = each.key
+  }
+}</code></pre>
+
+        <h3>3. Conditional Resources</h3>
+
+        <p>Create resources only when needed:</p>
+
+        <pre><code>variable "enable_nat_gateway" {
+  type    = bool
+  default = false
+}
+
+<span class="highlight-blue"># NAT Gateway created only if enable_nat_gateway = true</span>
+resource "aws_nat_gateway" "main" {
+  count = var.enable_nat_gateway ? 1 : 0
+
+  subnet_id = aws_subnet.public[0].id
+
+  tags = {
+    Name = "nat-gateway"
+  }
+}</code></pre>
+
+        <h3>4. Module Composition (Modules Using Modules)</h3>
+
+        <p>Create higher-level modules that use other modules:</p>
+
+        <pre><code><span class="highlight-blue"># modules/complete_infrastructure/main.tf</span>
+<span class="highlight-blue"># This module uses other modules</span>
+
+module "vpc" {
+  source = "../vpc"
+  vpc_cidr = var.vpc_cidr
+}
+
+module "security_group" {
+  source = "../security_group"
+  vpc_id = module.vpc.vpc_id
+}
+
+module "rds" {
+  source           = "../rds"
+  vpc_id           = module.vpc.vpc_id
+  security_group_id = module.security_group.id
+}</code></pre>
+
+        <h2>Key Takeaways</h2>
+
+        <div class="key-point">
+            <strong>Remember:</strong>
+            <ul>
+                <li>✅ Modules = reusable infrastructure code</li>
+                <li>✅ Every module needs: main.tf, variables.tf, outputs.tf, README.md</li>
+                <li>✅ Use variables to make modules flexible</li>
+                <li>✅ Use outputs to share data with other parts of code</li>
+                <li>✅ Keep modules focused and well-documented</li>
+                <li>✅ Test modules with different configurations</li>
+                <li>✅ Use modules to maintain consistency across projects</li>
+            </ul>
+        </div>
+
+        <h2>Next Steps</h2>
+
+        <ol>
+            <li><strong>Create a simple module</strong> - Start with a security group or VPC</li>
+            <li><strong>Document it well</strong> - Add clear README and variable descriptions</li>
+            <li><strong>Use it in a project</strong> - Apply the module to real infrastructure</li>
+            <li><strong>Reuse it</strong> - Use the same module in multiple projects</li>
+            <li><strong>Maintain it</strong> - Keep documentation and code updated</li>
+        </ol>
+
+        <div class="tip">
+            <strong>Pro Tip:</strong> Start collecting your modules in a <code>modules/</code> directory. As you build more infrastructure, you'll accumulate a library of reusable components that make future projects much faster!
+        </div>
+
+        <div class="author-info">
+            <h3>About the Author</h3>
+            <p>
+                👤 <strong>Anji Yarra</strong><br>
+                DevOps Engineer | Cloud Infrastructure Specialist<br>
+                4+ years building production infrastructure with Terraform and AWS<br><br>
+                📌 <a href="https://anjidevops.online">Portfolio</a> | 
+                🔗 <a href="https://linkedin.com/in/anjiyarra">LinkedIn</a> | 
+                💻 <a href="https://github.com/anji-yarra">GitHub</a><br><br>
+                Questions or comments? Reach out! I'm always happy to discuss Terraform and DevOps.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>
+                📚 <strong>Related Articles:</strong><br>
+                • Terraform State Management<br>
+                • Infrastructure as Code Best Practices<br>
+                • AWS VPC Design Guide<br><br>
+                
+                ✉️ Subscribe to my blog for more Terraform and DevOps content!<br><br>
+                
+                © 2026 Anji Yarra | All rights reserved
+            </p>
+        </div>
+    </div>
+</body>
+</html>
