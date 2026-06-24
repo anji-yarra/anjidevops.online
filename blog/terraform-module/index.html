@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete Terraform Modules guide with real-world examples and best practices.">
+<meta name="author" content="Anji Yarra">
+<meta property="og:title" content="Terraform Modules Complete Guide | AnjiDevOps">
+<meta property="og:url" content="https://anjidevops.online/blog/terraform-modules/">
+<title>Terraform Modules Complete Guide | AnjiDevOps</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07111f;
+  --panel: rgba(12,26,48,0.8);
+  --border: rgba(255,255,255,0.07);
+  --white: #f8fafc;
+  --muted: #64748b;
+  --light: #94a3b8;
+  --teal: #00e5c3;
+  --purple: #a855f7;
+  --blue: #0ea5e9;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.7;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 700px 500px at 10% 10%, rgba(0,229,195,.08) 0%, transparent 60%),
+              radial-gradient(ellipse 600px 400px at 90% 85%, rgba(59,130,246,.08) 0%, transparent 60%);
+}
+
+#prog { position: fixed; top: 0; left: 0; height: 3px; z-index: 999; background: linear-gradient(90deg, #00e5c3, #0ea5e9, #a855f7); width: 0%; }
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(7,17,31,.95);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--teal); letter-spacing: 1.5px; text-decoration: none; font-weight: 600; }
+.nav-logo span { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 24px; }
+.nav-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; font-weight: 500; }
+.nav-link:hover { color: var(--white); }
+.nav-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 14px; border-radius: 100px; background: rgba(0,229,195,.1); border: 1px solid rgba(0,229,195,.25); color: var(--teal); letter-spacing: 1px; font-weight: 600; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.hero { position: relative; z-index: 1; padding: 100px 0 60px; border-bottom: 1px solid var(--border); }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--teal); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 24px; font-weight: 600; }
+.hero-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; }
+.hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(44px, 7vw, 72px); font-weight: 400; line-height: 1.15; color: var(--white); letter-spacing: -0.8px; margin-bottom: 24px; }
+.hero h1 em { color: var(--teal); font-style: italic; }
+.hero-subtitle { font-size: 18px; color: var(--light); line-height: 1.8; max-width: 700px; margin-bottom: 36px; font-weight: 300; }
+
+.meta { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; font-size: 13px; }
+.meta-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #00e5c3, #0ea5e9); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #07111f; }
+.meta-name { font-size: 14px; font-weight: 600; color: var(--white); }
+.meta-role { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.meta-divider { width: 1px; height: 32px; background: var(--border); }
+.meta-info { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+
+.layout { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 280px; gap: 56px; padding: 56px 0; align-items: start; }
+.content { min-width: 0; }
+
+.intro { font-size: 16px; color: var(--light); line-height: 1.85; margin-bottom: 64px; padding: 24px; border-left: 3px solid var(--teal); border-radius: 8px; background: rgba(0,229,195,.03); }
+.intro strong { color: var(--white); font-weight: 600; }
+
+.section { margin-bottom: 80px; }
+.section h2 { font-family: 'Instrument Serif', serif; font-size: 32px; font-weight: 400; color: var(--white); margin-bottom: 8px; padding-bottom: 16px; border-bottom: 2px solid var(--teal); }
+.section h3 { font-size: 22px; font-weight: 600; color: var(--white); margin-top: 40px; margin-bottom: 16px; }
+.section h4 { font-size: 16px; font-weight: 600; color: var(--white); margin-top: 28px; margin-bottom: 12px; }
+
+.topic { margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+.topic:last-child { border-bottom: none; }
+
+.topic-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.topic-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 4px 12px; border-radius: 6px; background: rgba(0,229,195,.15); color: var(--teal); font-weight: 600; flex-shrink: 0; }
+.topic-title { font-size: 20px; font-weight: 700; color: var(--white); }
+
+.topic-desc { font-size: 15px; color: var(--light); line-height: 1.85; margin-bottom: 20px; }
+
+.code-block { background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 0; margin: 20px 0; overflow: hidden; }
+.code-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; padding: 12px 18px; background: rgba(0,0,0,.6); border-bottom: 1px solid rgba(255,255,255,.06); font-weight: 600; }
+.code-content { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #00e5c3; line-height: 1.9; padding: 18px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+.code-content .comment { color: #64748b; }
+.code-content .output { color: #22c55e; }
+
+.explain-box { background: rgba(0,229,195,.07); border: 1.5px solid rgba(0,229,195,.2); border-left: 4px solid var(--teal); padding: 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; color: var(--light); line-height: 1.8; }
+.explain-box strong { color: var(--teal); font-weight: 600; }
+.explain-box em { color: var(--white); font-style: italic; }
+
+.tip-box { background: rgba(34,197,94,.07); border-left: 4px solid #22c55e; padding: 16px; border-radius: 8px; margin: 20px 0; font-size: 14px; color: var(--light); }
+.tip-box strong { color: #22c55e; }
+
+ul, ol { margin: 16px 0 16px 24px; }
+li { margin-bottom: 8px; }
+a { color: var(--teal); text-decoration: none; transition: opacity .2s; }
+a:hover { opacity: 0.8; }
+
+.sidebar { position: sticky; top: 100px; height: fit-content; }
+.sidebar-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+.sidebar-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 20px; font-weight: 700; }
+.toc-list { display: flex; flex-direction: column; gap: 10px; }
+.toc-link { display: block; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 13px; color: var(--muted); font-weight: 500; transition: all .2s; border: 1px solid transparent; }
+.toc-link:hover { color: var(--white); background: rgba(255,255,255,.04); }
+.toc-link.active { color: var(--white); background: rgba(255,255,255,.08); border-color: rgba(0,229,195,.2); }
+
+.share-card { background: linear-gradient(135deg, rgba(0,229,195,.08), rgba(14,165,233,.05)); border: 1.5px solid rgba(0,229,195,.2); border-radius: 16px; padding: 28px; text-align: center; }
+.share-title { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+.share-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; background: linear-gradient(135deg, #00e5c3, #0ea5e9); color: #07111f; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer; border: none; width: 100%; transition: all .25s; }
+.share-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,229,195,.3); }
+
+footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 56px 0; margin-top: 80px; text-align: center; }
+.footer-author { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 36px; }
+.footer-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #00e5c3, #0ea5e9); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 24px; color: #07111f; }
+.footer-name { font-size: 20px; font-weight: 700; color: var(--white); }
+.footer-bio { font-size: 14px; color: var(--muted); max-width: 450px; line-height: 1.7; margin: 12px auto 0; }
+.footer-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+.footer-link { display: flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 10px; background: var(--panel); border: 1px solid var(--border); text-decoration: none; font-size: 13px; color: var(--light); font-weight: 500; transition: all .25s; }
+.footer-link:hover { color: var(--teal); border-color: rgba(0,229,195,.25); background: rgba(0,229,195,.05); }
+
+@media(max-width: 1024px) { .layout { grid-template-columns: 1fr; gap: 40px; } .sidebar { position: static; top: auto; } }
+@media(max-width: 900px) { nav { padding: 0 24px; } .container { padding: 0 24px; } .hero { padding: 70px 0 50px; } }
+@media(max-width: 640px) { nav { padding: 0 16px; } .container { padding: 0 16px; } .hero { padding: 50px 0 40px; } .hero h1 { font-size: 36px; } .section h2 { font-size: 24px; } .layout { gap: 32px; } }
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<nav>
+  <a href="https://anjidevops.online" class="nav-logo">anji<span>devops</span>.online</a>
+  <div class="nav-right">
+    <a href="https://anjidevops.online/blog/" class="nav-link">← All Posts</a>
+    <span class="nav-tag">Blog</span>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag"><div class="hero-dot"></div>Terraform · IaC · DevOps</div>
+    <h1>Terraform Modules <em>Complete Guide</em></h1>
+    <p class="hero-subtitle">Master reusable infrastructure code. Learn module structure, best practices, and real-world patterns with 70+ practical examples.</p>
+    <div class="meta">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="meta-avatar">AY</div>
+        <div>
+          <div class="meta-name">Anji Yarra</div>
+          <div class="meta-role">AWS SAA-C03 · Cloud & DevOps Engineer</div>
+        </div>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="meta-info">📚 ~20 min read</div>
+      <div class="meta-divider"></div>
+      <div class="meta-info">💻 70+ examples</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="content">
+      <div class="intro">
+        Terraform modules are <strong>the foundation of scalable infrastructure as code</strong>. They enable you to write reusable, maintainable infrastructure code that you can share across projects, teams, and organizations. Learning modules properly transforms you from writing basic Terraform to building enterprise-grade infrastructure.
+      </div>
+
+      <!-- SECTION 1 -->
+      <div class="section">
+        <h2>Module Fundamentals</h2>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Definition</span>
+            <div class="topic-title">What Are Terraform Modules?</div>
+          </div>
+          <p class="topic-desc">A Terraform module is a folder containing Terraform files that define infrastructure resources as a reusable, self-contained unit. It's a way to package related resources (VPC, subnets, security groups) into a single component you can use across multiple projects.</p>
+
+          <div class="explain-box">
+            <strong>Key concept:</strong> Modules are like functions in programming. You write a function once, then call it multiple times with different parameters. Terraform modules work the same way—define infrastructure once in a module, then use it in many projects.
+          </div>
+
+          <div class="code-block">
+            <div class="code-label">Module concept</div>
+            <div class="code-content"><span class="comment"># Without modules (repetitive)</span>
+# Project 1 - main.tf
+resource "aws_vpc" "vpc" { ... }
+resource "aws_subnet" "public" { ... }
+
+# Project 2 - main.tf (same code again!)
+resource "aws_vpc" "vpc" { ... }
+resource "aws_subnet" "public" { ... }
+
+<span class="comment"># With modules (DRY)</span>
+# modules/vpc/main.tf
+resource "aws_vpc" "vpc" { ... }
+resource "aws_subnet" "public" { ... }
+
+# Project 1 - main.tf
+module "vpc" {
+  source = "../modules/vpc"
+}
+
+# Project 2 - main.tf  
+module "vpc" {
+  source = "../modules/vpc"
+}</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Benefits</span>
+            <div class="topic-title">Why Use Modules?</div>
+          </div>
+          <p class="topic-desc">Modules provide major benefits: code reusability, maintainability, consistency, organization, and testing. Without modules, you duplicate code, make updates difficult, and create inconsistencies. Modules solve all these problems.</p>
+
+          <div class="explain-box">
+            <strong>Real example:</strong> You manage 5 AWS projects, each needing identical VPC setup. Without modules: update one setting = fix it in 5 places. With modules: update once in the module, all 5 projects inherit the change instantly.
+          </div>
+
+          <div class="code-block">
+            <div class="code-label">Benefits comparison</div>
+            <div class="code-content"><span class="comment">WITHOUT MODULES</span>
+Code Reusability:    ❌ Copy-paste 200+ lines 5 times
+Maintainability:     ❌ Update code in 5 places
+Organization:        ❌ 1000+ line monolithic file
+Consistency:         ❌ Each person configures differently
+
+<span class="comment">WITH MODULES</span>
+Code Reusability:    ✅ Write once, use everywhere
+Maintainability:     ✅ Update module, affects all uses
+Organization:        ✅ Logical, focused components
+Consistency:         ✅ Same configuration every time</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Timing</span>
+            <div class="topic-title">When Should You Use Modules?</div>
+          </div>
+          <p class="topic-desc">Use modules when you have reusable infrastructure or multiple projects. Start with modules from day one if building multiple environments or projects. Even a single project benefits from modular structure.</p>
+
+          <h4>Decision Tree</h4>
+          <ul>
+            <li><strong>Single project, simple (< 10 resources)</strong>: Can keep in single main.tf, but modules still improve organization</li>
+            <li><strong>Single project, complex (> 10 resources)</strong>: MUST USE MODULES for organization</li>
+            <li><strong>Multiple projects (same infrastructure)</strong>: DEFINITELY USE MODULES for code reuse</li>
+            <li><strong>Enterprise (many teams, many projects)</strong>: USE MODULE REGISTRY with versioning</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div class="section">
+        <h2>Module Structure & Organization</h2>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Layout</span>
+            <div class="topic-title">Module Directory Structure</div>
+          </div>
+          <p class="topic-desc">A module is just a directory with Terraform files. The standard structure includes main.tf (resources), variables.tf (inputs), outputs.tf (returns), and optionally README.md (documentation).</p>
+
+          <div class="code-block">
+            <div class="code-label">Standard module structure</div>
+            <div class="code-content">project/
+├── main.tf
+├── terraform.tfvars
+├── outputs.tf
+├── variables.tf
+└── modules/
+    ├── vpc/
+    │   ├── main.tf         <span class="comment"># VPC resources</span>
+    │   ├── variables.tf    <span class="comment"># Input variables</span>
+    │   ├── outputs.tf      <span class="comment"># Return values</span>
+    │   └── README.md
+    ├── rds/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    └── security/
+        ├── main.tf
+        ├── variables.tf
+        └── outputs.tf</div>
+          </div>
+
+          <div class="explain-box">
+            <strong>Why this structure:</strong> Following the standard layout makes modules predictable. Other Terraform developers expect this organization. It's the community standard.
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Files</span>
+            <div class="topic-title">Purpose of Each Module File</div>
+          </div>
+
+          <h4>main.tf</h4>
+          <p>Defines all resources. Create VPCs, subnets, databases, security groups here.</p>
+
+          <h4>variables.tf</h4>
+          <p>Defines input parameters. These are values callers pass in to customize the module.</p>
+
+          <h4>outputs.tf</h4>
+          <p>Returns values from the module. Callers use these to get results (IDs, endpoints, etc.).</p>
+
+          <h4>README.md</h4>
+          <p>Documents the module. Include usage example, input descriptions, and output explanations.</p>
+
+          <div class="code-block">
+            <div class="code-label">Example files</div>
+            <div class="code-content"><span class="comment"># main.tf - Resources</span>
+resource "aws_vpc" "this" {
+  cidr_block = var.cidr_block
+}
+
+resource "aws_subnet" "public" {
+  vpc_id     = aws_vpc.this.id
+  cidr_block = var.public_subnet_cidr
+}
+
+<span class="comment"># variables.tf - Inputs</span>
+variable "cidr_block" {
+  description = "CIDR block for VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+<span class="comment"># outputs.tf - Return values</span>
+output "vpc_id" {
+  description = "ID of the VPC"
+  value       = aws_vpc.this.id
+}</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Sources</span>
+            <div class="topic-title">Module Sources (Where to Load From)</div>
+          </div>
+          <p class="topic-desc">Modules can be loaded from multiple sources: local filesystem, Git repositories, Terraform Registry, S3, and more. This flexibility enables code sharing across teams and organizations.</p>
+
+          <div class="code-block">
+            <div class="code-label">Different module sources</div>
+            <div class="code-content"><span class="comment"># LOCAL - During development</span>
+module "vpc" {
+  source = "../modules/vpc"
+}
+
+<span class="comment"># GIT - Team shared repos</span>
+module "vpc" {
+  source = "git::https://github.com/company/modules.git//vpc?ref=v1.0.0"
+}
+
+<span class="comment"># TERRAFORM REGISTRY - Official public modules</span>
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 5.0"
+}
+
+<span class="comment"># S3 - Private enterprise modules</span>
+module "vpc" {
+  source = "s3::https://s3.amazonaws.com/my-bucket/modules/vpc.zip"
+}</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Hierarchy</span>
+            <div class="topic-title">Root Module vs Child Modules</div>
+          </div>
+          <p class="topic-desc">Every Terraform configuration has a root module (the directory where you run terraform commands). Child modules are modules called by the root module. The root module orchestrates everything, child modules provide components.</p>
+
+          <div class="code-block">
+            <div class="code-label">Module hierarchy</div>
+            <div class="code-content"><span class="comment">ROOT MODULE main.tf - Orchestrates</span>
+module "network" {
+  source = "./modules/vpc"
+  cidr   = var.network_cidr
+}
+
+module "database" {
+  source = "./modules/rds"
+  subnet = module.network.subnet_id
+}
+
+<span class="comment">HIERARCHY</span>
+User runs: terraform apply
+  ↓
+Root module gets user variables
+  ↓
+Root module calls child modules
+  ↓
+Child modules create infrastructure
+  ↓
+Child modules return outputs to root
+  ↓
+Root module returns final outputs to user</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div class="section">
+        <h2>Module Variables & Inputs</h2>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Inputs</span>
+            <div class="topic-title">Module Input Variables</div>
+          </div>
+          <p class="topic-desc">Input variables make modules flexible. Instead of hardcoding values, define variables that callers pass in. This way, one module can create different infrastructure based on inputs.</p>
+
+          <div class="code-block">
+            <div class="code-label">Module variables example</div>
+            <div class="code-content"><span class="comment">modules/vpc/variables.tf</span>
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+<span class="comment">main.tf - ROOT MODULE</span>
+module "prod_vpc" {
+  source = "./modules/vpc"
+  
+  vpc_cidr    = "10.0.0.0/16"
+  environment = "production"
+}
+
+module "dev_vpc" {
+  source = "./modules/vpc"
+  
+  vpc_cidr    = "10.1.0.0/16"
+  environment = "development"
+}</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Types</span>
+            <div class="topic-title">Variable Types & Validation</div>
+          </div>
+          <p class="topic-desc">Variables have types: string, number, bool, list, map, etc. Terraform validates types, catching errors early. Add validation rules to ensure inputs are reasonable.</p>
+
+          <div class="code-block">
+            <div class="code-label">Variable types and validation</div>
+            <div class="code-content"><span class="comment">Basic types</span>
+variable "instance_name" {
+  type = string
+}
+
+variable "instance_count" {
+  type = number
+}
+
+variable "enable_monitoring" {
+  type = bool
+}
+
+<span class="comment">Complex types</span>
+variable "availability_zones" {
+  type = list(string)
+}
+
+variable "tags" {
+  type = map(string)
+}
+
+<span class="comment">With validation</span>
+variable "port" {
+  type = number
+  
+  validation {
+    condition     = var.port >= 1 && var.port <= 65535
+    error_message = "Port must be 1-65535"
+  }
+}</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Defaults</span>
+            <div class="topic-title">Defaults and Required Variables</div>
+          </div>
+          <p class="topic-desc">Variables with defaults are optional. Variables without defaults are required. Critical settings should be required. Advanced options should have sensible defaults.</p>
+
+          <div class="code-block">
+            <div class="code-label">Defaults vs required</div>
+            <div class="code-content"><span class="comment">REQUIRED - User MUST provide</span>
+variable "environment" {
+  description = "Environment (prod/staging/dev)"
+  type        = string
+  <span class="comment"># NO default</span>
+}
+
+<span class="comment">OPTIONAL - Has sensible default</span>
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "enable_encryption" {
+  description = "Enable encryption?"
+  type        = bool
+  default     = true
+}</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Security</span>
+            <div class="topic-title">Sensitive Variables</div>
+          </div>
+          <p class="topic-desc">Mark sensitive variables with <code>sensitive=true</code> to prevent Terraform from displaying them in logs. This protects passwords, API keys, and other secrets.</p>
+
+          <div class="code-block">
+            <div class="code-label">Sensitive variables</div>
+            <div class="code-content"><span class="comment">modules/rds/variables.tf</span>
+variable "database_password" {
+  description = "RDS master password"
+  type        = string
+  sensitive   = true
+}
+
+<span class="comment">Supply via environment variables:</span>
+export TF_VAR_database_password="secret"
+terraform apply</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div class="section">
+        <h2>Module Outputs</h2>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Outputs</span>
+            <div class="topic-title">Module Outputs Basics</div>
+          </div>
+          <p class="topic-desc">Module outputs return values that other modules or the root module can use. Define outputs in outputs.tf, then reference them with <code>module.name.output_name</code>.</p>
+
+          <div class="code-block">
+            <div class="code-label">Module outputs example</div>
+            <div class="code-content"><span class="comment">modules/vpc/outputs.tf</span>
+output "vpc_id" {
+  description = "ID of the VPC"
+  value       = aws_vpc.this.id
+}
+
+output "public_subnet_id" {
+  description = "ID of public subnet"
+  value       = aws_subnet.public.id
+}
+
+<span class="comment">main.tf - Use VPC outputs</span>
+module "vpc" {
+  source = "./modules/vpc"
+}
+
+module "rds" {
+  source = "./modules/rds"
+  
+  subnet_id = module.vpc.public_subnet_id
+  vpc_id    = module.vpc.vpc_id
+}</div>
+          </div>
+
+          <div class="explain-box">
+            <strong>Function analogy:</strong> In programming, functions return values. Terraform modules return values via outputs. This enables composition: one module's output becomes another's input.
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Types</span>
+            <div class="topic-title">Output Types and Sensitivity</div>
+          </div>
+          <p class="topic-desc">Outputs can return any value type: strings, numbers, lists, maps, objects. Mark outputs <code>sensitive=true</code> if they contain passwords or API keys.</p>
+
+          <div class="code-block">
+            <div class="code-label">Various output types</div>
+            <div class="code-content"><span class="comment">Simple outputs</span>
+output "database_endpoint" {
+  value = aws_db_instance.this.endpoint
+}
+
+<span class="comment">List output</span>
+output "instance_ids" {
+  value = aws_instance.this[*].id
+}
+
+<span class="comment">Map output</span>
+output "instance_ips" {
+  value = {
+    for inst in aws_instance.this :
+    inst.tags.Name => inst.private_ip
+  }
+}
+
+<span class="comment">Sensitive output</span>
+output "database_password" {
+  value     = aws_db_instance.this.password
+  sensitive = true
+}</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Doc</span>
+            <div class="topic-title">Documenting Outputs</div>
+          </div>
+          <p class="topic-desc">Always describe outputs clearly. Users need to know what each output contains and how to use it. Good descriptions prevent confusion and misuse.</p>
+
+          <div class="code-block">
+            <div class="code-label">Well-documented outputs</div>
+            <div class="code-content"><span class="comment">GOOD - Clear description</span>
+output "vpc_id" {
+  description = "ID of the created VPC. Use this when creating resources that must connect to this VPC."
+  value       = aws_vpc.this.id
+}
+
+output "private_subnet_ids" {
+  description = "List of private subnet IDs. Pass these to RDS subnet group for database deployment."
+  value       = aws_subnet.private[*].id
+}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div class="section">
+        <h2>Advanced Module Patterns</h2>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Composition</span>
+            <div class="topic-title">Module Composition</div>
+          </div>
+          <p class="topic-desc">Compose modules by calling multiple modules in your root configuration. Each module handles one concern (VPC, RDS, security), then you wire them together.</p>
+
+          <div class="code-block">
+            <div class="code-label">Module composition example</div>
+            <div class="code-content"><span class="comment"># Step 1: Create networking</span>
+module "networking" {
+  source = "./modules/vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+<span class="comment"># Step 2: Create security (depends on VPC)</span>
+module "security" {
+  source = "./modules/security"
+  vpc_id = module.networking.vpc_id
+}
+
+<span class="comment"># Step 3: Create database (depends on VPC & security)</span>
+module "database" {
+  source = "./modules/rds"
+  subnet_ids = module.networking.private_subnet_ids
+  sg_id = module.security.rds_security_group_id
+}
+
+<span class="comment"># Benefits of composition:</span>
+✓ Each module has single responsibility
+✓ Independently testable
+✓ Easy to reuse in other projects
+✓ Changes to one module don't break others
+✓ Clear data flow through outputs/inputs</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Versioning</span>
+            <div class="topic-title">Module Versioning & Stability</div>
+          </div>
+          <p class="topic-desc">When modules live in Git repos, use Git tags for versioning (v1.0.0, v1.1.0, v2.0.0). Callers pin to specific versions to ensure stability.</p>
+
+          <div class="code-block">
+            <div class="code-label">Module versioning</div>
+            <div class="code-content"><span class="comment"># GIT TAG YOUR MODULES</span>
+git tag -a v1.0.0 -m "Initial release"
+git push --tags
+
+<span class="comment"># CALLERS PIN TO VERSION</span>
+module "vpc" {
+  source = "git::https://github.com/company/tf-modules.git//vpc?ref=v1.1.0"
+}
+
+<span class="comment"># SEMANTIC VERSIONING</span>
+v1.0.0  = first release (safe to use)
+v1.1.0  = backward compatible feature
+v1.1.1  = bug fix
+v2.0.0  = breaking change (requires action!)</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Testing</span>
+            <div class="topic-title">Testing Terraform Modules</div>
+          </div>
+          <p class="topic-desc">Test modules with <code>terraform validate</code> and <code>terraform plan</code>. Create test configurations that use the module with various inputs. Verify outputs and resources are created correctly.</p>
+
+          <div class="code-block">
+            <div class="code-label">Testing modules</div>
+            <div class="code-content"><span class="comment"># BASIC: terraform validate</span>
+cd modules/vpc
+terraform init
+terraform validate
+
+<span class="comment"># INTERMEDIATE: terraform plan test</span>
+# test/main.tf
+module "vpc_test" {
+  source = ".."
+  cidr_block  = "10.0.0.0/16"
+  environment = "test"
+}
+
+cd test
+terraform plan
+
+<span class="comment"># TEST CHECKLIST</span>
+✓ Validate syntax (terraform validate)
+✓ Plan with minimal inputs
+✓ Plan with all variables
+✓ Verify all outputs exist
+✓ Test variable validation
+✓ Check dependencies
+✓ Verify no hardcoded secrets</div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header">
+            <span class="topic-badge">Best Practices</span>
+            <div class="topic-title">Module Best Practices</div>
+          </div>
+          <p class="topic-desc">Follow best practices: keep modules focused (one responsibility), use clear naming, document thoroughly, validate inputs, handle defaults wisely, make outputs comprehensive, version everything, and test systematically.</p>
+
+          <div class="tip-box">
+            <strong>Production mindset:</strong> Someone else will use your module. Write it as if you won't be around to explain it. Clear names, complete documentation, and validation go a long way.
+          </div>
+
+          <h4>Best Practices Checklist</h4>
+          <ul>
+            <li><strong>Design:</strong> Single responsibility, clear variable names, required for critical settings, sensible defaults</li>
+            <li><strong>Organization:</strong> main.tf, variables.tf, outputs.tf, README.md, examples/, tests/</li>
+            <li><strong>Documentation:</strong> Clear README with examples, description for every variable and output</li>
+            <li><strong>Quality:</strong> Validate syntax, test with multiple configs, pin versions, run linting</li>
+            <li><strong>Security:</strong> No hardcoded secrets, mark sensitive variables, restrict IAM policies, enable encryption</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Table of Contents</div>
+        <div class="toc-list">
+          <a href="#fundamentals" class="toc-link active">Fundamentals</a>
+          <a href="#structure" class="toc-link">Structure</a>
+          <a href="#variables" class="toc-link">Variables</a>
+          <a href="#outputs" class="toc-link">Outputs</a>
+          <a href="#advanced" class="toc-link">Advanced</a>
+        </div>
+      </div>
+
+      <div class="share-card">
+        <div class="share-title">Found Useful?</div>
+        <div class="share-sub">Share on LinkedIn</div>
+        <button class="share-btn" onclick="shareLinkedIn()">Share Article</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-author">
+      <div class="footer-avatar">AY</div>
+      <div class="footer-name">Anji Yarra</div>
+      <div class="footer-bio">AWS SAA-C03 Certified Cloud & DevOps Engineer. Building reusable, production-grade infrastructure as code with Terraform and AWS.</div>
+    </div>
+    <div class="footer-links">
+      <a href="https://anjidevops.online" class="footer-link">🏠 Home</a>
+      <a href="https://www.linkedin.com/in/anjiyarra/" target="_blank" class="footer-link">💼 LinkedIn</a>
+      <a href="https://anjidevops.online/blog/" class="footer-link">📚 All Posts</a>
+      <a href="mailto:anjiyarra.aws@gmail.com" class="footer-link">✉️ Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const p = scrollY / (document.body.scrollHeight - innerHeight);
+  prog.style.width = (p * 100) + '%';
+});
+
+// TOC active link
+const sections = document.querySelectorAll('.section');
+const tocLinks = document.querySelectorAll('.toc-link');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (pageYOffset >= sectionTop - 200) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  tocLinks.forEach(link => {
+    link.classList.remove('active');
+  });
+  if (current) {
+    document.querySelector(`.toc-link[href="#${current}"]`)?.classList.add('active');
+  }
+});
+
+function shareLinkedIn() {
+  const url = encodeURIComponent('https://anjidevops.online/blog/terraform-modules/');
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+}
+</script>
+
+</body>
+</html>
