@@ -1024,8 +1024,52 @@ footer {
   .stat-item { border-right:none; border-bottom:1px solid var(--border); }
   .skills-grid, .certs-grid, .exp-grid { grid-template-columns:1fr; }
   .projects-layout { grid-template-columns:1fr; }
+  .projects-extra { grid-template-columns:1fr; }
   footer { padding:20px; flex-direction:column; text-align:center; }
 }
+/* ─── ADDITIONAL PROJECT CARDS ─── */
+.projects-extra {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 22px;
+}
+.project-card {
+  min-width: 0;
+  padding: 28px;
+  background: rgba(22,36,68,.7);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.project-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0,212,170,.35);
+  box-shadow: 0 18px 42px rgba(0,0,0,.25);
+}
+.project-card-icon { font-size: 26px; margin-bottom: 18px; }
+.project-card-kicker {
+  margin-bottom: 10px;
+  color: var(--teal);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+}
+.project-card-title {
+  margin: 0 0 12px;
+  color: var(--white);
+  font-size: 19px;
+  line-height: 1.35;
+}
+.project-card-desc {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.project-card-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
 </style>
 </head>
 <body>
@@ -1260,6 +1304,39 @@ footer {
         <span class="ach">Multi-AZ Ready</span>
       </div>
     </div>
+  </div>
+
+  <!-- ADDITIONAL DEVOPS PROJECTS -->
+  <div class="projects-extra">
+    <article class="project-card reveal">
+      <div class="project-card-icon">🐳</div>
+      <div class="project-card-kicker">CONTAINERIZATION · ORCHESTRATION</div>
+      <h3 class="project-card-title">RoboShop Microservices Deployment</h3>
+      <p class="project-card-desc">Hands-on deployment of the RoboShop microservices application, working with containerized services and Kubernetes orchestration.</p>
+      <div class="project-card-tags">
+        <span class="ptag">Docker</span><span class="ptag">Kubernetes</span><span class="ptag">Helm</span><span class="ptag">Linux</span>
+      </div>
+    </article>
+
+    <article class="project-card reveal" style="transition-delay:.1s">
+      <div class="project-card-icon">⚙️</div>
+      <div class="project-card-kicker">CI/CD · CODE QUALITY</div>
+      <h3 class="project-card-title">Jenkins CI/CD Automation</h3>
+      <p class="project-card-desc">Built and worked with Jenkins pipeline automation using reusable Shared Libraries, source control integration and SonarQube code-quality analysis.</p>
+      <div class="project-card-tags">
+        <span class="ptag">Jenkins</span><span class="ptag">Shared Libraries</span><span class="ptag">SonarQube</span><span class="ptag">Git</span>
+      </div>
+    </article>
+
+    <article class="project-card reveal" style="transition-delay:.2s">
+      <div class="project-card-icon">☁️</div>
+      <div class="project-card-kicker">INFRASTRUCTURE AS CODE</div>
+      <h3 class="project-card-title">AWS Infrastructure with Terraform</h3>
+      <p class="project-card-desc">Used Terraform to define and provision AWS infrastructure as code, making cloud resource configuration repeatable and easier to manage.</p>
+      <div class="project-card-tags">
+        <span class="ptag">Terraform</span><span class="ptag">AWS</span><span class="ptag">IaC</span>
+      </div>
+    </article>
   </div>
 </section>
 
